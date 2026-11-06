@@ -14,7 +14,7 @@ En Windows también puedes usar `py -3.12 -m http.server 8000 --directory dist`.
 
 ## Experimentar
 
-Las tres mejoras están implementadas: **1. Selección conectada**, **2. Crecimiento animado** y **3. Cuaderno de descubrimientos**. La cabecera las identifica y el enlace **Cuaderno** abre los experimentos guardados.
+Las cuatro mejoras están implementadas: **1. Selección conectada**, **2. Crecimiento animado**, **3. Cuaderno de descubrimientos** y **4. Enlaces compartibles**. La cabecera las identifica y el enlace **Cuaderno** abre los experimentos guardados.
 
 El selector **Apariencia**, en la cabecera, ofrece **Normal** (el diseño claro original), **Oscuro** y **Sistema**. La elección se recuerda en este navegador; Sistema sigue los cambios de apariencia del sistema operativo mientras la página está abierta. Normal es la opción inicial. Si el navegador bloquea el almacenamiento, el selector sigue funcionando durante la sesión de la página. Restablecer el laboratorio conserva la apariencia elegida.
 
@@ -56,6 +56,16 @@ Las entradas se guardan en este navegador, bajo el origen del sitio. No se sincr
 
 Si el navegador bloquea el almacenamiento, se indica **Guardado temporal** y se permite exportar la colección antes de cerrar la pestaña. Un error de espacio no se presenta como un guardado correcto. Los datos dañados se conservan y se ofrece descargar una copia original. Los nombres y textos siempre se muestran con `textContent`.
 
+## Compartir un experimento
+
+Pulsa **Compartir experimento**, debajo de las vistas A/B, y después **Copiar enlace**. También puedes seleccionar y copiar el campo manualmente o abrir **Probar enlace** en otra pestaña.
+
+El enlace guarda una copia del texto y de todos los ajustes que conserva el cuaderno, incluida la selección del inspector y el ritmo. Al abrirlo, el laboratorio recupera esa configuración en pausa; se puede seguir editando o guardarla en el cuaderno. Las fuentes efectivas, el motor del navegador y su versión de Unicode pueden cambiar el renderizado y la segmentación. La apariencia Normal/Oscuro/Sistema sigue siendo una preferencia del visitante.
+
+Es una instantánea: si cambias los ajustes, vuelve a pulsar Compartir experimento para crear otro enlace. Abrir un enlace no añade entradas automáticamente al cuaderno. El texto y los ajustes se incluyen en el propio enlace, por lo que cualquiera que lo reciba puede recuperarlos.
+
+El formato versionado es `#experiment=v1.<JSON en UTF-8 y base64url>`. El fragmento no se envía en la petición HTTP al servidor; no se usa un servicio de acortamiento. Admite el límite habitual de 512 puntos de código, también con emojis, marcas y saltos de línea. Los enlaces se validan completamente antes de aplicar sus ajustes. Si están incompletos, dañados o usan una versión incompatible, aparece un aviso y se conserva el estado actual del laboratorio. Navegar a otros apartados usa los anclajes habituales; el enlace generado permanece en su campo hasta que lo cierres o generes otro.
+
 ## Qué significa cada medida
 
 | Medida | Origen | Limitación |
@@ -89,6 +99,7 @@ npm run check
 ```
 
 Las pruebas comprueban acentos, emojis ZWJ, indicadores regionales, tonos de piel, índices UTF-16, límites sin cortar pares sustitutos, ausencia de Segmenter, cadenas vacías, marcas sin base y metadatos Unicode.
+Las pruebas de enlaces comprueban la reproducción exacta de Unicode y de los ajustes, rutas relativas al sitio, límites, versiones y rechazo de enlaces incompletos o inválidos.
 Las pruebas del cuaderno comprueban la exportación/importación sin alterar Unicode, validación, mezcla de duplicados, capacidad, persistencia, datos dañados y errores de almacenamiento.
 Las pruebas del reproductor usan un reloj controlado para verificar pausas, reanudación, pasos manuales, cambio de velocidad, cancelación de callbacks, límite de 60, repetición y crecimiento de los puntos de código sin dividir el grafema combinante.
 
@@ -109,6 +120,7 @@ El script registra la versión real de `unicodedata`; regenerarlo con otra versi
 - `dist/selection.js` y `dist/selection.css`: selección conectada con rangos DOM, resaltado nativo y recuadros que respetan el recorte.
 - `dist/playback.js` y `dist/playback.css`: reproducción del crecimiento y controles; `tests/playback.test.js` comprueba su temporización.
 - `dist/notebook.js`, `dist/notebook-ui.js` y `dist/notebook.css`: formato JSON validado, persistencia y cuaderno; `tests/notebook.test.js` comprueba la integridad de los datos.
+- `dist/share.js`, `dist/share-ui.js` y `dist/share.css`: enlaces reproducibles con el estado completo y copia manual; `tests/share.test.js` comprueba sus formatos y validación.
 - `dist/theme.js` y `dist/theme.css`: selección de apariencia, preferencia local y paleta oscura.
 - `dist/unicode-names.json`: catálogo local parcial.
 - `dist/fonts/`: fuente Noto Sans y licencia OFL 1.1.

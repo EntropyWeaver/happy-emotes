@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="./selection.css">
   <link rel="stylesheet" href="./playback.css">
   <link rel="stylesheet" href="./notebook.css">
+  <link rel="stylesheet" href="./share.css">
   <script src="./theme.js"></script>
   <script type="module" src="./app.js"></script>
 </head>
@@ -32,7 +33,7 @@
 
   <main>
     <section class="intro" aria-labelledby="page-title">
-      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a></div></div>
+      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a><a href="#share-experiment"><b>✓ 4</b> Enlaces compartibles</a></div></div>
       <div class="intro-stamp" aria-hidden="true"><span>U+034B</span><div>o͋</div><small>pequeño carácter,<br>grandes consecuencias.</small></div>
     </section>
 
@@ -75,6 +76,7 @@
           <div class="stat"><span>Bytes UTF-8 <span class="stat-symbol">01</span></span><strong id="stat-utf8">—</strong><small>Texto codificado</small></div>
         </div>
         <section class="render-panel panel" aria-labelledby="render-title">
+          <div id="shared-notice" class="shared-notice" hidden><span id="shared-notice-text" role="status" aria-live="polite"></span><button id="shared-notice-close" aria-label="Cerrar aviso del enlace" title="Cerrar aviso">×</button></div>
           <div class="render-heading"><div><p class="eyebrow">LA PRUEBA DEL ALGODÓN</p><h2 id="render-title">Mismo texto. Distintas reglas.</h2></div><span class="live-badge"><span class="status-dot"></span> DOM real</span></div>
           <div class="legend"><span><i class="legend-box"></i> Caja del mensaje</span><span><i class="legend-baseline"></i> Línea base</span><span><i class="legend-ink"></i> Tinta estimada · Canvas</span><span><i class="legend-selection"></i> Grafema seleccionado</span></div>
           <div id="spider-player" class="spider-player" role="group" aria-label="Animación del crecimiento de la araña">
@@ -130,7 +132,15 @@
           </div>
           <div class="observation"><span class="observation-icon" aria-hidden="true">⌁</span><p id="observation">El contenido puede pintarse fuera de su caja sin desplazar los mensajes anteriores.</p></div>
           <p class="render-footnote">La tinta visible es texto real del navegador. El recuadro verde sitúa el grafema; no delimita su tinta. La guía naranja estima la tinta con Canvas. El panel completo siempre recorta en su borde.</p>
-          <a id="open-notebook" class="notebook-shortcut" href="#cuaderno">Guardar este experimento en el cuaderno →</a>
+          <div class="experiment-tools"><a id="open-notebook" class="notebook-shortcut" href="#cuaderno">Guardar este experimento en el cuaderno →</a><button id="share-experiment" class="notebook-primary share-trigger" aria-expanded="false" aria-controls="share-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="5" r="3"/><circle cx="18" cy="19" r="3"/><path d="m9 10 6-4M9 14l6 4"/></svg>Compartir experimento</button></div>
+          <div id="share-panel" class="share-panel" hidden>
+            <h3>Un experimento, un enlace</h3>
+            <p id="share-info">El enlace contiene el texto y los ajustes. Quien lo abra podrá recuperarlos; las fuentes y el navegador pueden cambiar el dibujo.</p>
+            <label for="share-url">Enlace de este momento<textarea id="share-url" rows="3" readonly spellcheck="false" aria-describedby="share-info share-snapshot-note"></textarea></label>
+            <div class="share-panel-actions"><button id="share-copy" class="notebook-primary">Copiar enlace</button><a id="share-open" class="notebook-button" target="_blank" rel="noopener noreferrer">Probar enlace ↗</a><button id="share-close" class="notebook-button share-close">Cerrar</button></div>
+            <p id="share-snapshot-note">Si cambias los ajustes, pulsa Compartir experimento para generar otro enlace.</p>
+            <p id="share-status" role="status" aria-live="polite"></p>
+          </div>
         </section>
         <section id="anatomia" class="anatomy-panel panel" aria-labelledby="anatomy-title">
           <div class="anatomy-heading"><div class="section-heading"><span class="step">03</span><h2 id="anatomy-title">Debajo del glifo</h2></div><div class="segmented" role="group" aria-label="Vista del inspector"><button id="tab-graphemes" aria-pressed="true">Grafemas</button><button id="tab-codepoints" aria-pressed="false">Puntos de código</button></div></div>

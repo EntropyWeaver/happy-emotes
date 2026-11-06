@@ -2,6 +2,7 @@ import { PRESETS, MAX_CODEPOINTS, MAX_MARKS, makeSpider, limitText, analyzeText,
 import { createGraphemeSelection } from './selection.js';
 import { createPlayback } from './playback.js';
 import { initNotebook } from './notebook-ui.js';
+import { initShareLinks } from './share-ui.js';
 
 const $ = id => document.getElementById(id);
 const fonts = { noto: '"Noto Lab", sans-serif', sans: 'Arial, sans-serif', serif: '"Times New Roman", serif', mono: '"Courier New", monospace', system: 'system-ui, sans-serif' };
@@ -460,6 +461,7 @@ document.fonts?.addEventListener('loadingdone', scheduleMeasurements);
 setSpecimen(PRESETS.spider.text, { preset: 'spider' });
 $('render-title').tabIndex = -1;
 initNotebook({ capture: captureExperiment, restore: restoreExperiment, pause: () => playback.pause() });
+initShareLinks({ capture: captureExperiment, restore: restoreExperiment });
 fetch('./unicode-names.json').then(response => {
   if (!response.ok) throw new Error('No se pudo cargar el catálogo');
   return response.json();

@@ -1,0 +1,23 @@
+.experiment-tools { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; }
+.experiment-tools .notebook-shortcut { margin-top: 0; }
+.share-trigger { display: inline-flex; align-items: center; gap: 7px; }
+.share-trigger svg { width: 14px; height: 14px; }
+.share-panel { margin-top: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); padding: 16px; }
+.share-panel h3 { font-size: 12px; }
+.share-panel p { font-size: 10px; line-height: 1.7; color: var(--muted); margin-top: 7px; }
+.share-panel label { display: block; font-size: 10px; color: var(--muted); margin-top: 13px; }
+.share-panel textarea { display: block; width: 100%; min-height: 70px; max-height: 150px; resize: vertical; padding: 10px; margin-top: 6px; border: 1px solid var(--line); border-radius: 7px; color: var(--ink); background: var(--paper); font: 10px/1.6 "Cascadia Code", Consolas, monospace; overflow-wrap: anywhere; word-break: break-all; }
+.share-panel-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+.share-panel-actions a { display: inline-flex; align-items: center; text-decoration: none; }
+.share-panel-actions .share-close { margin-left: auto; }
+.share-panel #share-status { color: var(--purple); min-height: 17px; }
+.shared-notice { display: flex; align-items: center; gap: 12px; justify-content: space-between; margin-bottom: 16px; padding: 12px 14px; border: 1px solid var(--selection-border); background: var(--selection-bg); border-radius: 9px; color: var(--selection); font-size: 11px; line-height: 1.7; }
+.shared-notice.share-error { border-color: var(--line); background: var(--purple-light); color: var(--ink); }
+.shared-notice button { flex-shrink: 0; font-size: 18px; padding: 3px 7px; }
+@media (max-width: 600px) {
+  .experiment-tools { align-items: stretch; flex-direction: column; }
+  .share-trigger { justify-content: center; min-height: 40px; }
+  .share-panel { padding: 12px; }
+  .share-panel-actions .share-close { margin-left: 0; }
+  .shared-notice { font-size: 10px; padding: 10px; align-items: start; }
+}
