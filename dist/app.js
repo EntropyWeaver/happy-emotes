@@ -1,4 +1,5 @@
 import { PRESETS, MAX_CODEPOINTS, makeSpider, limitText, analyzeText, displayChar, escapedText, canvasEligible } from './core.js';
+import { createGraphemeSelection } from './selection.js';
 
 const $ = id => document.getElementById(id);
 const fonts = { noto: '"Noto Lab", sans-serif', sans: 'Arial, sans-serif', serif: '"Times New Roman", serif', mono: '"Courier New", monospace', system: 'system-ui, sans-serif' };
@@ -8,6 +9,44 @@ let measureFrame = 0;
 let inputFrame = 0;
 let toastTimer;
 const ctx = document.createElement('canvas').getContext('2d');
+const connectedSelection = createGraphemeSelection(selectGrapheme);
+
+function selectGrapheme(index) {
+  if (!state.analysis.clusters?.[index]) return;
+  state.selected = index;
+  // Keep keyboard focus on the original chip or table button.
+  $('grapheme-list').querySelectorAll('button').forEach((button, i) => {
+    button.setAttribute('aria-pressed', String(i === index));
+  });
+  if (state.inspector === 'graphemes') renderTable();
+  else updateSelectedRows();
+  renderSelectionControls();
+  scheduleMeasurements();
+}
+
+function renderSelectionControls() {
+  const clusters = state.analysis.clusters;
+  const cluster = clusters?.[state.selected];
+  const count = cluster ? Array.from(cluster.text).length : 0;
+  $('selected-preview').textContent = cluster ? (count === 1 ? displayChar(cluster.text) : cluster.text) : '—';
+  $('connected-selection').textContent = cluster
+    ? `Grafema ${state.selected + 1} de ${clusters.length} · ${count} ${count === 1 ? 'punto' : 'puntos'} de código`
+    : clusters === null ? 'Selección de grafemas no disponible' : 'Aún no hay grafemas';
+  $('connected-help').textContent = clusters === null
+    ? 'Este navegador no dispone de segmentación de grafemas.'
+    : !cluster ? 'Escribe un texto o elige un espécimen para empezar.'
+      : 'Pulsa una ficha del inspector o un carácter en A/B.';
+  $('previous-grapheme').disabled = !cluster || state.selected === 0;
+  $('next-grapheme').disabled = !cluster || state.selected === clusters.length - 1;
+}
+
+function updateSelectedRows() {
+  $('codepoint-rows').querySelectorAll('tr[data-cluster]').forEach(row => {
+    const selected = Number(row.dataset.cluster) === state.selected;
+    row.classList.toggle('is-selected', selected);
+    row.querySelector('button')?.setAttribute('aria-pressed', String(selected));
+  });
+}
 
 function toast(message) {
   $('toast').textContent = message;
@@ -71,7 +110,7 @@ function renderInspector() {
   $('inspect-all').hidden = !showClusters;
   $('inspector-help').textContent = !available
     ? 'Este navegador no tiene Intl.Segmenter. Mostramos puntos de código; el número de grafemas no está disponible.'
-    : showClusters ? 'Cada ficha es un grafema. Selecciónalo para inspeccionar los puntos de código que lo forman.' : 'El texto completo, punto por punto. UTF-16 indica el intervalo [inicio, fin) dentro del string de JavaScript.';
+    : showClusters ? 'Cada ficha es un grafema. Selecciónalo: se ilumina en A y B y aquí aparecen sus puntos de código.' : 'El texto completo, punto por punto. Pulsa un carácter para localizar su grafema en A/B; sus filas se marcan en verde. UTF-16 indica el intervalo [inicio, fin) en JavaScript.';
   const fragment = document.createDocumentFragment();
   if (showClusters) {
     for (const [index, cluster] of a.clusters.entries()) {
@@ -79,7 +118,7 @@ function renderInspector() {
       button.className = 'grapheme-chip';
       button.setAttribute('aria-pressed', String(index === state.selected));
       const length = Array.from(cluster.text).length;
-      button.setAttribute('aria-label', `Grafema ${index + 1}, ${length} puntos de código`);
+      button.setAttribute('aria-label', `Grafema ${index + 1}, ${length} ${length === 1 ? 'punto' : 'puntos'} de código`);
       const glyph = document.createElement('bdi');
       glyph.className = 'glyph';
       glyph.dir = 'auto';
@@ -87,34 +126,46 @@ function renderInspector() {
       const counter = document.createElement('small');
       counter.textContent = `${length} cp`;
       button.append(glyph, counter);
-      button.addEventListener('click', () => {
-        state.selected = index;
-        // Preserve the focused button for keyboard navigation.
-        $('grapheme-list').querySelectorAll('button').forEach((b, i) => b.setAttribute('aria-pressed', String(i === index)));
-        renderTable();
+      button.addEventListener('click', () => selectGrapheme(index));
+      button.addEventListener('keydown', event => {
+        const next = { ArrowLeft: index - 1, ArrowRight: index + 1, Home: 0, End: a.clusters.length - 1 }[event.key];
+        if (next === undefined) return;
+        event.preventDefault();
+        const target = Math.max(0, Math.min(a.clusters.length - 1, next));
+        selectGrapheme(target);
+        $('grapheme-list').children[target].focus();
       });
       fragment.append(button);
     }
   }
   $('grapheme-list').replaceChildren(fragment);
   renderTable();
+  renderSelectionControls();
 }
 
 function renderTable() {
   const a = state.analysis;
   const selectedOnly = state.inspector === 'graphemes' && a.clusters !== null;
   const points = selectedOnly ? a.points.filter(p => p.cluster === state.selected) : a.points;
-  $('selection-label').textContent = !a.text ? 'Aún no hay texto para inspeccionar' : selectedOnly ? `Grafema ${state.selected + 1} · ${points.length} puntos de código` : `Texto completo · ${points.length} puntos de código`;
+  const countLabel = `${points.length} ${points.length === 1 ? 'punto' : 'puntos'} de código`;
+  $('selection-label').textContent = !a.text ? 'Aún no hay texto para inspeccionar' : selectedOnly ? `Grafema ${state.selected + 1} · ${countLabel}` : `Texto completo · ${countLabel}`;
   const fragment = document.createDocumentFragment();
   for (const point of points) {
     const row = document.createElement('tr');
+    if (point.cluster !== null) row.dataset.cluster = point.cluster;
     const isMark = point.category.code.startsWith('M');
     row.classList.toggle('is-mark', isMark);
     const glyphCell = document.createElement('td');
-    const glyph = document.createElement('span');
+    const linked = !selectedOnly && point.cluster !== null;
+    const glyph = document.createElement(linked ? 'button' : 'span');
     glyph.className = 'glyph-cell';
     glyph.textContent = displayChar(point.char);
     glyph.title = point.code;
+    if (linked) {
+      glyph.classList.add('codepoint-select');
+      glyph.setAttribute('aria-label', `${point.code}: seleccionar grafema ${point.cluster + 1}`);
+      glyph.addEventListener('click', () => selectGrapheme(point.cluster));
+    }
     glyphCell.append(glyph);
     const codeCell = document.createElement('td');
     codeCell.textContent = point.code;
@@ -142,6 +193,7 @@ function renderTable() {
     fragment.append(row);
   }
   $('codepoint-rows').replaceChildren(fragment);
+  updateSelectedRows();
 }
 
 function renderViews() {
@@ -154,7 +206,8 @@ function renderViews() {
     const overflow = $(`overflow-${view}`).value;
     const message = $(`message-${view}`);
     Object.assign(message.style, { fontFamily: font, fontSize: `${fontSize}px`, lineHeight: `${lineHeight}px`, overflow });
-    $(`sample-${view}`).textContent = state.analysis.text;
+    const sample = $(`sample-${view}`);
+    if (sample.textContent !== state.analysis.text) sample.textContent = state.analysis.text;
     $(`overflow-badge-${view}`).textContent = overflow;
     $(`css-${view}`).textContent = `font-size: ${fontSize}px; line-height: ${lineHeight}px;\noverflow: ${overflow};`;
     $(`layout-${view}`).hidden = !$('show-boxes').checked;
@@ -212,6 +265,7 @@ function measureViews() {
     metric.textContent = `≈ ${Math.round(width)} × ${Math.round(height)} px`;
     metric.title = 'Límites estimados de tinta sin recorte en Canvas; no son una medida del DOM.';
   }
+  connectedSelection.render(state.analysis, state.selected);
 }
 
 function scheduleMeasurements() {
@@ -254,6 +308,8 @@ $('mark-count').addEventListener('input', regenerateSpider);
 $('mark-type').addEventListener('change', regenerateSpider);
 for (const id of ['font-size', 'line-height', 'show-boxes', 'show-ink']) $(id).addEventListener('input', renderViews);
 for (const id of ['font-a', 'font-b', 'overflow-a', 'overflow-b']) $(id).addEventListener('change', renderViews);
+$('previous-grapheme').addEventListener('click', () => selectGrapheme(state.selected - 1));
+$('next-grapheme').addEventListener('click', () => selectGrapheme(state.selected + 1));
 
 $('escaped-toggle').addEventListener('click', () => {
   $('escaped').hidden = !$('escaped').hidden;

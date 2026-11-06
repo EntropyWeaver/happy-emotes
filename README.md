@@ -23,7 +23,8 @@ El selector **Apariencia**, en la cabecera, ofrece **Normal** (el diseño claro 
 5. Activa **Cajas de layout** y **Guía de tinta** para comparar dos mediciones diferentes.
 6. Prueba **Acentos** y aplica NFC/NFD. La forma visual puede conservarse aunque cambie el número de puntos de código.
 7. Prueba **Familia**: `👨‍👩‍👧‍👦` tiene 7 puntos de código, 11 unidades UTF-16 y 25 bytes UTF-8, agrupados en un grafema con la segmentación actual.
-8. Selecciona un grafema para ver sus puntos de código, nombres, categorías e intervalos UTF-16. También puedes inspeccionar el texto completo.
+8. Selecciona una ficha de grafema: se ilumina en **las dos vistas** y el inspector muestra sus puntos de código, nombres, categorías e intervalos UTF-16. También puedes pulsar el texto de A/B o usar los botones **anterior/siguiente**. En las fichas, las flechas y las teclas Inicio/Fin permiten recorrer el texto con el teclado.
+9. Cambia a **Puntos de código** para ver el texto completo. Pulsa un carácter de la tabla para localizar su grafema: todas las filas que lo componen quedan marcadas en verde.
 
 Incluye seis ejemplos, cuatro tipos de hilo, cinco opciones de fuente por vista, control de tamaño y altura de línea, escapes Unicode, copia y restablecimiento. Texto personalizado hasta 512 puntos de código; generador hasta 60 repeticiones. El contenido se inserta como texto con `textContent`, nunca como HTML.
 
@@ -37,9 +38,12 @@ Incluye seis ejemplos, cuatro tipos de hilo, cinco opciones de fuente por vista,
 | Bytes UTF-8 | `TextEncoder` | Tamaño del texto codificado, no del DOM |
 | Caja azul | `getBoundingClientRect()` del bloque del mensaje | Caja de bloque, no contorno de glifos ni caja interna de línea |
 | Línea base | Elemento inline de tamaño cero | Marca la primera línea base |
+| Selección verde | `Range.getClientRects()` con los intervalos UTF-16 de cada grafema | Posición tipográfica, no contorno de tinta; respeta el recorte de cada vista |
 | Guía naranja | `CanvasRenderingContext2D.measureText()` + `actualBoundingBox*` | Estimación sin recorte con Canvas, no medición de píxeles del DOM |
 
 El texto visible de las dos vistas lo dibuja el navegador en elementos DOM. La guía de Canvas puede diferir por composición, sustitución de fuentes y dirección de escritura. Se omite para texto vacío, multilínea, tabuladores y ciertos controles. El panel de pruebas siempre recorta en su propio borde, incluso cuando el mensaje tiene `overflow: visible`.
+
+La selección conserva cada muestra en un único nodo de texto para no alterar la composición de la fuente. Si existe CSS Custom Highlight API, también colorea el rango nativamente; en navegadores sin ella siguen funcionando los recuadros. Espacios y saltos de línea se pueden recorrer desde las fichas o las flechas; los rangos sin ancho reciben un marcador fino. Si un grafema queda completamente fuera del panel, se indica «Grafema fuera de vista». Las ligaduras pueden compartir geometría: para seleccionar sin ambigüedad usa las fichas del inspector. Sin `Intl.Segmenter` se conserva el inspector de puntos de código y se desactiva la selección de grafemas.
 
 Las fuentes del sistema varían entre equipos. Noto Sans se sirve localmente para hacer el primer experimento más reproducible, pero no elimina todas las diferencias de motor o sistema. El resto de escrituras y emojis pueden usar fuentes de sustitución. No se identifica automáticamente la fuente efectiva de cada glifo.
 
@@ -72,6 +76,7 @@ El script registra la versión real de `unicodedata`; regenerarlo con otra versi
 - `dist/styles.css`: diseño adaptable y escenarios de desbordamiento.
 - `dist/core.js`: análisis Unicode puro, reutilizable y probado.
 - `dist/app.js`: controles, inspector y mediciones DOM/Canvas.
+- `dist/selection.js` y `dist/selection.css`: selección conectada con rangos DOM, resaltado nativo y recuadros que respetan el recorte.
 - `dist/theme.js` y `dist/theme.css`: selección de apariencia, preferencia local y paleta oscura.
 - `dist/unicode-names.json`: catálogo local parcial.
 - `dist/fonts/`: fuente Noto Sans y licencia OFL 1.1.
@@ -86,6 +91,8 @@ Todo lo necesario para servir la aplicación está en `dist/`. Se puede desplega
 - [Unicode UAX #29: Text Segmentation](https://www.unicode.org/reports/tr29/)
 - [MDN: Intl.Segmenter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
 - [MDN: TextMetrics](https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics)
+- [MDN: CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API)
+- [MDN: Range.getClientRects](https://developer.mozilla.org/en-US/docs/Web/API/Range/getClientRects)
 - [Noto Sans y licencia](https://github.com/notofonts/latin-greek-cyrillic)
 
 Noto Sans se redistribuye bajo SIL Open Font License 1.1. Se ha convertido de TTF a WOFF conservando los glifos y las tablas de composición; su licencia está en `dist/fonts/OFL.txt`.
