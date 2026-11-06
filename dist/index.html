@@ -8,6 +8,8 @@
   <title>Happy Emotes — Laboratorio Unicode</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./theme.css">
+  <script src="./theme.js"></script>
   <script type="module" src="./app.js"></script>
 </head>
 <body>
@@ -15,7 +17,14 @@
   <header class="topbar">
     <a class="brand" href="#" aria-label="Happy Emotes, inicio"><span class="brand-icon" aria-hidden="true">a<span>͋</span></span><span>happy<span class="brand-light">emotes</span><small>UNICODE PLAYGROUND</small></span></a>
     <nav aria-label="Navegación principal"><a href="#laboratorio" class="nav-active">Laboratorio</a><a href="#anatomia">Anatomía</a><a href="#como-funciona">Cómo funciona</a></nav>
-    <a class="repo-link" href="https://github.com/EntropyWeaver/happy-emotes" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-14-2 18"/></svg><span>GitHub</span><span aria-hidden="true">↗</span></a>
+    <div class="topbar-actions">
+      <label class="theme-picker" title="Elige el aspecto del laboratorio">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor" stroke="none"/></svg>
+        <span class="visually-hidden">Apariencia</span>
+        <select id="theme" aria-label="Apariencia"><option value="light">Normal</option><option value="dark">Oscuro</option><option value="system">Sistema</option></select>
+      </label>
+      <a class="repo-link" href="https://github.com/EntropyWeaver/happy-emotes" target="_blank" rel="noopener noreferrer" aria-label="Ver happy-emotes en GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-14-2 18"/></svg><span>GitHub</span><span aria-hidden="true">↗</span></a>
+    </div>
   </header>
 
   <main>

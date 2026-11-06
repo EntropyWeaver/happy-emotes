@@ -1,0 +1,135 @@
+/* Appearance is independent of the specimen and its rendering settings. */
+:root { color-scheme: light; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121019;
+  --paper: #1c1926;
+  --ink: #eee8f7;
+  --muted: #aaa0ba;
+  --line: #332d43;
+  --purple: #b397ff;
+  --purple-light: #302342;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.topbar-actions { display: flex; align-items: center; gap: 12px; }
+.theme-picker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--muted);
+}
+.theme-picker svg { width: 16px; height: 16px; flex-shrink: 0; }
+.theme-picker select {
+  width: 83px;
+  padding: 6px 2px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 11px;
+}
+
+/* Keep the original light palette intact; soften it into plum and lavender. */
+[data-theme="dark"] .topbar,
+[data-theme="dark"] .stat,
+[data-theme="dark"] .concepts article,
+[data-theme="dark"] .methodology,
+[data-theme="dark"] .subtle-button,
+[data-theme="dark"] .skip-link { background: var(--paper); }
+[data-theme="dark"] .brand-icon { background: #8060da; }
+[data-theme="dark"] .brand small,
+[data-theme="dark"] .intro-stamp,
+[data-theme="dark"] .label-row .mono,
+[data-theme="dark"] .hint,
+[data-theme="dark"] .text-button,
+[data-theme="dark"] .range-labels,
+[data-theme="dark"] .select-label,
+[data-theme="dark"] .switch-row small,
+[data-theme="dark"] .local-note,
+[data-theme="dark"] .stat > span,
+[data-theme="dark"] .stat small,
+[data-theme="dark"] .stat-symbol,
+[data-theme="dark"] .render-heading .eyebrow,
+[data-theme="dark"] .legend,
+[data-theme="dark"] .view-settings label,
+[data-theme="dark"] .view-readout,
+[data-theme="dark"] .render-footnote,
+[data-theme="dark"] .inspector-summary,
+[data-theme="dark"] .normalization p,
+[data-theme="dark"] .empty-state,
+[data-theme="dark"] .explanation-heading .eyebrow,
+[data-theme="dark"] .explanation-heading > p:last-child,
+[data-theme="dark"] .concept-number,
+[data-theme="dark"] .concepts p,
+[data-theme="dark"] .methodology,
+[data-theme="dark"] footer { color: var(--muted); }
+[data-theme="dark"] .text-button:hover { color: var(--purple); }
+[data-theme="dark"] .preset { background: #241e31; border-color: #3b324d; }
+[data-theme="dark"] .preset.active {
+  background: var(--purple-light);
+  border-color: #8763c4;
+  color: #d7c4ff;
+}
+[data-theme="dark"] textarea { background: #16121f; border-color: #4b3b61; }
+[data-theme="dark"] textarea:focus { border-color: var(--purple); }
+[data-theme="dark"] select { background: #241e31; border-color: #493b59; color: #ded2ec; }
+[data-theme="dark"] .theme-picker select { background: transparent; color: var(--ink); }
+[data-theme="dark"] .notice { color: #efbb8c; }
+[data-theme="dark"] .escape-box { background: #282032; color: #d5c2ed; }
+[data-theme="dark"] .switch { background: #4c405d; }
+[data-theme="dark"] .live-badge { background: #1d3029; border-color: #304b3e; color: #9ad3b3; }
+[data-theme="dark"] .view-letter.secondary { background: #243247; color: #acc6e8; }
+[data-theme="dark"] .mode-badge { background: #282032; border-color: #40334f; color: #c0afd3; }
+[data-theme="dark"] .view-readout strong { color: #d4c2e9; }
+[data-theme="dark"] .css-snippet { background: #16121f; border-color: var(--line); color: #bba6d4; }
+[data-theme="dark"] .observation { background: #292035; border-color: #443256; }
+[data-theme="dark"] .observation p { color: #cab7e1; }
+[data-theme="dark"] .observation-icon { color: #bfa0ed; }
+[data-theme="dark"] .segmented { background: #15111e; }
+[data-theme="dark"] .segmented button { color: #b9a8cc; }
+[data-theme="dark"] .segmented button[aria-pressed="true"] { background: #3a2c4b; color: #eadbff; }
+[data-theme="dark"] .grapheme-chip { background: #241e31; border-color: #40324f; }
+[data-theme="dark"] .grapheme-chip small { color: #bbabc9; }
+[data-theme="dark"] .grapheme-chip[aria-pressed="true"] { background: #39264d; border-color: #9874cb; }
+[data-theme="dark"] .grapheme-chip:hover { background: #352541; }
+[data-theme="dark"] th { background: #292132; color: #c5b6d4; }
+[data-theme="dark"] td { border-color: #342a42; color: #c3b1d5; }
+[data-theme="dark"] td:nth-child(2) { color: #c2a5f4; }
+[data-theme="dark"] td:last-child { color: #b9a9ca; }
+[data-theme="dark"] tr.is-mark { background: #241c2e; }
+[data-theme="dark"] .category-tag { background: #3e2d23; border-color: #5b4130; color: #e7bf94; }
+[data-theme="dark"] .category-tag.neutral { background: #2a2c3f; border-color: #3f435d; color: #b9bfdc; }
+[data-theme="dark"] .subtle-button { border-color: #554165; color: #cdb1e9; }
+[data-theme="dark"] .subtle-button:hover { background: var(--purple-light); }
+[data-theme="dark"] .concept-example { color: #b69bdc; }
+[data-theme="dark"] footer strong { color: #c4b0da; }
+[data-theme="dark"] .toast { background: #e4d4ff; color: #291e38; }
+[data-theme="dark"] .no-script { background: #121019f5; }
+
+@media (max-width: 1000px) {
+  .topbar nav { gap: 16px; }
+  .topbar-actions { gap: 8px; }
+}
+@media (max-width: 600px) {
+  .topbar { height: auto; min-height: 67px; flex-wrap: wrap; gap: 10px; padding-top: 10px; padding-bottom: 10px; }
+  .topbar-actions { margin-left: auto; gap: 7px; }
+  .theme-picker { padding: 5px 7px; gap: 5px; }
+  .theme-picker select { width: 74px; font-size: 10px; }
+  .topbar-actions .repo-link span { display: none; }
+  .topbar-actions .repo-link { padding: 8px; }
+  .topbar-actions .repo-link svg { width: 18px; height: 18px; }
+}

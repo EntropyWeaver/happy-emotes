@@ -14,6 +14,8 @@ En Windows también puedes usar `py -3.12 -m http.server 8000 --directory dist`.
 
 ## Experimentar
 
+El selector **Apariencia**, en la cabecera, ofrece **Normal** (el diseño claro original), **Oscuro** y **Sistema**. La elección se recuerda en este navegador; Sistema sigue los cambios de apariencia del sistema operativo mientras la página está abierta. Normal es la opción inicial. Si el navegador bloquea el almacenamiento, el selector sigue funcionando durante la sesión de la página. Restablecer el laboratorio conserva la apariencia elegida.
+
 1. Abre **La araña**. Las dos vistas usan el mismo texto y Noto Sans, incluida en el proyecto.
 2. Mueve **Longitud del hilo**: aumenta el número de marcas combinantes mientras los grafemas pueden seguir siendo los mismos.
 3. Compara `overflow: visible` en A con `overflow: clip` en B. La tinta se dibuja en el DOM real; no es una telaraña simulada con CSS.
@@ -70,12 +72,13 @@ El script registra la versión real de `unicodedata`; regenerarlo con otra versi
 - `dist/styles.css`: diseño adaptable y escenarios de desbordamiento.
 - `dist/core.js`: análisis Unicode puro, reutilizable y probado.
 - `dist/app.js`: controles, inspector y mediciones DOM/Canvas.
+- `dist/theme.js` y `dist/theme.css`: selección de apariencia, preferencia local y paleta oscura.
 - `dist/unicode-names.json`: catálogo local parcial.
 - `dist/fonts/`: fuente Noto Sans y licencia OFL 1.1.
 - `tests/core.test.js`: pruebas de análisis.
 - `scripts/generate-unicode-catalog.py`: generación reproducible del catálogo.
 
-Todo lo necesario para servir la aplicación está en `dist/`. Se puede desplegar como sitio estático bajo una ruta raíz o subdirectorio; los recursos usan rutas relativas. El archivo `.openai/hosting.json` vincula la copia privada alojada y no es necesario para ejecutarla localmente. No hay analítica, peticiones a terceros, almacenamiento de texto ni claves.
+Todo lo necesario para servir la aplicación está en `dist/`. Se puede desplegar como sitio estático bajo una ruta raíz o subdirectorio; los recursos usan rutas relativas. El archivo `.openai/hosting.json` vincula la copia alojada y no es necesario para ejecutarla localmente. No hay analítica, peticiones a terceros, almacenamiento de texto ni claves. Solo se guarda la preferencia de apariencia en `localStorage`.
 
 ## Referencias
 
