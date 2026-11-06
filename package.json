@@ -1,0 +1,13 @@
+{
+  "name": "happy-emotes",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Laboratorio de Unicode, grafemas y desbordamiento tipográfico.",
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check dist/app.js && node --check dist/core.js",
+    "serve": "python -m http.server 8000 --directory dist"
+  },
+  "engines": { "node": ">=20" }
+}

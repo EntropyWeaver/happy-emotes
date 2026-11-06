@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Abre el texto por dentro: experimenta con Unicode, grafemas, fuentes y el desbordamiento real de los glifos.">
+  <meta name="theme-color" content="#f7f7fb">
+  <title>Happy Emotes — Laboratorio Unicode</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#laboratorio">Saltar al laboratorio</a>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Happy Emotes, inicio"><span class="brand-icon" aria-hidden="true">a<span>͋</span></span><span>happy<span class="brand-light">emotes</span><small>UNICODE PLAYGROUND</small></span></a>
+    <nav aria-label="Navegación principal"><a href="#laboratorio" class="nav-active">Laboratorio</a><a href="#anatomia">Anatomía</a><a href="#como-funciona">Cómo funciona</a></nav>
+    <a class="repo-link" href="https://github.com/EntropyWeaver/happy-emotes" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-14-2 18"/></svg><span>GitHub</span><span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p></div>
+      <div class="intro-stamp" aria-hidden="true"><span>U+034B</span><div>o͋</div><small>pequeño carácter,<br>grandes consecuencias.</small></div>
+    </section>
+
+    <section id="laboratorio" class="lab-grid" aria-label="Laboratorio interactivo">
+      <aside class="control-panel panel">
+        <div class="section-heading"><span class="step">01</span><h2>Tu espécimen</h2><button id="reset" class="icon-button" title="Restablecer laboratorio" aria-label="Restablecer laboratorio">↺</button></div>
+        <p class="muted small">Empieza con uno de nuestros sospechosos.</p>
+        <div class="presets" aria-label="Ejemplos de texto">
+          <button data-preset="spider" class="preset active" aria-pressed="true">🕷 La araña</button><button data-preset="accent" class="preset" aria-pressed="false">á Acentos</button><button data-preset="family" class="preset" aria-pressed="false">👨‍👩‍👧‍👦 Familia</button><button data-preset="flags" class="preset" aria-pressed="false">🇪🇸 Banderas</button><button data-preset="skin" class="preset" aria-pressed="false">👋🏽 Tono de piel</button><button data-preset="scripts" class="preset" aria-pressed="false">अ Escrituras</button>
+        </div>
+        <div class="label-row"><label for="specimen">Texto para explorar</label><span id="input-count" class="mono"></span></div>
+        <textarea id="specimen" rows="3" spellcheck="false" autocomplete="off" aria-describedby="input-help input-notice" dir="auto"></textarea>
+        <div class="input-actions"><button id="copy" class="text-button">Copiar texto <span aria-hidden="true">⧉</span></button><button id="escaped-toggle" class="text-button" aria-expanded="false" aria-controls="escaped">Ver escapes</button></div>
+        <code id="escaped" class="escape-box" hidden></code>
+        <p id="input-help" class="hint">Una base, muchas marcas. Cambia la fuente y mira hasta dónde llega el hilo.</p>
+        <p id="input-notice" class="notice" role="status"></p>
+        <div id="spider-controls" class="control-group">
+          <div class="label-row"><label for="mark-count">Longitud del hilo</label><output id="mark-count-value" for="mark-count" class="value-pill">12 marcas</output></div>
+          <input id="mark-count" type="range" min="0" max="60" step="1" value="12">
+          <div class="range-labels"><span>Discreta</span><span>Arácnido interdimensional</span></div>
+          <label for="mark-type" class="select-label">Carácter del hilo</label>
+          <select id="mark-type"><option value="homothetic">◌͋ · U+034B · Homothetic above</option><option value="acute">◌́ · U+0301 · Acento agudo</option><option value="below">◌̣ · U+0323 · Punto inferior</option><option value="arabic">ﱞ · U+FC5E · Ligadura árabe</option></select>
+          <p id="mark-note" class="micro muted">Su altura depende de la fuente y del motor tipográfico.</p>
+        </div>
+        <div class="control-group">
+          <div class="section-heading compact"><span class="step">02</span><h2>El microscopio</h2></div>
+          <div class="label-row"><label for="font-size">Tamaño de fuente</label><output id="font-size-value" for="font-size" class="mono">28 px</output></div><input id="font-size" type="range" min="14" max="48" value="28">
+          <div class="label-row"><label for="line-height">Altura de línea</label><output id="line-height-value" for="line-height" class="mono">36 px</output></div><input id="line-height" type="range" min="16" max="80" value="36">
+          <label class="switch-row"><span><strong>Cajas de layout</strong><small>El espacio reservado por el DOM</small></span><input id="show-boxes" type="checkbox" checked role="switch"><span class="switch" aria-hidden="true"></span></label>
+          <label class="switch-row"><span><strong>Guía de tinta</strong><small>Estimación con Canvas, sin recorte</small></span><input id="show-ink" type="checkbox" role="switch"><span class="switch" aria-hidden="true"></span></label>
+        </div>
+        <div class="local-note"><span class="status-dot"></span><span>Todo se procesa en tu navegador.<br>Sin cuentas, servidores de análisis ni API.</span></div>
+      </aside>
+
+      <div class="workbench">
+        <div class="stats" aria-label="Medidas del texto">
+          <div class="stat"><span>Puntos de código <span class="stat-symbol">U+</span></span><strong id="stat-codepoints">—</strong><small>Valores Unicode</small></div>
+          <div class="stat"><span>Grafemas <span class="stat-symbol">a͋</span></span><strong id="stat-graphemes">—</strong><small>Clústeres percibidos</small></div>
+          <div class="stat"><span>Unidades UTF-16 <span class="stat-symbol">{ }</span></span><strong id="stat-utf16">—</strong><small>Lo que cuenta JS .length</small></div>
+          <div class="stat"><span>Bytes UTF-8 <span class="stat-symbol">01</span></span><strong id="stat-utf8">—</strong><small>Texto codificado</small></div>
+        </div>
+        <section class="render-panel panel" aria-labelledby="render-title">
+          <div class="render-heading"><div><p class="eyebrow">LA PRUEBA DEL ALGODÓN</p><h2 id="render-title">Mismo texto. Distintas reglas.</h2></div><span class="live-badge"><span class="status-dot"></span> DOM real</span></div>
+          <div class="legend"><span><i class="legend-box"></i> Caja del mensaje</span><span><i class="legend-baseline"></i> Línea base</span><span><i class="legend-ink"></i> Tinta estimada · Canvas</span></div>
+          <div class="comparison">
+            <article class="render-card" data-view="a">
+              <div class="view-title"><span class="view-letter">A</span><h3>Deja que escape</h3><span id="overflow-badge-a" class="mode-badge">visible</span></div>
+              <div class="view-settings"><label>Fuente<select id="font-a"><option value="noto">Noto Sans · incluida</option><option value="sans">Arial / sans-serif</option><option value="serif">Times / serif</option><option value="mono">Courier / monospace</option><option value="system">Sistema</option></select></label><label>Overflow<select id="overflow-a"><option value="visible">visible</option><option value="clip">clip</option><option value="hidden">hidden</option></select></label></div>
+              <div class="stage" id="stage-a" aria-label="Vista A: renderizado del texto">
+                <div class="stage-tag"><span></span> CHAT DE PRUEBAS</div>
+                <div class="chat-message"><span class="chat-user purple">pixel_ghost</span><span>todo bajo control</span></div>
+                <div class="chat-message"><span class="chat-user green">nullpointer</span><span>¿eso se está moviendo?</span></div>
+                <div class="chat-message"><span class="chat-user amber">hob_enjoyer</span><span>nice run ✨</span></div>
+                <div class="specimen-message" id="message-a"><span class="baseline-anchor" aria-hidden="true"></span><bdi class="sample" id="sample-a" dir="auto"></bdi></div>
+                <div class="sample-caption"><span class="chat-user purple">tú</span><span>acabas de enviar un espécimen</span></div>
+                <div class="stage-overlays" aria-hidden="true"><div class="layout-outline" id="layout-a"></div><div class="baseline-guide" id="baseline-a"></div><div class="ink-outline" id="ink-a" hidden></div></div>
+              </div>
+              <div class="view-readout"><span>Caja <strong id="box-metric-a">—</strong></span><span>Tinta Canvas <strong id="ink-metric-a">—</strong></span></div>
+              <code class="css-snippet" id="css-a"></code>
+            </article>
+            <article class="render-card" data-view="b">
+              <div class="view-title"><span class="view-letter secondary">B</span><h3>Ponle un límite</h3><span id="overflow-badge-b" class="mode-badge">clip</span></div>
+              <div class="view-settings"><label>Fuente<select id="font-b"><option value="noto">Noto Sans · incluida</option><option value="sans">Arial / sans-serif</option><option value="serif">Times / serif</option><option value="mono">Courier / monospace</option><option value="system">Sistema</option></select></label><label>Overflow<select id="overflow-b"><option value="visible">visible</option><option value="clip" selected>clip</option><option value="hidden">hidden</option></select></label></div>
+              <div class="stage" id="stage-b" aria-label="Vista B: renderizado del texto">
+                <div class="stage-tag"><span></span> CHAT DE PRUEBAS</div>
+                <div class="chat-message"><span class="chat-user purple">pixel_ghost</span><span>todo bajo control</span></div>
+                <div class="chat-message"><span class="chat-user green">nullpointer</span><span>¿eso se está moviendo?</span></div>
+                <div class="chat-message"><span class="chat-user amber">hob_enjoyer</span><span>nice run ✨</span></div>
+                <div class="specimen-message" id="message-b"><span class="baseline-anchor" aria-hidden="true"></span><bdi class="sample" id="sample-b" dir="auto"></bdi></div>
+                <div class="sample-caption"><span class="chat-user purple">tú</span><span>acabas de enviar un espécimen</span></div>
+                <div class="stage-overlays" aria-hidden="true"><div class="layout-outline" id="layout-b"></div><div class="baseline-guide" id="baseline-b"></div><div class="ink-outline" id="ink-b" hidden></div></div>
+              </div>
+              <div class="view-readout"><span>Caja <strong id="box-metric-b">—</strong></span><span>Tinta Canvas <strong id="ink-metric-b">—</strong></span></div>
+              <code class="css-snippet" id="css-b"></code>
+            </article>
+          </div>
+          <div class="observation"><span class="observation-icon" aria-hidden="true">⌁</span><p id="observation">El contenido puede pintarse fuera de su caja sin desplazar los mensajes anteriores.</p></div>
+          <p class="render-footnote">La tinta visible es texto real del navegador. La guía naranja es una estimación de Canvas, no una medición de píxeles del DOM. El panel completo siempre recorta en su borde.</p>
+        </section>
+        <section id="anatomia" class="anatomy-panel panel" aria-labelledby="anatomy-title">
+          <div class="anatomy-heading"><div class="section-heading"><span class="step">03</span><h2 id="anatomy-title">Debajo del glifo</h2></div><div class="segmented" role="group" aria-label="Vista del inspector"><button id="tab-graphemes" aria-pressed="true">Grafemas</button><button id="tab-codepoints" aria-pressed="false">Puntos de código</button></div></div>
+          <p id="inspector-help" class="muted small">Cada ficha es un grafema. Selecciónalo para inspeccionar los puntos de código que lo forman.</p>
+          <div id="grapheme-list" class="grapheme-list" aria-label="Grafemas del texto"></div>
+          <div class="inspector-summary"><span id="selection-label">Selecciona un grafema</span><button id="inspect-all" class="text-button">Ver todos los puntos →</button></div>
+          <div class="table-scroll"><table><thead><tr><th scope="col">Carácter</th><th scope="col">Punto de código</th><th scope="col">Nombre Unicode</th><th scope="col">Categoría</th><th scope="col">UTF-16</th></tr></thead><tbody id="codepoint-rows"></tbody></table></div>
+          <div class="normalization"><div><strong>¿Se puede escribir igual de otra manera?</strong><p id="normalization-info">Compara las formas compuesta y descompuesta.</p></div><div><button id="normalize-nfc" class="subtle-button" title="Aplicar composición canónica">Aplicar NFC</button><button id="normalize-nfd" class="subtle-button" title="Aplicar descomposición canónica">Aplicar NFD</button></div></div>
+          <p id="catalog-note" class="micro muted catalog-note">Los nombres se consultan en un catálogo local; la segmentación depende de tu navegador.</p>
+        </section>
+      </div>
+    </section>
+
+    <section id="como-funciona" class="explanation" aria-labelledby="explanation-title">
+      <div class="explanation-heading"><p class="eyebrow">LA INFORMÁTICA DETRÁS DE LA ARAÑA</p><h2 id="explanation-title">Tres cosas que parecen una.</h2><p>Un carácter, un grafema y un glifo viven en capas distintas.</p></div>
+      <div class="concepts"><article><span class="concept-number">01 / DATOS</span><div class="concept-example mono">U+0061 + U+0301</div><h3>Puntos de código</h3><p>Los valores que componen el texto. Una «a» y su acento combinante son dos puntos de código.</p></article><article><span class="concept-number">02 / AGRUPACIÓN</span><div class="concept-example">[ á ]</div><h3>Grafemas</h3><p>Los clústeres que solemos percibir como caracteres. Esa letra con acento forma un solo grafema.</p></article><article><span class="concept-number">03 / DIBUJO</span><div class="concept-example ink-example">á<span></span></div><h3>Glifos y tinta</h3><p>Las formas que pinta la fuente. Su tinta puede salir de la caja; contar grafemas no cuenta glifos.</p></article></div>
+      <details class="methodology"><summary>Qué estamos midiendo, exactamente <span aria-hidden="true">+</span></summary><div><p><strong>Layout:</strong> el rectángulo azul es la caja de bloque del mensaje, medida con <code>getBoundingClientRect()</code>. No es el contorno de los glifos ni la caja de línea interna. La guía horizontal marca la primera línea base con un elemento inline de tamaño cero.</p><p><strong>Tinta:</strong> los glifos se dibujan en el DOM, con la fuente y el <code>overflow</code> elegidos. La guía naranja usa <code>measureText()</code> y <code>actualBoundingBox*</code> de Canvas para estimar los límites antes del recorte. Canvas y el DOM pueden diferir; no se dibuja esta guía para saltos de línea, tabuladores o controles incompatibles.</p><p><strong>Grafemas:</strong> se calculan con <code>Intl.Segmenter</code>, según la versión Unicode del navegador. Si falta esta API se indica que la medida no está disponible; no se sustituyen grafemas por puntos de código.</p><p><strong>Fuentes:</strong> los nombres son familias solicitadas, no una identificación de cada fuente usada. El navegador puede usar fuentes de sustitución. El número de marcas no garantiza una altura.</p><p><strong>Normalización:</strong> NFC compone y NFD descompone canónicamente. Ninguna elimina por sí sola todas las marcas repetidas. U+FC5E es una ligadura de presentación árabe (categoría Lo), no una marca Mn; se incluye para comparar el espécimen original.</p><p>Lecturas: <a href="https://www.w3.org/TR/css-overflow-3/#ink-overflow" target="_blank" rel="noopener noreferrer">CSS Ink Overflow ↗</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter" target="_blank" rel="noopener noreferrer">Intl.Segmenter ↗</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics" target="_blank" rel="noopener noreferrer">TextMetrics ↗</a> · <a href="https://www.unicode.org/reports/tr29/" target="_blank" rel="noopener noreferrer">Unicode UAX #29 ↗</a></p></div></details>
+    </section>
+  </main>
+  <footer><span><strong>happyemotes</strong> · Hecho de curiosidad y Unicode.</span><span>De una araña en un chat a abrir el navegador por dentro. 🕷</span></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript><div class="no-script">Este laboratorio necesita JavaScript para analizar y renderizar los experimentos.</div></noscript>
+</body>
+</html>
