@@ -28,6 +28,18 @@ El selector **Apariencia**, en la cabecera, ofrece **Normal** (el diseño claro 
 
 Incluye seis ejemplos, cuatro tipos de hilo, cinco opciones de fuente por vista, control de tamaño y altura de línea, escapes Unicode, copia y restablecimiento. Texto personalizado hasta 512 puntos de código; generador hasta 60 repeticiones. El contenido se inserta como texto con `textContent`, nunca como HTML.
 
+### La araña, paso a paso
+
+Con **La araña** seleccionada, el reproductor aparece junto a las vistas A/B:
+
+- **Reproducir / Pausar** incorpora un punto de código por paso, desde la longitud actual hasta 60. Al terminar, **Repetir** comienza de nuevo desde cero.
+- **Desde cero** deja la araña sin incorporaciones y en pausa. **+1 marca** pausa y añade exactamente una; con U+FC5E el control indica **+1 ligadura**.
+- **Ritmo** ofrece 1, 2 o 4 incorporaciones por segundo. No hay reproducción automática al abrir la página ni bucle al alcanzar el límite.
+- El texto, los contadores, el inspector, las dos vistas y sus guías se actualizan juntos. Se conserva el grafema seleccionado mientras siga existiendo.
+- Editar el texto, cambiar de espécimen, mover la longitud, cambiar el tipo de hilo, normalizar, seleccionar un grafema o entrar con el foco en el inspector pausa la animación. Cambiar de pestaña también la pausa; hay que pulsar Reproducir para continuar. Las fuentes, la altura de línea y el recorte se pueden modificar durante la reproducción.
+
+Para observar el desbordamiento desde su origen: pulsa **Desde cero**, elige **Lento** y pulsa **Reproducir**. Con las marcas combinantes aumentan los puntos de código mientras el hilo sigue dentro de un solo grafema; U+FC5E es una ligadura y puede producir otra segmentación. La tinta depende de la fuente, no de una animación de altura simulada.
+
 ## Qué significa cada medida
 
 | Medida | Origen | Limitación |
@@ -61,6 +73,7 @@ npm run check
 ```
 
 Las pruebas comprueban acentos, emojis ZWJ, indicadores regionales, tonos de piel, índices UTF-16, límites sin cortar pares sustitutos, ausencia de Segmenter, cadenas vacías, marcas sin base y metadatos Unicode.
+Las pruebas del reproductor usan un reloj controlado para verificar pausas, reanudación, pasos manuales, cambio de velocidad, cancelación de callbacks, límite de 60, repetición y crecimiento de los puntos de código sin dividir el grafema combinante.
 
 Para regenerar el catálogo:
 
@@ -77,6 +90,7 @@ El script registra la versión real de `unicodedata`; regenerarlo con otra versi
 - `dist/core.js`: análisis Unicode puro, reutilizable y probado.
 - `dist/app.js`: controles, inspector y mediciones DOM/Canvas.
 - `dist/selection.js` y `dist/selection.css`: selección conectada con rangos DOM, resaltado nativo y recuadros que respetan el recorte.
+- `dist/playback.js` y `dist/playback.css`: reproducción del crecimiento y controles; `tests/playback.test.js` comprueba su temporización.
 - `dist/theme.js` y `dist/theme.css`: selección de apariencia, preferencia local y paleta oscura.
 - `dist/unicode-names.json`: catálogo local parcial.
 - `dist/fonts/`: fuente Noto Sans y licencia OFL 1.1.

@@ -1,5 +1,6 @@
-import { PRESETS, MAX_CODEPOINTS, makeSpider, limitText, analyzeText, displayChar, escapedText, canvasEligible } from './core.js';
+import { PRESETS, MAX_CODEPOINTS, MAX_MARKS, makeSpider, limitText, analyzeText, displayChar, escapedText, canvasEligible } from './core.js';
 import { createGraphemeSelection } from './selection.js';
+import { createPlayback } from './playback.js';
 
 const $ = id => document.getElementById(id);
 const fonts = { noto: '"Noto Lab", sans-serif', sans: 'Arial, sans-serif', serif: '"Times New Roman", serif', mono: '"Courier New", monospace', system: 'system-ui, sans-serif' };
@@ -10,9 +11,43 @@ let inputFrame = 0;
 let toastTimer;
 const ctx = document.createElement('canvas').getContext('2d');
 const connectedSelection = createGraphemeSelection(selectGrapheme);
+let announcedPlaybackPhase = '';
+const playback = createPlayback({
+  getCount: () => Number($('mark-count').value),
+  setCount: count => {
+    $('mark-count').value = count;
+    regenerateSpider({ animated: true });
+  },
+  getDelay: () => Number($('player-speed').value),
+  maximum: MAX_MARKS,
+  onChange: renderPlaybackControls,
+});
+
+function renderPlaybackControls() {
+  const count = Number($('mark-count').value);
+  const atEnd = count >= MAX_MARKS;
+  const noun = $('mark-type').value === 'arabic' ? 'ligaduras' : 'marcas';
+  const phase = playback.playing ? 'Reproduciendo' : atEnd ? 'Completado' : 'En pausa';
+  $('player-status').textContent = `${phase} · ${count} de ${MAX_MARKS} ${noun}`;
+  $('player-progress').value = count;
+  $('player-progress').setAttribute('aria-valuetext', `${count} de ${MAX_MARKS} ${noun}`);
+  $('player-label').textContent = playback.playing ? 'Pausar' : atEnd ? 'Repetir' : 'Reproducir';
+  $('player-icon').textContent = playback.playing ? 'Ⅱ' : '▶';
+  $('player-step').disabled = atEnd;
+  $('player-rewind').disabled = count === 0 && !playback.playing;
+  $('player-step-label').textContent = noun === 'ligaduras' ? 'ligadura' : 'marca';
+  // Announce transport changes, not a stream of counts several times a second.
+  $('connected-selection').setAttribute('aria-live', playback.playing ? 'off' : 'polite');
+  $('mark-count-value').setAttribute('aria-live', playback.playing ? 'off' : 'polite');
+  if (phase !== announcedPlaybackPhase) {
+    $('player-announcement').textContent = `${phase}. ${count} ${noun}.`;
+    announcedPlaybackPhase = phase;
+  }
+}
 
 function selectGrapheme(index) {
   if (!state.analysis.clusters?.[index]) return;
+  playback.pause();
   state.selected = index;
   // Keep keyboard focus on the original chip or table button.
   $('grapheme-list').querySelectorAll('button').forEach((button, i) => {
@@ -62,9 +97,11 @@ function updatePresetButtons() {
     button.setAttribute('aria-pressed', String(active));
   });
   $('spider-controls').hidden = state.preset !== 'spider';
+  $('spider-player').hidden = state.preset !== 'spider';
 }
 
-function setSpecimen(text, { preset = null, notice = '' } = {}) {
+function setSpecimen(text, { preset = null, notice = '', animated = false } = {}) {
+  if (!animated) playback.pause();
   cancelAnimationFrame(inputFrame);
   const limited = limitText(text);
   $('specimen').value = limited.text;
@@ -72,7 +109,8 @@ function setSpecimen(text, { preset = null, notice = '' } = {}) {
   state.preset = preset;
   $('input-help').textContent = PRESETS[preset]?.hint ?? 'Tu texto, tal cual. Explora sus grafemas y prueba distintas reglas de renderizado.';
   updatePresetButtons();
-  updateAnalysis(true);
+  updateAnalysis(!animated);
+  renderPlaybackControls();
 }
 
 function updateAnalysis(selectInteresting = false) {
@@ -273,7 +311,7 @@ function scheduleMeasurements() {
   measureFrame = requestAnimationFrame(measureViews);
 }
 
-function regenerateSpider() {
+function regenerateSpider({ animated = false } = {}) {
   const count = Number($('mark-count').value);
   $('mark-count-value').value = `${count} marcas`;
   const type = $('mark-type').value;
@@ -281,7 +319,7 @@ function regenerateSpider() {
   $('mark-note').textContent = type === 'arabic'
     ? 'U+FC5E es una ligadura árabe (Lo), no una marca Mn. Su composición depende de la fuente.'
     : 'Su altura depende de la fuente y del motor tipográfico.';
-  setSpecimen(makeSpider(count, marks[type]), { preset: 'spider' });
+  setSpecimen(makeSpider(count, marks[type]), { preset: 'spider', animated });
 }
 
 document.querySelectorAll('[data-preset]').forEach(button => button.addEventListener('click', () => {
@@ -291,6 +329,7 @@ document.querySelectorAll('[data-preset]').forEach(button => button.addEventList
 }));
 
 $('specimen').addEventListener('input', event => {
+  playback.pause();
   if (event.isComposing) return;
   cancelAnimationFrame(inputFrame);
   inputFrame = requestAnimationFrame(() => {
@@ -303,6 +342,7 @@ $('specimen').addEventListener('input', event => {
     updateAnalysis(true);
   });
 });
+$('specimen').addEventListener('compositionstart', () => playback.pause());
 $('specimen').addEventListener('compositionend', () => $('specimen').dispatchEvent(new Event('input')));
 $('mark-count').addEventListener('input', regenerateSpider);
 $('mark-type').addEventListener('change', regenerateSpider);
@@ -310,6 +350,16 @@ for (const id of ['font-size', 'line-height', 'show-boxes', 'show-ink']) $(id).a
 for (const id of ['font-a', 'font-b', 'overflow-a', 'overflow-b']) $(id).addEventListener('change', renderViews);
 $('previous-grapheme').addEventListener('click', () => selectGrapheme(state.selected - 1));
 $('next-grapheme').addEventListener('click', () => selectGrapheme(state.selected + 1));
+$('player-toggle').addEventListener('click', () => playback.playing ? playback.pause() : playback.play());
+$('player-rewind').addEventListener('click', () => playback.rewind());
+$('player-step').addEventListener('click', () => {
+  playback.step();
+  $('player-announcement').textContent = `Paso: ${$('mark-count').value} incorporaciones, ${state.analysis.codepoints} puntos de código.`;
+});
+$('player-speed').addEventListener('change', () => playback.changeSpeed());
+$('anatomia').addEventListener('focusin', () => { if (playback.playing) playback.pause(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden) playback.pause(); });
+window.addEventListener('pagehide', () => playback.pause());
 
 $('escaped-toggle').addEventListener('click', () => {
   $('escaped').hidden = !$('escaped').hidden;
@@ -344,6 +394,8 @@ $('inspect-all').addEventListener('click', () => {
 });
 
 $('reset').addEventListener('click', () => {
+  playback.pause();
+  $('player-speed').value = '500';
   cancelAnimationFrame(inputFrame);
   for (const [id, value] of Object.entries({ 'mark-count': 12, 'mark-type': 'homothetic', 'font-size': 28, 'line-height': 36, 'font-a': 'noto', 'font-b': 'noto', 'overflow-a': 'visible', 'overflow-b': 'clip' })) $(id).value = value;
   $('show-boxes').checked = true;

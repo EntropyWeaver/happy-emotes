@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./theme.css">
   <link rel="stylesheet" href="./selection.css">
+  <link rel="stylesheet" href="./playback.css">
   <script src="./theme.js"></script>
   <script type="module" src="./app.js"></script>
 </head>
@@ -75,6 +76,20 @@
         <section class="render-panel panel" aria-labelledby="render-title">
           <div class="render-heading"><div><p class="eyebrow">LA PRUEBA DEL ALGODÓN</p><h2 id="render-title">Mismo texto. Distintas reglas.</h2></div><span class="live-badge"><span class="status-dot"></span> DOM real</span></div>
           <div class="legend"><span><i class="legend-box"></i> Caja del mensaje</span><span><i class="legend-baseline"></i> Línea base</span><span><i class="legend-ink"></i> Tinta estimada · Canvas</span><span><i class="legend-selection"></i> Grafema seleccionado</span></div>
+          <div id="spider-player" class="spider-player" role="group" aria-label="Animación del crecimiento de la araña">
+            <div class="player-row">
+              <div class="player-copy"><strong>La araña, paso a paso</strong><p id="player-status">En pausa · 12 de 60 marcas</p></div>
+              <div class="player-controls">
+                <button id="player-rewind" title="Volver a cero y pausar"><span aria-hidden="true">↺</span> Desde cero</button>
+                <button id="player-toggle" class="player-toggle"><span id="player-icon" aria-hidden="true">▶</span><span id="player-label">Reproducir</span></button>
+                <button id="player-step" title="Pausar y añadir una incorporación"><span aria-hidden="true">+1</span><span id="player-step-label">marca</span></button>
+              </div>
+              <label class="player-speed">Ritmo<select id="player-speed" aria-label="Ritmo de reproducción"><option value="1000">Lento · 1/s</option><option value="500" selected>Normal · 2/s</option><option value="250">Rápido · 4/s</option></select></label>
+            </div>
+            <progress id="player-progress" class="player-progress" value="12" max="60" aria-label="Longitud animada del hilo" aria-live="off"></progress>
+            <p class="player-hint">Cada paso incorpora un punto de código. Reproduce desde la longitud actual o vuelve a cero.</p>
+            <span id="player-announcement" class="visually-hidden" role="status" aria-live="polite"></span>
+          </div>
           <div class="selection-toolbar" role="group" aria-label="Selección conectada">
             <div class="selection-preview" aria-hidden="true"><bdi id="selected-preview" dir="auto"></bdi></div>
             <div class="selection-copy"><strong id="connected-selection" role="status" aria-live="polite" aria-atomic="true">Selecciona un grafema</strong><p id="connected-help">Pulsa una ficha del inspector o un carácter en A/B.</p></div>

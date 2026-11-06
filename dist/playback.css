@@ -1,0 +1,43 @@
+.spider-player {
+  padding: 13px 14px 11px;
+  margin-bottom: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+}
+.player-row { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.player-copy { flex: 1; min-width: 145px; }
+.player-copy strong { display: block; font-size: 11px; font-weight: 600; }
+.player-copy p { color: var(--muted); font-size: 10px; margin-top: 5px; }
+.player-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.player-controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--paper);
+  font-size: 10px;
+  white-space: nowrap;
+}
+.player-controls button:hover:not(:disabled) { border-color: var(--purple); }
+.player-controls .player-toggle { background: var(--purple); color: #fff; border-color: var(--purple); min-width: 108px; }
+[data-theme="dark"] .player-controls .player-toggle { color: #20152f; }
+.player-speed { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 10px; }
+.player-speed select { width: auto; min-height: 36px; padding: 6px; font-size: 10px; }
+.player-progress { display: block; width: 100%; height: 4px; margin-top: 12px; border: 0; border-radius: 4px; overflow: hidden; appearance: none; background: var(--line); color: var(--purple); accent-color: var(--purple); }
+.player-progress::-webkit-progress-bar { background: var(--line); }
+.player-progress::-webkit-progress-value { background: var(--purple); }
+.player-progress::-moz-progress-bar { background: var(--purple); }
+.player-hint { margin-top: 8px; color: var(--muted); font-size: 9px; line-height: 1.6; }
+@media (max-width: 600px) {
+  .spider-player { padding: 12px 10px; }
+  .player-copy { flex-basis: 100%; }
+  .player-controls { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
+  .player-controls button { min-height: 40px; padding: 8px; }
+  .player-controls .player-toggle { grid-column: 1 / -1; grid-row: 1; }
+  .player-speed { width: 100%; justify-content: space-between; }
+}
