@@ -14,6 +14,8 @@ En Windows también puedes usar `py -3.12 -m http.server 8000 --directory dist`.
 
 ## Experimentar
 
+Las tres mejoras están implementadas: **1. Selección conectada**, **2. Crecimiento animado** y **3. Cuaderno de descubrimientos**. La cabecera las identifica y el enlace **Cuaderno** abre los experimentos guardados.
+
 El selector **Apariencia**, en la cabecera, ofrece **Normal** (el diseño claro original), **Oscuro** y **Sistema**. La elección se recuerda en este navegador; Sistema sigue los cambios de apariencia del sistema operativo mientras la página está abierta. Normal es la opción inicial. Si el navegador bloquea el almacenamiento, el selector sigue funcionando durante la sesión de la página. Restablecer el laboratorio conserva la apariencia elegida.
 
 1. Abre **La araña**. Las dos vistas usan el mismo texto y Noto Sans, incluida en el proyecto.
@@ -39,6 +41,20 @@ Con **La araña** seleccionada, el reproductor aparece junto a las vistas A/B:
 - Editar el texto, cambiar de espécimen, mover la longitud, cambiar el tipo de hilo, normalizar, seleccionar un grafema o entrar con el foco en el inspector pausa la animación. Cambiar de pestaña también la pausa; hay que pulsar Reproducir para continuar. Las fuentes, la altura de línea y el recorte se pueden modificar durante la reproducción.
 
 Para observar el desbordamiento desde su origen: pulsa **Desde cero**, elige **Lento** y pulsa **Reproducir**. Con las marcas combinantes aumentan los puntos de código mientras el hilo sigue dentro de un solo grafema; U+FC5E es una ligadura y puede producir otra segmentación. La tinta depende de la fuente, no de una animación de altura simulada.
+
+## Cuaderno de descubrimientos
+
+Usa **Guardar este experimento en el cuaderno** debajo de A/B o el enlace **Cuaderno** de la cabecera. Ponle un nombre y pulsa **Guardar experimento**. Cada entrada conserva:
+
+- El texto Unicode exacto, el espécimen y los ajustes del generador de la araña.
+- Las fuentes y el `overflow` de A/B, tamaño de fuente, altura de línea y las guías activadas.
+- El grafema seleccionado, el modo del inspector, los escapes y el ritmo del reproductor.
+
+**Abrir** restaura esos ajustes y deja el reproductor en pausa. La apariencia Normal/Oscuro/Sistema es una preferencia general y se conserva al abrir experimentos. **Renombrar** cambia solo el nombre. **Eliminar** ofrece **Deshacer eliminación** para la última entrada eliminada durante esta sesión. Restablecer el laboratorio conserva el cuaderno.
+
+Las entradas se guardan en este navegador, bajo el origen del sitio. No se sincronizan automáticamente entre equipos. **Exportar JSON** descarga el cuaderno completo; **Importar JSON** añade entradas sin sobrescribir las existentes. Las copias exactas se omiten, y las versiones diferentes con el mismo identificador reciben uno nuevo. Se validan todos los datos antes de escribir: si algo falla, no se importa parcialmente. Límites: 100 experimentos, nombres de 80 caracteres, texto de 512 puntos de código por experimento y archivos de hasta 1 MiB. El formato incluye `format: "happy-emotes-notebook"` y `version: 1`.
+
+Si el navegador bloquea el almacenamiento, se indica **Guardado temporal** y se permite exportar la colección antes de cerrar la pestaña. Un error de espacio no se presenta como un guardado correcto. Los datos dañados se conservan y se ofrece descargar una copia original. Los nombres y textos siempre se muestran con `textContent`.
 
 ## Qué significa cada medida
 
@@ -73,6 +89,7 @@ npm run check
 ```
 
 Las pruebas comprueban acentos, emojis ZWJ, indicadores regionales, tonos de piel, índices UTF-16, límites sin cortar pares sustitutos, ausencia de Segmenter, cadenas vacías, marcas sin base y metadatos Unicode.
+Las pruebas del cuaderno comprueban la exportación/importación sin alterar Unicode, validación, mezcla de duplicados, capacidad, persistencia, datos dañados y errores de almacenamiento.
 Las pruebas del reproductor usan un reloj controlado para verificar pausas, reanudación, pasos manuales, cambio de velocidad, cancelación de callbacks, límite de 60, repetición y crecimiento de los puntos de código sin dividir el grafema combinante.
 
 Para regenerar el catálogo:
@@ -91,13 +108,14 @@ El script registra la versión real de `unicodedata`; regenerarlo con otra versi
 - `dist/app.js`: controles, inspector y mediciones DOM/Canvas.
 - `dist/selection.js` y `dist/selection.css`: selección conectada con rangos DOM, resaltado nativo y recuadros que respetan el recorte.
 - `dist/playback.js` y `dist/playback.css`: reproducción del crecimiento y controles; `tests/playback.test.js` comprueba su temporización.
+- `dist/notebook.js`, `dist/notebook-ui.js` y `dist/notebook.css`: formato JSON validado, persistencia y cuaderno; `tests/notebook.test.js` comprueba la integridad de los datos.
 - `dist/theme.js` y `dist/theme.css`: selección de apariencia, preferencia local y paleta oscura.
 - `dist/unicode-names.json`: catálogo local parcial.
 - `dist/fonts/`: fuente Noto Sans y licencia OFL 1.1.
 - `tests/core.test.js`: pruebas de análisis.
 - `scripts/generate-unicode-catalog.py`: generación reproducible del catálogo.
 
-Todo lo necesario para servir la aplicación está en `dist/`. Se puede desplegar como sitio estático bajo una ruta raíz o subdirectorio; los recursos usan rutas relativas. El archivo `.openai/hosting.json` vincula la copia alojada y no es necesario para ejecutarla localmente. No hay analítica, peticiones a terceros, almacenamiento de texto ni claves. Solo se guarda la preferencia de apariencia en `localStorage`.
+Todo lo necesario para servir la aplicación está en `dist/`. Se puede desplegar como sitio estático bajo una ruta raíz o subdirectorio; los recursos usan rutas relativas. El archivo `.openai/hosting.json` vincula la copia alojada y no es necesario para ejecutarla localmente. No hay analítica, peticiones a terceros ni claves. La preferencia de apariencia y los experimentos que guardas en el cuaderno se almacenan localmente en este navegador; el texto no se envía a servidores de análisis.
 
 ## Referencias
 

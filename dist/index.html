@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="./theme.css">
   <link rel="stylesheet" href="./selection.css">
   <link rel="stylesheet" href="./playback.css">
+  <link rel="stylesheet" href="./notebook.css">
   <script src="./theme.js"></script>
   <script type="module" src="./app.js"></script>
 </head>
@@ -18,7 +19,7 @@
   <a class="skip-link" href="#laboratorio">Saltar al laboratorio</a>
   <header class="topbar">
     <a class="brand" href="#" aria-label="Happy Emotes, inicio"><span class="brand-icon" aria-hidden="true">a<span>͋</span></span><span>happy<span class="brand-light">emotes</span><small>UNICODE PLAYGROUND</small></span></a>
-    <nav aria-label="Navegación principal"><a href="#laboratorio" class="nav-active">Laboratorio</a><a href="#anatomia">Anatomía</a><a href="#como-funciona">Cómo funciona</a></nav>
+    <nav aria-label="Navegación principal"><a href="#laboratorio" class="nav-active">Laboratorio</a><a href="#anatomia">Anatomía</a><a href="#cuaderno">Cuaderno</a><a href="#como-funciona">Cómo funciona</a></nav>
     <div class="topbar-actions">
       <label class="theme-picker" title="Elige el aspecto del laboratorio">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor" stroke="none"/></svg>
@@ -31,7 +32,7 @@
 
   <main>
     <section class="intro" aria-labelledby="page-title">
-      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p></div>
+      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a></div></div>
       <div class="intro-stamp" aria-hidden="true"><span>U+034B</span><div>o͋</div><small>pequeño carácter,<br>grandes consecuencias.</small></div>
     </section>
 
@@ -129,6 +130,7 @@
           </div>
           <div class="observation"><span class="observation-icon" aria-hidden="true">⌁</span><p id="observation">El contenido puede pintarse fuera de su caja sin desplazar los mensajes anteriores.</p></div>
           <p class="render-footnote">La tinta visible es texto real del navegador. El recuadro verde sitúa el grafema; no delimita su tinta. La guía naranja estima la tinta con Canvas. El panel completo siempre recorta en su borde.</p>
+          <a id="open-notebook" class="notebook-shortcut" href="#cuaderno">Guardar este experimento en el cuaderno →</a>
         </section>
         <section id="anatomia" class="anatomy-panel panel" aria-labelledby="anatomy-title">
           <div class="anatomy-heading"><div class="section-heading"><span class="step">03</span><h2 id="anatomy-title">Debajo del glifo</h2></div><div class="segmented" role="group" aria-label="Vista del inspector"><button id="tab-graphemes" aria-pressed="true">Grafemas</button><button id="tab-codepoints" aria-pressed="false">Puntos de código</button></div></div>
@@ -140,6 +142,23 @@
           <p id="catalog-note" class="micro muted catalog-note">Los nombres se consultan en un catálogo local; la segmentación depende de tu navegador.</p>
         </section>
       </div>
+    </section>
+
+    <section id="cuaderno" class="notebook-panel panel" aria-labelledby="notebook-title">
+      <div class="notebook-heading">
+        <div><div class="section-heading"><span class="step">04</span><h2 id="notebook-title">Cuaderno de descubrimientos</h2></div><p>Ponle nombre a un hallazgo y vuelve a él cuando quieras.</p></div>
+        <div class="notebook-actions"><button id="notebook-export" class="notebook-button" disabled>Exportar JSON</button><button id="notebook-import" class="notebook-button">Importar JSON</button><input id="notebook-file" type="file" accept=".json,application/json" aria-label="Archivo JSON del cuaderno" hidden></div>
+      </div>
+      <form id="notebook-form" class="notebook-form">
+        <label for="experiment-name">Nombre del experimento<input id="experiment-name" name="experiment-name" type="text" maxlength="80" required placeholder="La araña que trepa tres mensajes" autocomplete="off" aria-describedby="notebook-save-help"></label>
+        <button id="notebook-save" class="notebook-primary" type="submit">Guardar experimento</button><button id="notebook-cancel" class="notebook-button" type="button" hidden>Cancelar</button>
+      </form>
+      <p id="notebook-save-help" class="notebook-storage">Conserva el texto, los ajustes A/B, las guías y la selección. Los experimentos se recuperan en pausa.</p>
+      <p id="notebook-storage" class="notebook-storage">Guardado en este navegador. Exporta JSON para compartirlo o llevarlo a otro equipo.</p>
+      <div class="notebook-feedback"><span id="notebook-status" role="status" aria-live="polite"></span><button id="notebook-undo" class="text-button" hidden>Deshacer eliminación</button></div>
+      <div class="notebook-list-header"><span>TUS HALLAZGOS</span><span id="notebook-count">0 / 100 experimentos</span></div>
+      <div id="notebook-empty" class="notebook-empty"><strong>Las mejores rarezas merecen una página.</strong><p>Guarda el experimento que tienes abierto o importa un cuaderno JSON.</p></div>
+      <div id="notebook-list" class="notebook-list" aria-label="Experimentos guardados"></div>
     </section>
 
     <section id="como-funciona" class="explanation" aria-labelledby="explanation-title">

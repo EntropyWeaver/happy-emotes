@@ -1,6 +1,7 @@
 import { PRESETS, MAX_CODEPOINTS, MAX_MARKS, makeSpider, limitText, analyzeText, displayChar, escapedText, canvasEligible } from './core.js';
 import { createGraphemeSelection } from './selection.js';
 import { createPlayback } from './playback.js';
+import { initNotebook } from './notebook-ui.js';
 
 const $ = id => document.getElementById(id);
 const fonts = { noto: '"Noto Lab", sans-serif', sans: 'Arial, sans-serif', serif: '"Times New Roman", serif', mono: '"Courier New", monospace', system: 'system-ui, sans-serif' };
@@ -100,7 +101,7 @@ function updatePresetButtons() {
   $('spider-player').hidden = state.preset !== 'spider';
 }
 
-function setSpecimen(text, { preset = null, notice = '', animated = false } = {}) {
+function setSpecimen(text, { preset = null, notice = '', animated = false, preserveSelection = false } = {}) {
   if (!animated) playback.pause();
   cancelAnimationFrame(inputFrame);
   const limited = limitText(text);
@@ -109,7 +110,7 @@ function setSpecimen(text, { preset = null, notice = '', animated = false } = {}
   state.preset = preset;
   $('input-help').textContent = PRESETS[preset]?.hint ?? 'Tu texto, tal cual. Explora sus grafemas y prueba distintas reglas de renderizado.';
   updatePresetButtons();
-  updateAnalysis(!animated);
+  updateAnalysis(!animated && !preserveSelection);
   renderPlaybackControls();
 }
 
@@ -311,7 +312,7 @@ function scheduleMeasurements() {
   measureFrame = requestAnimationFrame(measureViews);
 }
 
-function regenerateSpider({ animated = false } = {}) {
+function updateSpiderControls() {
   const count = Number($('mark-count').value);
   $('mark-count-value').value = `${count} marcas`;
   const type = $('mark-type').value;
@@ -319,7 +320,47 @@ function regenerateSpider({ animated = false } = {}) {
   $('mark-note').textContent = type === 'arabic'
     ? 'U+FC5E es una ligadura árabe (Lo), no una marca Mn. Su composición depende de la fuente.'
     : 'Su altura depende de la fuente y del motor tipográfico.';
-  setSpecimen(makeSpider(count, marks[type]), { preset: 'spider', animated });
+}
+
+function regenerateSpider({ animated = false } = {}) {
+  updateSpiderControls();
+  setSpecimen(makeSpider(Number($('mark-count').value), marks[$('mark-type').value]), { preset: 'spider', animated });
+}
+
+function captureExperiment() {
+  playback.pause();
+  cancelAnimationFrame(inputFrame);
+  const text = limitText($('specimen').value).text;
+  if (text !== state.analysis.text) setSpecimen(text);
+  return {
+    text, preset: state.preset,
+    fontSize: Number($('font-size').value), lineHeight: Number($('line-height').value),
+    views: Object.fromEntries(['a', 'b'].map(view => [view, { font: $(`font-${view}`).value, overflow: $(`overflow-${view}`).value }])),
+    showBoxes: $('show-boxes').checked, showInk: $('show-ink').checked,
+    markCount: Number($('mark-count').value), markType: $('mark-type').value,
+    speed: Number($('player-speed').value), inspector: state.inspector,
+    selected: state.selected, showEscapes: !$('escaped').hidden,
+  };
+}
+
+function restoreExperiment(snapshot) {
+  playback.pause();
+  cancelAnimationFrame(inputFrame);
+  for (const [id, value] of Object.entries({ 'font-size': snapshot.fontSize, 'line-height': snapshot.lineHeight, 'mark-count': snapshot.markCount, 'mark-type': snapshot.markType, 'player-speed': snapshot.speed })) $(id).value = value;
+  for (const view of ['a', 'b']) {
+    $(`font-${view}`).value = snapshot.views[view].font;
+    $(`overflow-${view}`).value = snapshot.views[view].overflow;
+  }
+  $('show-boxes').checked = snapshot.showBoxes;
+  $('show-ink').checked = snapshot.showInk;
+  $('escaped').hidden = !snapshot.showEscapes;
+  $('escaped-toggle').setAttribute('aria-expanded', String(snapshot.showEscapes));
+  $('escaped-toggle').textContent = snapshot.showEscapes ? 'Ocultar escapes' : 'Ver escapes';
+  state.inspector = snapshot.inspector;
+  state.selected = snapshot.selected;
+  updateSpiderControls();
+  setSpecimen(snapshot.text, { preset: snapshot.preset, preserveSelection: true });
+  toast('Experimento recuperado, en pausa.');
 }
 
 document.querySelectorAll('[data-preset]').forEach(button => button.addEventListener('click', () => {
@@ -417,6 +458,8 @@ document.fonts?.ready.then(scheduleMeasurements);
 document.fonts?.addEventListener('loadingdone', scheduleMeasurements);
 
 setSpecimen(PRESETS.spider.text, { preset: 'spider' });
+$('render-title').tabIndex = -1;
+initNotebook({ capture: captureExperiment, restore: restoreExperiment, pause: () => playback.pause() });
 fetch('./unicode-names.json').then(response => {
   if (!response.ok) throw new Error('No se pudo cargar el catálogo');
   return response.json();
