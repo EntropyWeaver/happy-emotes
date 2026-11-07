@@ -14,7 +14,7 @@ En Windows también puedes usar `py -3.12 -m http.server 8000 --directory dist`.
 
 ## Experimentar
 
-La cabecera identifica las ocho mejoras implementadas. **1. Selección conectada**, **2. Crecimiento animado**, **3. Cuaderno de descubrimientos**, **4. Enlaces compartibles**, **5. Constructor de criaturas**, **6. Escenarios de recorte**, **7. Chat en movimiento** y **8. Fuentes locales**. El enlace **Cuaderno** abre los experimentos guardados.
+La cabecera identifica las nueve mejoras implementadas. **1. Selección conectada**, **2. Crecimiento animado**, **3. Cuaderno de descubrimientos**, **4. Enlaces compartibles**, **5. Constructor de criaturas**, **6. Escenarios de recorte**, **7. Chat en movimiento**, **8. Fuentes locales** y **9. Retos**. El enlace **Cuaderno** abre los experimentos guardados.
 
 El selector **Apariencia**, en la cabecera, ofrece **Normal** (el diseño claro original), **Oscuro** y **Sistema**. La elección se recuerda en este navegador; Sistema sigue los cambios de apariencia del sistema operativo mientras la página está abierta. Normal es la opción inicial. Si el navegador bloquea el almacenamiento, el selector sigue funcionando durante la sesión de la página. Restablecer el laboratorio conserva la apariencia elegida.
 
@@ -37,6 +37,16 @@ Elige **Vista A** o **Vista B** en **Aplicar al cargar** y arrastra un archivo a
 Los archivos permanecen en la memoria de la pestaña. **Quitar fuentes locales** retira las fuentes cargadas y devuelve a Noto Sans las vistas que las usaban. El navegador puede usar otras fuentes para los caracteres ausentes en el archivo.
 
 El cuaderno, sus exportaciones y los enlaces guardan una referencia al archivo y usan Noto Sans si falta. Para reproducir la tipografía, carga el mismo archivo en esa pestaña antes de abrir el experimento. En HTTPS y localhost, la referencia se calcula a partir del contenido del archivo.
+
+### Retos del laboratorio
+
+Elige un reto en **Retos**, trabaja con el espécimen y pulsa **Comprobar**. Cada reto ofrece una pista opcional y explica el resultado al resolverlo.
+
+- **Un grafema, siete piezas** comprueba que el espécimen entero sea un solo grafema de siete puntos de código.
+- **El mismo acento** parte de «a» con un acento combinante. **Preparar acento** carga esa forma en el editor para que puedas comparar el resultado de NFC.
+- **Tinta fuera de la caja** usa la estimación de Canvas para detectar desbordamiento vertical en A. Compruébalo con **Mensaje** en `visible` y luego con `clip` o `hidden`, conservando texto, fuente, tamaño, altura de línea y recorte del panel.
+
+El progreso pertenece a la pestaña y se reinicia al recargar. Puedes repetir cada reto desde su resultado.
 
 ### La araña, paso a paso
 

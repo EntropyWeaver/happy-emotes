@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="./share.css">
   <link rel="stylesheet" href="./creatures.css">
   <link rel="stylesheet" href="./local-fonts.css">
+  <link rel="stylesheet" href="./challenges.css">
   <script src="./theme.js"></script>
   <script type="module" src="./app.js"></script>
 </head>
@@ -35,7 +36,7 @@
 
   <main>
     <section class="intro" aria-labelledby="page-title">
-      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a><a href="#share-experiment"><b>✓ 4</b> Enlaces compartibles</a><a href="#criaturas"><b>✓ 5</b> Constructor de criaturas</a><a href="#panel-overflow-a"><b>✓ 6</b> Escenarios de recorte</a><a href="#chat-en-movimiento"><b>✓ 7</b> Chat en movimiento</a><a href="#local-fonts"><b>✓ 8</b> Fuentes locales</a></div></div>
+      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a><a href="#share-experiment"><b>✓ 4</b> Enlaces compartibles</a><a href="#criaturas"><b>✓ 5</b> Constructor de criaturas</a><a href="#panel-overflow-a"><b>✓ 6</b> Escenarios de recorte</a><a href="#chat-en-movimiento"><b>✓ 7</b> Chat en movimiento</a><a href="#local-fonts"><b>✓ 8</b> Fuentes locales</a><a href="#retos"><b>✓ 9</b> Retos</a></div></div>
       <div class="intro-stamp" aria-hidden="true"><span>U+034B</span><div>o͋</div><small>pequeño carácter,<br>grandes consecuencias.</small></div>
     </section>
 
@@ -103,6 +104,26 @@
             <p id="creature-status" class="creature-status" role="status"></p>
           </div>
         </details>
+        <section id="retos" class="challenge-panel panel" aria-labelledby="challenge-title">
+          <div class="challenge-heading">
+            <div><p class="eyebrow">PON A PRUEBA EL LABORATORIO</p><h2 id="challenge-title">Retos del laboratorio</h2></div>
+            <span id="challenge-progress" class="value-pill" role="status">0 de 3 resueltos</span>
+          </div>
+          <div id="challenge-options" class="challenge-options" role="group" aria-label="Elegir un reto">
+            <button class="notebook-button" type="button" data-challenge="grapheme" aria-pressed="true">1. Un grafema, siete piezas<span class="challenge-done" hidden><span aria-hidden="true"> ✓</span><span class="visually-hidden"> Resuelto</span></span></button>
+            <button class="notebook-button" type="button" data-challenge="accent" aria-pressed="false">2. El mismo acento<span class="challenge-done" hidden><span aria-hidden="true"> ✓</span><span class="visually-hidden"> Resuelto</span></span></button>
+            <button class="notebook-button" type="button" data-challenge="clip" aria-pressed="false">3. Tinta fuera de la caja<span class="challenge-done" hidden><span aria-hidden="true"> ✓</span><span class="visually-hidden"> Resuelto</span></span></button>
+          </div>
+          <p id="challenge-task" class="challenge-task"></p>
+          <div class="challenge-actions">
+            <button id="challenge-check" class="notebook-primary" type="button">Comprobar</button>
+            <button id="challenge-hint-toggle" class="notebook-button" type="button" aria-expanded="false" aria-controls="challenge-hint">Pista</button>
+            <button id="challenge-prepare" class="notebook-button" type="button" hidden>Preparar acento</button>
+            <a id="challenge-link" href="#specimen">Ir al espécimen</a>
+          </div>
+          <p id="challenge-hint" class="challenge-note" hidden></p>
+          <p id="challenge-result" class="challenge-note" role="status"></p>
+        </section>
         <section class="render-panel panel" aria-labelledby="render-title">
           <div id="shared-notice" class="shared-notice" hidden><span id="shared-notice-text" role="status" aria-live="polite"></span><button id="shared-notice-close" aria-label="Cerrar aviso del enlace" title="Cerrar aviso">×</button></div>
           <div class="render-heading"><div><p class="eyebrow">LA PRUEBA DEL ALGODÓN</p><h2 id="render-title">Mismo texto. Distintas reglas.</h2></div><span class="live-badge"><span class="status-dot"></span> DOM real</span></div>

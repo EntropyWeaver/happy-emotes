@@ -6,6 +6,7 @@ import { initShareLinks } from './share-ui.js';
 import { initCreatureBuilder } from './creatures.js';
 import { initMovingChat } from './chat.js';
 import { initLocalFonts } from './local-fonts.js';
+import { initChallenges } from './challenges.js';
 
 const $ = id => document.getElementById(id);
 const fonts = { noto: '"Noto Lab", sans-serif', sans: 'Arial, sans-serif', serif: '"Times New Roman", serif', mono: '"Courier New", monospace', system: 'system-ui, sans-serif' };
@@ -273,6 +274,7 @@ function placeBox(element, left, top, width, height) {
 
 function measureViews() {
   chat.position();
+  let inkA = null;
   for (const view of ['a', 'b']) {
     const stage = $(`stage-${view}`);
     const message = $(`message-${view}`);
@@ -307,12 +309,18 @@ function measureViews() {
     const width = Math.max(0, left + right);
     const height = Math.max(0, ascent + descent);
     const sampleRect = sample.getBoundingClientRect();
-    placeBox(ink, sampleRect.left - stageRect.left - left, baseline - ascent, width, height);
+    const inkLeft = sampleRect.left - left;
+    const inkTop = baseline - ascent;
+    placeBox(ink, inkLeft - stageRect.left, inkTop, width, height);
+    if (view === 'a' && width && height) {
+      inkA = { left: inkLeft, right: inkLeft + width, top: inkTop + stageRect.top, bottom: inkTop + stageRect.top + height, message: rect };
+    }
     ink.hidden = !$('show-ink').checked;
     metric.textContent = `≈ ${Math.round(width)} × ${Math.round(height)} px`;
     metric.title = 'Límites estimados de tinta sin recorte en Canvas; no son una medida del DOM.';
   }
   connectedSelection.render(state.analysis, state.selected);
+  return inkA;
 }
 
 function scheduleMeasurements() {
@@ -335,11 +343,38 @@ function regenerateSpider({ animated = false } = {}) {
   setSpecimen(makeSpider(Number($('mark-count').value), marks[$('mark-type').value]), { preset: 'spider', animated });
 }
 
-function captureExperiment() {
-  playback.pause();
+function readSpecimen() {
   cancelAnimationFrame(inputFrame);
   const text = limitText($('specimen').value).text;
   if (text !== state.analysis.text) setSpecimen(text);
+  return state.analysis;
+}
+
+function readChallengeInk() {
+  playback.pause();
+  const { text } = readSpecimen();
+  const ink = measureViews();
+  if (!ink) return null;
+  const panelOverflow = $('panel-overflow-a').value;
+  const panel = $(panelOverflow === 'visible' ? 'stage-window-a' : 'stage-a').getBoundingClientRect();
+  // Use the same Canvas estimate as the ink guide, limited to the panel's clip.
+  const top = Math.max(ink.top, panel.top);
+  const bottom = Math.min(ink.bottom, panel.bottom);
+  const insideWidth = Math.min(ink.right, panel.right) - Math.max(ink.left, panel.left);
+  const overhang = insideWidth > 0 && (
+    Math.min(bottom, ink.message.top) - top > 1 ||
+    bottom - Math.max(top, ink.message.bottom) > 1
+  );
+  return {
+    overhang,
+    overflow: getComputedStyle($('message-a')).overflowY,
+    settings: JSON.stringify([text, $('font-a').value, $('font-size').value, $('line-height').value, panelOverflow]),
+  };
+}
+
+function captureExperiment() {
+  playback.pause();
+  const { text } = readSpecimen();
   return {
     text, preset: state.preset,
     fontSize: Number($('font-size').value), lineHeight: Number($('line-height').value),
@@ -483,6 +518,7 @@ document.fonts?.addEventListener('loadingdone', scheduleMeasurements);
 const chat = initMovingChat({ onMove: scheduleMeasurements });
 const localFonts = initLocalFonts({ onChange: renderViews });
 setSpecimen(PRESETS.spider.text, { preset: 'spider' });
+initChallenges({ readText: readSpecimen, readInk: readChallengeInk, prepareAccent: setSpecimen });
 $('render-title').tabIndex = -1;
 initNotebook({ capture: captureExperiment, restore: restoreExperiment, pause: () => playback.pause() });
 initShareLinks({ capture: captureExperiment, restore: restoreExperiment });
