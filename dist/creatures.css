@@ -1,0 +1,52 @@
+.creature-builder { padding: 0; min-width: 0; }
+.creature-builder > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  padding: 16px 20px;
+  list-style: none;
+}
+.creature-builder > summary::-webkit-details-marker { display: none; }
+.creature-summary { display: grid; gap: 5px; }
+.creature-summary strong { font-size: 14px; }
+.creature-summary small { color: var(--muted); font-size: 11px; }
+.creature-toggle { color: var(--purple); font-size: 19px; }
+.creature-builder[open] .creature-toggle { transform: rotate(45deg); }
+.creature-body { border-top: 1px solid var(--line); padding: 16px 20px; }
+.creature-controls { display: flex; align-items: end; flex-wrap: wrap; gap: 8px; }
+.creature-controls label, .creature-group { display: grid; gap: 5px; font-size: 10px; color: var(--muted); }
+.creature-controls select, .creature-group select { min-height: 36px; width: auto; }
+.creature-group { margin-top: 14px; width: fit-content; max-width: 100%; }
+.creature-pieces { display: flex; flex-wrap: wrap; gap: 7px; margin: 10px 0; }
+.creature-piece {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  min-width: 66px;
+  padding: 7px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--paper);
+}
+.creature-piece:hover, .creature-piece:focus-visible { background: var(--purple-light); border-color: var(--purple); }
+.creature-glyph {
+  display: block;
+  height: 27px;
+  line-height: 27px;
+  font-family: "Noto Lab", sans-serif;
+  font-size: 19px;
+  overflow: hidden;
+}
+.creature-piece small { color: var(--muted); font: 9px/1.4 monospace; }
+.creature-description { padding: 9px 12px; background: var(--bg); border-radius: 8px; }
+.creature-description strong { font: 11px/1.5 monospace; overflow-wrap: anywhere; }
+.creature-description p, .creature-help, .creature-status { margin-top: 5px; font-size: 11px; line-height: 1.6; color: var(--muted); }
+.creature-status { color: var(--purple); min-height: 18px; }
+@media (max-width: 600px) {
+  .creature-builder > summary, .creature-body { padding: 14px; }
+  .creature-controls label { width: 100%; }
+  .creature-controls button { flex: 1 1 auto; }
+}

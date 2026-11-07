@@ -3,6 +3,7 @@ import { createGraphemeSelection } from './selection.js';
 import { createPlayback } from './playback.js';
 import { initNotebook } from './notebook-ui.js';
 import { initShareLinks } from './share-ui.js';
+import { initCreatureBuilder } from './creatures.js';
 
 const $ = id => document.getElementById(id);
 const fonts = { noto: '"Noto Lab", sans-serif', sans: 'Arial, sans-serif', serif: '"Times New Roman", serif', mono: '"Courier New", monospace', system: 'system-ui, sans-serif' };
@@ -462,12 +463,18 @@ setSpecimen(PRESETS.spider.text, { preset: 'spider' });
 $('render-title').tabIndex = -1;
 initNotebook({ capture: captureExperiment, restore: restoreExperiment, pause: () => playback.pause() });
 initShareLinks({ capture: captureExperiment, restore: restoreExperiment });
+const refreshCreatureDetails = initCreatureBuilder({
+  getText: () => $('specimen').value,
+  setText: setSpecimen,
+  getRecord: char => state.catalog[char.codePointAt(0).toString(16).toUpperCase()],
+});
 fetch('./unicode-names.json').then(response => {
   if (!response.ok) throw new Error('No se pudo cargar el catálogo');
   return response.json();
 }).then(data => {
   state.catalog = data.characters;
   state.unicodeVersion = data.version;
+  refreshCreatureDetails();
   $('catalog-note').textContent = `Nombres y categorías detalladas: catálogo parcial Unicode ${data.version}. Fuera del catálogo se muestra la categoría general del navegador; la segmentación también depende del navegador.`;
   renderTable();
 }).catch(() => {

@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="./playback.css">
   <link rel="stylesheet" href="./notebook.css">
   <link rel="stylesheet" href="./share.css">
+  <link rel="stylesheet" href="./creatures.css">
   <script src="./theme.js"></script>
   <script type="module" src="./app.js"></script>
 </head>
@@ -33,7 +34,7 @@
 
   <main>
     <section class="intro" aria-labelledby="page-title">
-      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a><a href="#share-experiment"><b>✓ 4</b> Enlaces compartibles</a></div></div>
+      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a><a href="#share-experiment"><b>✓ 4</b> Enlaces compartibles</a><a href="#criaturas"><b>✓ 5</b> Constructor de criaturas</a></div></div>
       <div class="intro-stamp" aria-hidden="true"><span>U+034B</span><div>o͋</div><small>pequeño carácter,<br>grandes consecuencias.</small></div>
     </section>
 
@@ -75,6 +76,32 @@
           <div class="stat"><span>Unidades UTF-16 <span class="stat-symbol">{ }</span></span><strong id="stat-utf16">—</strong><small>Lo que cuenta JS .length</small></div>
           <div class="stat"><span>Bytes UTF-8 <span class="stat-symbol">01</span></span><strong id="stat-utf8">—</strong><small>Texto codificado</small></div>
         </div>
+        <details id="criaturas" class="creature-builder panel">
+          <summary>
+            <span class="creature-summary"><strong>Constructor de criaturas Unicode</strong><small>Elige una base y ensambla tu criatura pieza a pieza.</small></span>
+            <span class="creature-toggle" aria-hidden="true">+</span>
+          </summary>
+          <div class="creature-body">
+            <div class="creature-controls">
+              <label>Base<select id="creature-base">
+                <option value="o">o · Letra redonda</option><option value="a">a · Letra latina</option><option value="◕">◕ · Ojo</option><option value="♥">♥ · Corazón</option>
+                <option value="👍">👍 · Pulgar</option><option value="👋">👋 · Mano</option><option value="👩">👩 · Mujer</option><option value="💻">💻 · Portátil</option><option value="🕷">🕷 · Araña</option>
+              </select></label>
+              <button id="creature-use-base" class="notebook-primary" type="button">Empezar con esta base</button>
+              <button id="creature-add-base" class="notebook-button" type="button">Añadir base</button>
+              <button id="creature-remove" class="notebook-button" type="button">Quitar último punto</button>
+            </div>
+            <p class="creature-help">Empezar sustituye el texto del espécimen. Las piezas y las bases que añadas se colocan al final.</p>
+            <label class="creature-group">Paleta<select id="creature-group">
+              <option value="above">Marcas de arriba</option><option value="below">Marcas de abajo</option><option value="overlay">Superpuestas y envolventes</option>
+              <option value="join">Unidores y presentación</option><option value="emoji">Modificadores de emoji</option>
+            </select></label>
+            <div id="creature-pieces" class="creature-pieces" role="group" aria-label="Piezas de la paleta"></div>
+            <div class="creature-description"><strong id="creature-piece-name"></strong><p id="creature-piece-category"></p></div>
+            <p class="creature-help">Prueba 👩 + ZWJ + 💻, o 👍 + un tono de piel. La fuente y el navegador deciden si la secuencia se dibuja como un solo emoji o como piezas separadas.</p>
+            <p id="creature-status" class="creature-status" role="status"></p>
+          </div>
+        </details>
         <section class="render-panel panel" aria-labelledby="render-title">
           <div id="shared-notice" class="shared-notice" hidden><span id="shared-notice-text" role="status" aria-live="polite"></span><button id="shared-notice-close" aria-label="Cerrar aviso del enlace" title="Cerrar aviso">×</button></div>
           <div class="render-heading"><div><p class="eyebrow">LA PRUEBA DEL ALGODÓN</p><h2 id="render-title">Mismo texto. Distintas reglas.</h2></div><span class="live-badge"><span class="status-dot"></span> DOM real</span></div>

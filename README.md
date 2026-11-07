@@ -14,7 +14,7 @@ En Windows también puedes usar `py -3.12 -m http.server 8000 --directory dist`.
 
 ## Experimentar
 
-Las cuatro mejoras están implementadas: **1. Selección conectada**, **2. Crecimiento animado**, **3. Cuaderno de descubrimientos** y **4. Enlaces compartibles**. La cabecera las identifica y el enlace **Cuaderno** abre los experimentos guardados.
+Las cinco mejoras están implementadas: **1. Selección conectada**, **2. Crecimiento animado**, **3. Cuaderno de descubrimientos**, **4. Enlaces compartibles** y **5. Constructor de criaturas**. La cabecera las identifica y el enlace **Cuaderno** abre los experimentos guardados.
 
 El selector **Apariencia**, en la cabecera, ofrece **Normal** (el diseño claro original), **Oscuro** y **Sistema**. La elección se recuerda en este navegador; Sistema sigue los cambios de apariencia del sistema operativo mientras la página está abierta. Normal es la opción inicial. Si el navegador bloquea el almacenamiento, el selector sigue funcionando durante la sesión de la página. Restablecer el laboratorio conserva la apariencia elegida.
 
@@ -65,6 +65,12 @@ El enlace guarda una copia del texto y de todos los ajustes que conserva el cuad
 Es una instantánea: si cambias los ajustes, vuelve a pulsar Compartir experimento para crear otro enlace. Abrir un enlace no añade entradas automáticamente al cuaderno. El texto y los ajustes se incluyen en el propio enlace, por lo que cualquiera que lo reciba puede recuperarlos.
 
 El formato versionado es `#experiment=v1.<JSON en UTF-8 y base64url>`. El fragmento no se envía en la petición HTTP al servidor; no se usa un servicio de acortamiento. Admite el límite habitual de 512 puntos de código, también con emojis, marcas y saltos de línea. Los enlaces se validan completamente antes de aplicar sus ajustes. Si están incompletos, dañados o usan una versión incompatible, aparece un aviso y se conserva el estado actual del laboratorio. Navegar a otros apartados usa los anclajes habituales; el enlace generado permanece en su campo hasta que lo cierres o generes otro.
+
+## Constructor de criaturas Unicode
+
+Abre **Constructor de criaturas** desde la cabecera. Elige una base y pulsa **Empezar con esta base**. Las piezas de la paleta y **Añadir base** se insertan al final del espécimen. **Quitar último punto** retira el último punto de código, incluido un emoji completo si ocupa dos unidades UTF-16.
+
+La paleta reúne marcas de arriba, de abajo, superpuestas y envolventes, unidores, selectores de presentación y tonos de piel. Al pasar el puntero, enfocar o pulsar una pieza, se muestra su nombre Unicode y categoría. Para construir 👩‍💻, empieza con 👩, añade ZWJ, elige 💻 y pulsa **Añadir base**. La fuente y el navegador determinan el dibujo. La criatura se puede guardar en el cuaderno y compartir por enlace como cualquier espécimen.
 
 ## Qué significa cada medida
 
