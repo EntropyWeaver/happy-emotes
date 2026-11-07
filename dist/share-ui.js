@@ -6,7 +6,9 @@ export function initShareLinks({ capture, restore }) {
   let copyGeneration = 0;
   $('share-experiment').addEventListener('click', () => {
     try {
-      const url = createExperimentURL(window.location.href, capture());
+      const snapshot = capture();
+      const url = createExperimentURL(window.location.href, snapshot);
+      $('share-font-note').hidden = !Object.values(snapshot.views).some(view => view.localFont);
       copyGeneration++;
       $('share-url').value = url;
       $('share-copy').disabled = false;
@@ -17,6 +19,7 @@ export function initShareLinks({ capture, restore }) {
       $('share-url').focus();
       $('share-url').select();
     } catch (error) {
+      $('share-font-note').hidden = true;
       $('share-url').value = '';
       $('share-copy').disabled = true;
       $('share-open').removeAttribute('href');
@@ -52,10 +55,12 @@ export function initShareLinks({ capture, restore }) {
     try {
       const snapshot = decodeExperimentHash(window.location.hash);
       if (!snapshot) return;
-      restore(snapshot);
+      const missingFonts = restore(snapshot);
       $('shared-notice').hidden = false;
       $('shared-notice').classList.remove('share-error');
-      $('shared-notice-text').textContent = 'Experimento abierto desde un enlace, en pausa. La configuración se conserva; el dibujo puede variar con el navegador y las fuentes disponibles.';
+      $('shared-notice-text').textContent = missingFonts.length
+        ? `Experimento abierto en pausa. Se usan fuentes de sustitución en ${missingFonts.join(' y ')}. Puedes cargar los archivos originales en Fuentes locales.`
+        : 'Experimento abierto desde un enlace, en pausa. El dibujo puede variar con el navegador y las fuentes disponibles.';
       requestAnimationFrame(() => $('shared-notice').scrollIntoView({ block: 'start' }));
     } catch (error) {
       $('shared-notice').hidden = false;

@@ -26,6 +26,14 @@ test('shared links preserve both views, all experiment controls and exact Unicod
   }
 });
 
+test('local font references round-trip without carrying font files or accepting URLs', () => {
+  const experiment = snapshot();
+  experiment.views.a.localFont = 'a'.repeat(64);
+  assert.deepEqual(decodeExperimentHash(SHARE_PREFIX + encodeExperiment(experiment)), experiment);
+  experiment.views.a.localFont = 'https://example.com/font.woff2';
+  assert.throws(() => encodeExperiment(experiment), /fuente local/);
+});
+
 test('URLs support subdirectories, replace old fragments and omit existing query parameters', () => {
   for (const base of ['https://example.com/', 'http://localhost:8000/lab/index.html?old=parameter#cuaderno']) {
     const result = new URL(createExperimentURL(base, snapshot()));
@@ -67,6 +75,8 @@ test('untrusted links are fully validated before any settings can be restored', 
 test('maximum-size Unicode and control strings fit the bounded link format', () => {
   for (const text of ['😀'.repeat(MAX_CODEPOINTS), '\u0000'.repeat(MAX_CODEPOINTS), '\uD800'.repeat(MAX_CODEPOINTS)]) {
     const original = { ...snapshot(), text, preset: null };
+    original.views.a.localFont = 'a'.repeat(64);
+    original.views.b.localFont = 'b'.repeat(64);
     const encoded = encodeExperiment(original);
     assert.ok(encoded.length <= MAX_SHARE_TOKEN_LENGTH);
     assert.equal(decodeExperimentHash(SHARE_PREFIX + encoded).text, text);

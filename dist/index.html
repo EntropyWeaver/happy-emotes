@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="./notebook.css">
   <link rel="stylesheet" href="./share.css">
   <link rel="stylesheet" href="./creatures.css">
+  <link rel="stylesheet" href="./local-fonts.css">
   <script src="./theme.js"></script>
   <script type="module" src="./app.js"></script>
 </head>
@@ -34,7 +35,7 @@
 
   <main>
     <section class="intro" aria-labelledby="page-title">
-      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a><a href="#share-experiment"><b>✓ 4</b> Enlaces compartibles</a><a href="#criaturas"><b>✓ 5</b> Constructor de criaturas</a><a href="#panel-overflow-a"><b>✓ 6</b> Escenarios de recorte</a><a href="#chat-en-movimiento"><b>✓ 7</b> Chat en movimiento</a></div></div>
+      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a><a href="#share-experiment"><b>✓ 4</b> Enlaces compartibles</a><a href="#criaturas"><b>✓ 5</b> Constructor de criaturas</a><a href="#panel-overflow-a"><b>✓ 6</b> Escenarios de recorte</a><a href="#chat-en-movimiento"><b>✓ 7</b> Chat en movimiento</a><a href="#local-fonts"><b>✓ 8</b> Fuentes locales</a></div></div>
       <div class="intro-stamp" aria-hidden="true"><span>U+034B</span><div>o͋</div><small>pequeño carácter,<br>grandes consecuencias.</small></div>
     </section>
 
@@ -138,10 +139,20 @@
             <p class="player-hint">Los mensajes nuevos empujan el espécimen hacia arriba en A y B. Envíalo otra vez para volver a verlo al final.</p>
             <span id="chat-announcement" class="visually-hidden" role="status"></span>
           </div>
+          <section id="local-fonts" class="spider-player font-drop" aria-labelledby="local-font-title">
+            <div class="player-row">
+              <div class="player-copy"><strong id="local-font-title">Fuentes locales</strong><p>Arrastra aquí un archivo WOFF2, WOFF, TTF u OTF de hasta 10 MiB.</p></div>
+              <label class="player-speed">Aplicar al cargar<select id="local-font-target"><option value="a">Vista A</option><option value="b">Vista B</option></select></label>
+              <div class="player-controls"><button id="local-font-pick" type="button" aria-describedby="local-font-hint">Elegir archivo</button><button id="local-font-clear" type="button" hidden>Quitar fuentes locales</button></div>
+              <input id="local-font-file" type="file" accept=".woff2,.woff,.ttf,.otf" aria-label="Archivo de fuente local" hidden>
+            </div>
+            <p id="local-font-hint" class="player-hint">Los archivos se quedan en esta pestaña. El navegador puede usar otra fuente para los caracteres que falten.</p>
+            <p id="local-font-status" role="status"></p>
+          </section>
           <div class="comparison">
             <article class="render-card" data-view="a">
               <div class="view-title"><span class="view-letter">A</span><h3>Deja que escape</h3><span id="overflow-badge-a" class="mode-badge">visible</span></div>
-              <div class="view-settings"><label>Fuente<select id="font-a"><option value="noto">Noto Sans · incluida</option><option value="sans">Arial / sans-serif</option><option value="serif">Times / serif</option><option value="mono">Courier / monospace</option><option value="system">Sistema</option></select></label><label>Mensaje<select id="overflow-a"><option value="visible">visible</option><option value="clip">clip</option><option value="hidden">hidden</option></select></label><label>Panel<select id="panel-overflow-a"><option value="hidden">Recortar</option><option value="visible">Visible</option></select></label></div>
+              <div class="view-settings"><label>Fuente<select id="font-a"><option value="noto">Noto Sans · incluida</option><option value="sans">Arial / sans-serif</option><option value="serif">Times / serif</option><option value="mono">Courier / monospace</option><option value="system">Sistema</option><optgroup id="local-fonts-a" label="Fuentes locales" hidden></optgroup></select></label><label>Mensaje<select id="overflow-a"><option value="visible">visible</option><option value="clip">clip</option><option value="hidden">hidden</option></select></label><label>Panel<select id="panel-overflow-a"><option value="hidden">Recortar</option><option value="visible">Visible</option></select></label></div>
               <div class="stage-window" id="stage-window-a">
                 <div class="stage" id="stage-a" aria-label="Vista A: renderizado del texto">
                   <div class="stage-tag"><span></span> CHAT DE PRUEBAS</div>
@@ -159,7 +170,7 @@
             </article>
             <article class="render-card" data-view="b">
               <div class="view-title"><span class="view-letter secondary">B</span><h3>Ponle un límite</h3><span id="overflow-badge-b" class="mode-badge">clip</span></div>
-              <div class="view-settings"><label>Fuente<select id="font-b"><option value="noto">Noto Sans · incluida</option><option value="sans">Arial / sans-serif</option><option value="serif">Times / serif</option><option value="mono">Courier / monospace</option><option value="system">Sistema</option></select></label><label>Mensaje<select id="overflow-b"><option value="visible">visible</option><option value="clip" selected>clip</option><option value="hidden">hidden</option></select></label><label>Panel<select id="panel-overflow-b"><option value="hidden">Recortar</option><option value="visible">Visible</option></select></label></div>
+              <div class="view-settings"><label>Fuente<select id="font-b"><option value="noto">Noto Sans · incluida</option><option value="sans">Arial / sans-serif</option><option value="serif">Times / serif</option><option value="mono">Courier / monospace</option><option value="system">Sistema</option><optgroup id="local-fonts-b" label="Fuentes locales" hidden></optgroup></select></label><label>Mensaje<select id="overflow-b"><option value="visible">visible</option><option value="clip" selected>clip</option><option value="hidden">hidden</option></select></label><label>Panel<select id="panel-overflow-b"><option value="hidden">Recortar</option><option value="visible">Visible</option></select></label></div>
               <div class="stage-window" id="stage-window-b">
                 <div class="stage" id="stage-b" aria-label="Vista B: renderizado del texto">
                   <div class="stage-tag"><span></span> CHAT DE PRUEBAS</div>
@@ -185,6 +196,7 @@
             <label for="share-url">Enlace de este momento<textarea id="share-url" rows="3" readonly spellcheck="false" aria-describedby="share-info share-snapshot-note"></textarea></label>
             <div class="share-panel-actions"><button id="share-copy" class="notebook-primary">Copiar enlace</button><a id="share-open" class="notebook-button" target="_blank" rel="noopener noreferrer">Probar enlace ↗</a><button id="share-close" class="notebook-button share-close">Cerrar</button></div>
             <p id="share-snapshot-note">Si cambias los ajustes, pulsa Compartir experimento para generar otro enlace.</p>
+            <p id="share-font-note" hidden>El enlace guarda referencias a las fuentes locales. En otra pestaña se usarán fuentes de sustitución hasta que cargues los archivos.</p>
             <p id="share-status" role="status" aria-live="polite"></p>
           </div>
         </section>
@@ -209,7 +221,7 @@
         <label for="experiment-name">Nombre del experimento<input id="experiment-name" name="experiment-name" type="text" maxlength="80" required placeholder="La araña que trepa tres mensajes" autocomplete="off" aria-describedby="notebook-save-help"></label>
         <button id="notebook-save" class="notebook-primary" type="submit">Guardar experimento</button><button id="notebook-cancel" class="notebook-button" type="button" hidden>Cancelar</button>
       </form>
-      <p id="notebook-save-help" class="notebook-storage">Conserva el texto, los ajustes A/B, las guías y la selección. Los experimentos se recuperan en pausa.</p>
+      <p id="notebook-save-help" class="notebook-storage">Conserva el texto, los ajustes A/B, las guías y la selección. Los experimentos se recuperan en pausa. Para recuperar una fuente local, carga el mismo archivo antes de abrir el experimento.</p>
       <p id="notebook-storage" class="notebook-storage">Guardado en este navegador. Exporta JSON para compartirlo o llevarlo a otro equipo.</p>
       <div class="notebook-feedback"><span id="notebook-status" role="status" aria-live="polite"></span><button id="notebook-undo" class="text-button" hidden>Deshacer eliminación</button></div>
       <div class="notebook-list-header"><span>TUS HALLAZGOS</span><span id="notebook-count">0 / 100 experimentos</span></div>

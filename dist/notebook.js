@@ -39,6 +39,10 @@ export function validateSnapshot(value) {
       overflow: choice(view.overflow, ['visible', 'clip', 'hidden'], 'Overflow'),
       panelOverflow: choice(view.panelOverflow === undefined ? 'hidden' : view.panelOverflow, ['visible', 'hidden'], 'Overflow del panel'),
     };
+    if (view.localFont !== undefined) {
+      requireValue(typeof view.localFont === 'string' && /^[a-f0-9]{64}$/u.test(view.localFont), 'Referencia de fuente local no válida.');
+      views[id].localFont = view.localFont;
+    }
   }
   const snapshot = {
     text: value.text,

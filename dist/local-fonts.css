@@ -1,0 +1,21 @@
+.font-drop {
+  border-style: dashed;
+  scroll-margin-top: 12px;
+}
+.font-dragging {
+  background: var(--purple-light);
+  border-color: var(--purple);
+}
+.font-drop .player-copy { min-width: 180px; }
+#local-font-clear[hidden] { display: none; }
+#local-font-status {
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+#local-font-status:empty { margin: 0; }
+@media (max-width: 600px) {
+  .font-drop .player-controls { display: flex; }
+  .font-drop .player-controls button { flex: 1; }
+}

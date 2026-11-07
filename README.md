@@ -14,7 +14,7 @@ En Windows también puedes usar `py -3.12 -m http.server 8000 --directory dist`.
 
 ## Experimentar
 
-Las siete mejoras están implementadas: **1. Selección conectada**, **2. Crecimiento animado**, **3. Cuaderno de descubrimientos**, **4. Enlaces compartibles** **5. Constructor de criaturas**, **6. Escenarios de recorte** y **7. Chat en movimiento**. La cabecera las identifica y el enlace **Cuaderno** abre los experimentos guardados.
+La cabecera identifica las ocho mejoras implementadas. **1. Selección conectada**, **2. Crecimiento animado**, **3. Cuaderno de descubrimientos**, **4. Enlaces compartibles**, **5. Constructor de criaturas**, **6. Escenarios de recorte**, **7. Chat en movimiento** y **8. Fuentes locales**. El enlace **Cuaderno** abre los experimentos guardados.
 
 El selector **Apariencia**, en la cabecera, ofrece **Normal** (el diseño claro original), **Oscuro** y **Sistema**. La elección se recuerda en este navegador; Sistema sigue los cambios de apariencia del sistema operativo mientras la página está abierta. Normal es la opción inicial. Si el navegador bloquea el almacenamiento, el selector sigue funcionando durante la sesión de la página. Restablecer el laboratorio conserva la apariencia elegida.
 
@@ -28,7 +28,15 @@ El selector **Apariencia**, en la cabecera, ofrece **Normal** (el diseño claro 
 8. Selecciona una ficha de grafema: se ilumina en **las dos vistas** y el inspector muestra sus puntos de código, nombres, categorías e intervalos UTF-16. También puedes pulsar el texto de A/B o usar los botones **anterior/siguiente**. En las fichas, las flechas y las teclas Inicio/Fin permiten recorrer el texto con el teclado.
 9. Cambia a **Puntos de código** para ver el texto completo. Pulsa un carácter de la tabla para localizar su grafema: todas las filas que lo componen quedan marcadas en verde.
 
-Incluye seis ejemplos, cuatro tipos de hilo, cinco opciones de fuente por vista, control de tamaño y altura de línea, escapes Unicode, copia y restablecimiento. Texto personalizado hasta 512 puntos de código; generador hasta 60 repeticiones. El contenido se inserta como texto con `textContent`, nunca como HTML.
+Incluye seis ejemplos, cuatro tipos de hilo, cinco fuentes predefinidas por vista, control de tamaño y altura de línea, escapes Unicode, copia y restablecimiento. El texto personalizado admite hasta 512 puntos de código y el generador hasta 60 repeticiones. El contenido se inserta como texto con `textContent`.
+
+### Fuentes locales
+
+Elige **Vista A** o **Vista B** en **Aplicar al cargar** y arrastra un archivo a **Fuentes locales** o pulsa **Elegir archivo**. Puedes elegir cualquiera de las fuentes cargadas desde el selector **Fuente** de cada vista. El laboratorio admite hasta ocho archivos WOFF2, WOFF, TTF u OTF de hasta 10 MiB cada uno.
+
+Los archivos permanecen en la memoria de la pestaña. **Quitar fuentes locales** retira las fuentes cargadas y devuelve a Noto Sans las vistas que las usaban. El navegador puede usar otras fuentes para los caracteres ausentes en el archivo.
+
+El cuaderno, sus exportaciones y los enlaces guardan una referencia al archivo y usan Noto Sans si falta. Para reproducir la tipografía, carga el mismo archivo en esa pestaña antes de abrir el experimento. En HTTPS y localhost, la referencia se calcula a partir del contenido del archivo.
 
 ### La araña, paso a paso
 

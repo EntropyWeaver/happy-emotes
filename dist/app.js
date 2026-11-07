@@ -5,6 +5,7 @@ import { initNotebook } from './notebook-ui.js';
 import { initShareLinks } from './share-ui.js';
 import { initCreatureBuilder } from './creatures.js';
 import { initMovingChat } from './chat.js';
+import { initLocalFonts } from './local-fonts.js';
 
 const $ = id => document.getElementById(id);
 const fonts = { noto: '"Noto Lab", sans-serif', sans: 'Arial, sans-serif', serif: '"Times New Roman", serif', mono: '"Courier New", monospace', system: 'system-ui, sans-serif' };
@@ -245,7 +246,8 @@ function renderViews() {
   $('font-size-value').value = `${fontSize} px`;
   $('line-height-value').value = `${lineHeight} px`;
   for (const view of ['a', 'b']) {
-    const font = fonts[$(`font-${view}`).value];
+    const fontId = $(`font-${view}`).value;
+    const font = localFonts.family(fontId) ?? fonts[fontId];
     const overflow = $(`overflow-${view}`).value;
     const panelOverflow = $(`panel-overflow-${view}`).value;
     const stage = $(`stage-${view}`);
@@ -341,7 +343,14 @@ function captureExperiment() {
   return {
     text, preset: state.preset,
     fontSize: Number($('font-size').value), lineHeight: Number($('line-height').value),
-    views: Object.fromEntries(['a', 'b'].map(view => [view, { font: $(`font-${view}`).value, overflow: $(`overflow-${view}`).value, panelOverflow: $(`panel-overflow-${view}`).value }])),
+    views: Object.fromEntries(['a', 'b'].map(view => {
+      const font = $(`font-${view}`).value;
+      return [view, {
+        ...(localFonts.has(font) ? { font: 'noto', localFont: font } : { font }),
+        overflow: $(`overflow-${view}`).value,
+        panelOverflow: $(`panel-overflow-${view}`).value,
+      }];
+    })),
     showBoxes: $('show-boxes').checked, showInk: $('show-ink').checked,
     markCount: Number($('mark-count').value), markType: $('mark-type').value,
     speed: Number($('player-speed').value), inspector: state.inspector,
@@ -354,8 +363,11 @@ function restoreExperiment(snapshot) {
   chat.reset();
   cancelAnimationFrame(inputFrame);
   for (const [id, value] of Object.entries({ 'font-size': snapshot.fontSize, 'line-height': snapshot.lineHeight, 'mark-count': snapshot.markCount, 'mark-type': snapshot.markType, 'player-speed': snapshot.speed })) $(id).value = value;
+  const missingFonts = [];
   for (const view of ['a', 'b']) {
-    $(`font-${view}`).value = snapshot.views[view].font;
+    const { font, localFont } = snapshot.views[view];
+    $(`font-${view}`).value = localFonts.has(localFont) ? localFont : font;
+    if (localFont && !localFonts.has(localFont)) missingFonts.push(view.toUpperCase());
     $(`overflow-${view}`).value = snapshot.views[view].overflow;
     $(`panel-overflow-${view}`).value = snapshot.views[view].panelOverflow;
   }
@@ -368,7 +380,9 @@ function restoreExperiment(snapshot) {
   state.selected = snapshot.selected;
   updateSpiderControls();
   setSpecimen(snapshot.text, { preset: snapshot.preset, preserveSelection: true });
-  toast('Experimento recuperado, en pausa.');
+  localFonts.warnMissing(missingFonts);
+  toast(missingFonts.length ? 'Experimento recuperado con fuentes de sustitución.' : 'Experimento recuperado, en pausa.');
+  return missingFonts;
 }
 
 document.querySelectorAll('[data-preset]').forEach(button => button.addEventListener('click', () => {
@@ -467,6 +481,7 @@ document.fonts?.ready.then(scheduleMeasurements);
 document.fonts?.addEventListener('loadingdone', scheduleMeasurements);
 
 const chat = initMovingChat({ onMove: scheduleMeasurements });
+const localFonts = initLocalFonts({ onChange: renderViews });
 setSpecimen(PRESETS.spider.text, { preset: 'spider' });
 $('render-title').tabIndex = -1;
 initNotebook({ capture: captureExperiment, restore: restoreExperiment, pause: () => playback.pause() });
