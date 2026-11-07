@@ -6,7 +6,7 @@ import { SHARE_PREFIX, MAX_SHARE_TOKEN_LENGTH, encodeExperiment, decodeExperimen
 function snapshot() {
   return {
     text: makeSpider(12), preset: 'spider', fontSize: 48, lineHeight: 16,
-    views: { a: { font: 'noto', overflow: 'visible' }, b: { font: 'serif', overflow: 'hidden' } },
+    views: { a: { font: 'noto', overflow: 'visible', panelOverflow: 'visible' }, b: { font: 'serif', overflow: 'hidden', panelOverflow: 'hidden' } },
     showBoxes: false, showInk: true, markCount: 12, markType: 'homothetic',
     speed: 1000, inspector: 'codepoints', selected: 5, showEscapes: true,
   };
@@ -36,6 +36,18 @@ test('URLs support subdirectories, replace old fragments and omit existing query
     assert.deepEqual(decodeExperimentHash(result.hash), snapshot());
   }
   assert.throws(() => createExperimentURL('javascript:alert(1)', snapshot()), /HTTP/);
+});
+
+test('legacy links default to clipping at the panel edge and invalid panel modes are rejected', () => {
+  const experiment = snapshot();
+  delete experiment.views.a.panelOverflow;
+  delete experiment.views.b.panelOverflow;
+  const restored = decodeExperimentHash(uncheckedHash({ v: 1, experiment }));
+  assert.equal(restored.views.a.panelOverflow, 'hidden');
+  assert.equal(restored.views.b.panelOverflow, 'hidden');
+  assert.equal(restored.views.a.overflow, 'visible');
+  experiment.views.b.panelOverflow = 'scroll';
+  assert.throws(() => decodeExperimentHash(uncheckedHash({ v: 1, experiment })), /Overflow del panel/);
 });
 
 test('ordinary anchors are ignored; truncated, oversized, invalid UTF-8 and future-version payloads are rejected', () => {

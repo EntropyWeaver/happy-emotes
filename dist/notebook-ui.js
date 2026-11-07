@@ -64,7 +64,9 @@ export function initNotebook({ capture, restore, pause }) {
       views.className = 'experiment-views';
       for (const id of ['a', 'b']) {
         const tag = document.createElement('span');
-        tag.textContent = `${id.toUpperCase()} · ${fontNames[entry.snapshot.views[id].font]} · ${entry.snapshot.views[id].overflow}`;
+        const view = entry.snapshot.views[id];
+        tag.textContent = `${id.toUpperCase()} · ${fontNames[view.font]} · ${view.overflow}`;
+        if (view.panelOverflow === 'visible') tag.textContent += ' · panel visible';
         views.append(tag);
       }
       const date = document.createElement('time');

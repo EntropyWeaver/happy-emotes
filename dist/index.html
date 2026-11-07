@@ -34,7 +34,7 @@
 
   <main>
     <section class="intro" aria-labelledby="page-title">
-      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a><a href="#share-experiment"><b>✓ 4</b> Enlaces compartibles</a><a href="#criaturas"><b>✓ 5</b> Constructor de criaturas</a></div></div>
+      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a><a href="#share-experiment"><b>✓ 4</b> Enlaces compartibles</a><a href="#criaturas"><b>✓ 5</b> Constructor de criaturas</a><a href="#panel-overflow-a"><b>✓ 6</b> Escenarios de recorte</a></div></div>
       <div class="intro-stamp" aria-hidden="true"><span>U+034B</span><div>o͋</div><small>pequeño carácter,<br>grandes consecuencias.</small></div>
     </section>
 
@@ -128,37 +128,41 @@
           <div class="comparison">
             <article class="render-card" data-view="a">
               <div class="view-title"><span class="view-letter">A</span><h3>Deja que escape</h3><span id="overflow-badge-a" class="mode-badge">visible</span></div>
-              <div class="view-settings"><label>Fuente<select id="font-a"><option value="noto">Noto Sans · incluida</option><option value="sans">Arial / sans-serif</option><option value="serif">Times / serif</option><option value="mono">Courier / monospace</option><option value="system">Sistema</option></select></label><label>Overflow<select id="overflow-a"><option value="visible">visible</option><option value="clip">clip</option><option value="hidden">hidden</option></select></label></div>
-              <div class="stage" id="stage-a" aria-label="Vista A: renderizado del texto">
-                <div class="stage-tag"><span></span> CHAT DE PRUEBAS</div>
-                <div class="chat-message"><span class="chat-user purple">pixel_ghost</span><span>todo bajo control</span></div>
-                <div class="chat-message"><span class="chat-user green">nullpointer</span><span>¿eso se está moviendo?</span></div>
-                <div class="chat-message"><span class="chat-user amber">hob_enjoyer</span><span>nice run ✨</span></div>
-                <div class="specimen-message" id="message-a"><span class="baseline-anchor" aria-hidden="true"></span><bdi class="sample" id="sample-a" dir="auto"></bdi></div>
-                <div class="sample-caption"><span class="chat-user purple">tú</span><span>acabas de enviar un espécimen</span></div>
-                <div class="stage-overlays" aria-hidden="true"><div class="layout-outline" id="layout-a"></div><div class="baseline-guide" id="baseline-a"></div><div class="ink-outline" id="ink-a" hidden></div><div id="selection-a"></div><span id="selection-status-a" class="selection-offscreen" hidden>Grafema fuera de vista</span></div>
+              <div class="view-settings"><label>Fuente<select id="font-a"><option value="noto">Noto Sans · incluida</option><option value="sans">Arial / sans-serif</option><option value="serif">Times / serif</option><option value="mono">Courier / monospace</option><option value="system">Sistema</option></select></label><label>Mensaje<select id="overflow-a"><option value="visible">visible</option><option value="clip">clip</option><option value="hidden">hidden</option></select></label><label>Panel<select id="panel-overflow-a"><option value="hidden">Recortar</option><option value="visible">Visible</option></select></label></div>
+              <div class="stage-window" id="stage-window-a">
+                <div class="stage" id="stage-a" aria-label="Vista A: renderizado del texto">
+                  <div class="stage-tag"><span></span> CHAT DE PRUEBAS</div>
+                  <div class="chat-message"><span class="chat-user purple">pixel_ghost</span><span>todo bajo control</span></div>
+                  <div class="chat-message"><span class="chat-user green">nullpointer</span><span>¿eso se está moviendo?</span></div>
+                  <div class="chat-message"><span class="chat-user amber">hob_enjoyer</span><span>nice run ✨</span></div>
+                  <div class="specimen-message" id="message-a"><span class="baseline-anchor" aria-hidden="true"></span><bdi class="sample" id="sample-a" dir="auto"></bdi></div>
+                  <div class="sample-caption"><span class="chat-user purple">tú</span><span>acabas de enviar un espécimen</span></div>
+                  <div class="stage-overlays" aria-hidden="true"><div class="layout-outline" id="layout-a"></div><div class="baseline-guide" id="baseline-a"></div><div class="ink-outline" id="ink-a" hidden></div><div id="selection-a"></div><span id="selection-status-a" class="selection-offscreen" hidden>Grafema fuera de vista</span></div>
+                </div>
               </div>
               <div class="view-readout"><span>Caja <strong id="box-metric-a">—</strong></span><span>Tinta Canvas <strong id="ink-metric-a">—</strong></span></div>
               <code class="css-snippet" id="css-a"></code>
             </article>
             <article class="render-card" data-view="b">
               <div class="view-title"><span class="view-letter secondary">B</span><h3>Ponle un límite</h3><span id="overflow-badge-b" class="mode-badge">clip</span></div>
-              <div class="view-settings"><label>Fuente<select id="font-b"><option value="noto">Noto Sans · incluida</option><option value="sans">Arial / sans-serif</option><option value="serif">Times / serif</option><option value="mono">Courier / monospace</option><option value="system">Sistema</option></select></label><label>Overflow<select id="overflow-b"><option value="visible">visible</option><option value="clip" selected>clip</option><option value="hidden">hidden</option></select></label></div>
-              <div class="stage" id="stage-b" aria-label="Vista B: renderizado del texto">
-                <div class="stage-tag"><span></span> CHAT DE PRUEBAS</div>
-                <div class="chat-message"><span class="chat-user purple">pixel_ghost</span><span>todo bajo control</span></div>
-                <div class="chat-message"><span class="chat-user green">nullpointer</span><span>¿eso se está moviendo?</span></div>
-                <div class="chat-message"><span class="chat-user amber">hob_enjoyer</span><span>nice run ✨</span></div>
-                <div class="specimen-message" id="message-b"><span class="baseline-anchor" aria-hidden="true"></span><bdi class="sample" id="sample-b" dir="auto"></bdi></div>
-                <div class="sample-caption"><span class="chat-user purple">tú</span><span>acabas de enviar un espécimen</span></div>
-                <div class="stage-overlays" aria-hidden="true"><div class="layout-outline" id="layout-b"></div><div class="baseline-guide" id="baseline-b"></div><div class="ink-outline" id="ink-b" hidden></div><div id="selection-b"></div><span id="selection-status-b" class="selection-offscreen" hidden>Grafema fuera de vista</span></div>
+              <div class="view-settings"><label>Fuente<select id="font-b"><option value="noto">Noto Sans · incluida</option><option value="sans">Arial / sans-serif</option><option value="serif">Times / serif</option><option value="mono">Courier / monospace</option><option value="system">Sistema</option></select></label><label>Mensaje<select id="overflow-b"><option value="visible">visible</option><option value="clip" selected>clip</option><option value="hidden">hidden</option></select></label><label>Panel<select id="panel-overflow-b"><option value="hidden">Recortar</option><option value="visible">Visible</option></select></label></div>
+              <div class="stage-window" id="stage-window-b">
+                <div class="stage" id="stage-b" aria-label="Vista B: renderizado del texto">
+                  <div class="stage-tag"><span></span> CHAT DE PRUEBAS</div>
+                  <div class="chat-message"><span class="chat-user purple">pixel_ghost</span><span>todo bajo control</span></div>
+                  <div class="chat-message"><span class="chat-user green">nullpointer</span><span>¿eso se está moviendo?</span></div>
+                  <div class="chat-message"><span class="chat-user amber">hob_enjoyer</span><span>nice run ✨</span></div>
+                  <div class="specimen-message" id="message-b"><span class="baseline-anchor" aria-hidden="true"></span><bdi class="sample" id="sample-b" dir="auto"></bdi></div>
+                  <div class="sample-caption"><span class="chat-user purple">tú</span><span>acabas de enviar un espécimen</span></div>
+                  <div class="stage-overlays" aria-hidden="true"><div class="layout-outline" id="layout-b"></div><div class="baseline-guide" id="baseline-b"></div><div class="ink-outline" id="ink-b" hidden></div><div id="selection-b"></div><span id="selection-status-b" class="selection-offscreen" hidden>Grafema fuera de vista</span></div>
+                </div>
               </div>
               <div class="view-readout"><span>Caja <strong id="box-metric-b">—</strong></span><span>Tinta Canvas <strong id="ink-metric-b">—</strong></span></div>
               <code class="css-snippet" id="css-b"></code>
             </article>
           </div>
           <div class="observation"><span class="observation-icon" aria-hidden="true">⌁</span><p id="observation">El contenido puede pintarse fuera de su caja sin desplazar los mensajes anteriores.</p></div>
-          <p class="render-footnote">La tinta visible es texto real del navegador. El recuadro verde sitúa el grafema; no delimita su tinta. La guía naranja estima la tinta con Canvas. El panel completo siempre recorta en su borde.</p>
+          <p class="render-footnote">La tinta visible es texto real del navegador. El recuadro verde sitúa el grafema; no delimita su tinta. La guía naranja estima la tinta con Canvas. Si el panel deja salir la tinta, puedes verla en el margen que rodea el chat. Sube la longitud del hilo para llevarlo hasta ese borde.</p>
           <div class="experiment-tools"><a id="open-notebook" class="notebook-shortcut" href="#cuaderno">Guardar este experimento en el cuaderno →</a><button id="share-experiment" class="notebook-primary share-trigger" aria-expanded="false" aria-controls="share-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="5" r="3"/><circle cx="18" cy="19" r="3"/><path d="m9 10 6-4M9 14l6 4"/></svg>Compartir experimento</button></div>
           <div id="share-panel" class="share-panel" hidden>
             <h3>Un experimento, un enlace</h3>

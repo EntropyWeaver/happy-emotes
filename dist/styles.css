@@ -7,3 +7,30 @@
 @media(max-width:900px){.topbar{padding:0 20px;height:72px}.topbar nav{gap:18px}.topbar nav a{font-size:11px}main{padding:0 20px}.intro{padding:33px 0}.intro h1{font-size:32px}.intro .eyebrow{font-size:8px}.intro-copy{font-size:12px}.lab-grid{grid-template-columns:1fr}.control-panel{position:static;display:grid;grid-template-columns:1fr 1fr;column-gap:24px;padding:22px}.control-panel>.section-heading,.control-panel>.small,.presets,.control-panel>.label-row,textarea,.input-actions,.hint,.escape-box,.notice{grid-column:1}.control-panel>.control-group{grid-column:2}.control-panel>#spider-controls{grid-row:1 / span 6;margin:0;padding:0;border:0;align-self:start}.control-panel>.control-group:not(#spider-controls){grid-row:7 / span 5;margin-top:14px}.control-panel:has(#spider-controls[hidden])>.control-group:not(#spider-controls){grid-row:1 / span 10;margin-top:0;padding-top:0;border-top:0}.local-note{grid-column:1;align-self:end}.presets{grid-template-columns:repeat(3,1fr);margin-top:8px;margin-bottom:18px}.control-panel>.small{font-size:11px}.stats{gap:12px}.stat{padding:16px}.stat>span{font-size:11px}.stat-symbol{display:inline}.stat small{font-size:10px}.render-panel,.anatomy-panel{padding:22px}.stage{padding:64px 22px 45px;min-height:280px}.chat-message{font-size:10px;gap:10px}.chat-user{font-size:10px}.view-title{padding:14px 14px 0}.view-title h3{font-size:12px}.view-settings{padding:12px 14px;grid-template-columns:minmax(0,1fr) 90px}.comparison{gap:15px}.view-readout{padding:12px 14px}.css-snippet{padding:9px 14px;font-size:9px}.normalization{flex-direction:row;align-items:center}.sample-caption{font-size:9px}.explanation{margin-top:50px}footer{padding:20px;font-size:9px}.concepts{gap:13px}.concepts article{padding:20px}.concept-example.mono{font-size:13px}}
 @media(max-width:600px){.topbar{height:67px;padding:0 16px}.brand{font-size:20px;gap:9px}.brand small{font-size:7px}.brand-icon{height:33px;width:33px;font-size:31px}.brand-icon span{left:14px;font-size:22px}.topbar nav{display:none}.repo-link{padding:8px 10px;font-size:10px;gap:6px}main{padding:0 14px}.intro{padding:30px 3px}.intro h1{font-size:32px;letter-spacing:-1px;line-height:1.2}.intro .eyebrow{font-size:7px;letter-spacing:1.2px}.mobile-break{display:block}.intro-copy{font-size:12px;max-width:310px;line-height:1.7}.control-panel{display:block;padding:20px}.presets{grid-template-columns:repeat(3,1fr);gap:6px}.preset{font-size:10px}.control-panel>#spider-controls,.control-panel:has(#spider-controls[hidden])>.control-group:not(#spider-controls){margin-top:20px;padding-top:20px;border-top:1px solid var(--line)}.control-panel>.control-group:not(#spider-controls){margin-top:20px}.stats{grid-template-columns:repeat(2,1fr);gap:9px}.stat{padding:15px 17px}.stat strong{font-size:29px;margin:8px 0 4px}.render-panel,.anatomy-panel{padding:18px 14px}.render-heading h2{font-size:16px}.live-badge{font-size:8px}.legend{gap:12px;font-size:8px;line-height:1.8;margin:15px 0}.comparison{grid-template-columns:1fr;gap:17px}.stage{min-height:260px;padding-top:57px;padding-bottom:40px}.chat-message{font-size:11px}.chat-user{font-size:10px}.view-title h3{font-size:13px}.view-title{padding:14px 15px 0}.view-settings{padding:12px 15px}.view-settings label{font-size:9px}.view-settings select{font-size:11px}.observation{padding:10px;gap:8px}.observation p{font-size:10px}.render-footnote{font-size:9px}.anatomy-heading{align-items:start;flex-direction:column;gap:13px;margin-bottom:14px}.anatomy-heading .segmented{align-self:stretch;justify-content:stretch}.segmented button{flex:1;font-size:10px}.anatomy-panel>.small{font-size:11px}.normalization{flex-direction:column;align-items:start;gap:13px}.normalization strong{font-size:11px}.normalization p{font-size:10px}.concepts{grid-template-columns:1fr}.concepts article{padding:23px}.concept-example.mono{font-size:18px}.concepts p{font-size:12px;max-width:none}.explanation-heading h2{font-size:25px}.explanation-heading>p:last-child{font-size:11px}.explanation-heading .eyebrow{font-size:8px}.explanation{margin-top:42px;padding-bottom:30px}footer{flex-direction:column;gap:8px;font-size:9px}.methodology{padding:17px}.table-scroll{max-height:240px}}
 @media(prefers-reduced-motion:reduce){:root{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+
+/* Give paint beyond the chat its own space while keeping the two views aligned. */
+.view-settings {
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, .8fr) minmax(0, 1fr);
+}
+.view-settings select { min-width: 0; }
+.stage-window {
+  position: relative;
+  overflow: hidden;
+  overflow: clip;
+  padding: 38px 10px 26px;
+  background: #3b3154;
+}
+.stage-window::before {
+  content: "MARGEN DE OBSERVACIÓN";
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  color: #ded1f3;
+  font-size: 8px;
+  letter-spacing: .06em;
+  pointer-events: none;
+}
+.stage[data-panel-overflow="visible"] {
+  overflow: visible;
+  contain: none;
+}

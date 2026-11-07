@@ -32,10 +32,12 @@ export function validateSnapshot(value) {
   requireValue(record(value.views), 'Faltan los ajustes de las vistas A/B.');
   const views = {};
   for (const id of ['a', 'b']) {
-    requireValue(record(value.views[id]), `Falta la vista ${id.toUpperCase()}.`);
+    const view = value.views[id];
+    requireValue(record(view), `Falta la vista ${id.toUpperCase()}.`);
     views[id] = {
-      font: choice(value.views[id].font, ['noto', 'sans', 'serif', 'mono', 'system'], 'Fuente'),
-      overflow: choice(value.views[id].overflow, ['visible', 'clip', 'hidden'], 'Overflow'),
+      font: choice(view.font, ['noto', 'sans', 'serif', 'mono', 'system'], 'Fuente'),
+      overflow: choice(view.overflow, ['visible', 'clip', 'hidden'], 'Overflow'),
+      panelOverflow: choice(view.panelOverflow === undefined ? 'hidden' : view.panelOverflow, ['visible', 'hidden'], 'Overflow del panel'),
     };
   }
   const snapshot = {

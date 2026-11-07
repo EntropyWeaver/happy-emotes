@@ -245,20 +245,21 @@ function renderViews() {
   for (const view of ['a', 'b']) {
     const font = fonts[$(`font-${view}`).value];
     const overflow = $(`overflow-${view}`).value;
+    const panelOverflow = $(`panel-overflow-${view}`).value;
+    const stage = $(`stage-${view}`);
+    stage.dataset.panelOverflow = panelOverflow;
     const message = $(`message-${view}`);
     Object.assign(message.style, { fontFamily: font, fontSize: `${fontSize}px`, lineHeight: `${lineHeight}px`, overflow });
     const sample = $(`sample-${view}`);
     if (sample.textContent !== state.analysis.text) sample.textContent = state.analysis.text;
-    $(`overflow-badge-${view}`).textContent = overflow;
-    $(`css-${view}`).textContent = `font-size: ${fontSize}px; line-height: ${lineHeight}px;\noverflow: ${overflow};`;
+    $(`overflow-badge-${view}`).textContent = `Mensaje · ${overflow}`;
+    $(`css-${view}`).textContent = `font-size: ${fontSize}px; line-height: ${lineHeight}px;\nMensaje · overflow: ${overflow};\nPanel · overflow: ${panelOverflow};`;
     $(`layout-${view}`).hidden = !$('show-boxes').checked;
     $(`baseline-${view}`).hidden = !$('show-boxes').checked;
   }
-  const first = $('overflow-a').value;
-  const second = $('overflow-b').value;
-  $('observation').textContent = !state.analysis.text ? 'Escribe un texto para observar qué espacio reserva el navegador.' : first === second
-    ? `Las dos vistas usan overflow: ${first}. Compara las fuentes para observar cómo cambia la composición.`
-    : 'Las cajas reservan espacio para el mensaje. Con visible, su tinta puede atravesar otros mensajes; con clip o hidden se recorta en la caja.';
+  $('observation').textContent = state.analysis.text
+    ? 'Mensaje controla el recorte en la caja azul. Panel controla el borde oscuro del chat. Elige visible en Mensaje y compara las opciones de Panel.'
+    : 'Escribe un texto para observar qué espacio reserva el navegador.';
   scheduleMeasurements();
 }
 
@@ -337,7 +338,7 @@ function captureExperiment() {
   return {
     text, preset: state.preset,
     fontSize: Number($('font-size').value), lineHeight: Number($('line-height').value),
-    views: Object.fromEntries(['a', 'b'].map(view => [view, { font: $(`font-${view}`).value, overflow: $(`overflow-${view}`).value }])),
+    views: Object.fromEntries(['a', 'b'].map(view => [view, { font: $(`font-${view}`).value, overflow: $(`overflow-${view}`).value, panelOverflow: $(`panel-overflow-${view}`).value }])),
     showBoxes: $('show-boxes').checked, showInk: $('show-ink').checked,
     markCount: Number($('mark-count').value), markType: $('mark-type').value,
     speed: Number($('player-speed').value), inspector: state.inspector,
@@ -352,6 +353,7 @@ function restoreExperiment(snapshot) {
   for (const view of ['a', 'b']) {
     $(`font-${view}`).value = snapshot.views[view].font;
     $(`overflow-${view}`).value = snapshot.views[view].overflow;
+    $(`panel-overflow-${view}`).value = snapshot.views[view].panelOverflow;
   }
   $('show-boxes').checked = snapshot.showBoxes;
   $('show-ink').checked = snapshot.showInk;
@@ -390,7 +392,7 @@ $('specimen').addEventListener('compositionend', () => $('specimen').dispatchEve
 $('mark-count').addEventListener('input', regenerateSpider);
 $('mark-type').addEventListener('change', regenerateSpider);
 for (const id of ['font-size', 'line-height', 'show-boxes', 'show-ink']) $(id).addEventListener('input', renderViews);
-for (const id of ['font-a', 'font-b', 'overflow-a', 'overflow-b']) $(id).addEventListener('change', renderViews);
+for (const id of ['font-a', 'font-b', 'overflow-a', 'overflow-b', 'panel-overflow-a', 'panel-overflow-b']) $(id).addEventListener('change', renderViews);
 $('previous-grapheme').addEventListener('click', () => selectGrapheme(state.selected - 1));
 $('next-grapheme').addEventListener('click', () => selectGrapheme(state.selected + 1));
 $('player-toggle').addEventListener('click', () => playback.playing ? playback.pause() : playback.play());
@@ -440,7 +442,7 @@ $('reset').addEventListener('click', () => {
   playback.pause();
   $('player-speed').value = '500';
   cancelAnimationFrame(inputFrame);
-  for (const [id, value] of Object.entries({ 'mark-count': 12, 'mark-type': 'homothetic', 'font-size': 28, 'line-height': 36, 'font-a': 'noto', 'font-b': 'noto', 'overflow-a': 'visible', 'overflow-b': 'clip' })) $(id).value = value;
+  for (const [id, value] of Object.entries({ 'mark-count': 12, 'mark-type': 'homothetic', 'font-size': 28, 'line-height': 36, 'font-a': 'noto', 'font-b': 'noto', 'overflow-a': 'visible', 'overflow-b': 'clip', 'panel-overflow-a': 'hidden', 'panel-overflow-b': 'hidden' })) $(id).value = value;
   $('show-boxes').checked = true;
   $('show-ink').checked = false;
   $('escaped').hidden = true;

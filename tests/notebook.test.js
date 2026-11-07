@@ -6,7 +6,7 @@ import { createNotebookStore, decodeNotebook, encodeNotebook, experimentName, me
 function entry(id = 'test-1', name = 'La araña que trepa tres mensajes') {
   return { id, name, createdAt: '2026-11-06T20:00:00.000Z', snapshot: {
     text: makeSpider(12), preset: 'spider', fontSize: 28, lineHeight: 36,
-    views: { a: { font: 'noto', overflow: 'visible' }, b: { font: 'serif', overflow: 'hidden' } },
+    views: { a: { font: 'noto', overflow: 'visible', panelOverflow: 'visible' }, b: { font: 'serif', overflow: 'hidden', panelOverflow: 'hidden' } },
     showBoxes: true, showInk: true, markCount: 12, markType: 'homothetic',
     speed: 1000, inspector: 'codepoints', selected: 4, showEscapes: true,
   } };
@@ -44,6 +44,17 @@ test('imports reject invalid formats, overlong text, unsafe settings and inconsi
   }
   const duplicateIds = JSON.stringify({ format: 'happy-emotes-notebook', version: 1, experiments: [entry(), entry()] });
   assert.throws(() => decodeNotebook(duplicateIds), /identificadores/);
+});
+
+test('a notebook saved before panel controls restores the original panel clipping', () => {
+  const legacy = entry();
+  delete legacy.snapshot.views.a.panelOverflow;
+  delete legacy.snapshot.views.b.panelOverflow;
+  const json = JSON.stringify({ format: 'happy-emotes-notebook', version: 1, experiments: [legacy] });
+  const [restored] = decodeNotebook(json);
+  assert.equal(restored.snapshot.views.a.panelOverflow, 'hidden');
+  assert.equal(restored.snapshot.views.b.panelOverflow, 'hidden');
+  assert.equal(restored.snapshot.views.a.overflow, 'visible');
 });
 
 test('merge skips exact repeats and retains both versions when an imported ID has changed', () => {

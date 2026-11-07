@@ -11,14 +11,19 @@ function textRange(sample, cluster) {
   return range;
 }
 
-function visibleRects(range, stage, message, overflow) {
+function clippingBoundary(view, stage) {
+  return getComputedStyle(view.stage).overflow === 'visible'
+    ? view.window.getBoundingClientRect() : stage;
+}
+
+function visibleRects(range, boundary, message, overflow) {
   // Range geometry is typographic, not the outline of the painted glyphs.
   // Intersect it with the actual clipping boxes, including the stage itself.
-  const clip = overflow === 'visible' ? stage : {
-    left: Math.max(stage.left, message.left),
-    right: Math.min(stage.right, message.right),
-    top: Math.max(stage.top, message.top),
-    bottom: Math.min(stage.bottom, message.bottom),
+  const clip = overflow === 'visible' ? boundary : {
+    left: Math.max(boundary.left, message.left),
+    right: Math.min(boundary.right, message.right),
+    top: Math.max(boundary.top, message.top),
+    bottom: Math.min(boundary.bottom, message.bottom),
   };
   return Array.from(range.getClientRects(), rect => {
     const left = Math.max(rect.left, clip.left);
@@ -33,6 +38,7 @@ export function createGraphemeSelection(onSelect) {
   const nativeHighlight = typeof Highlight === 'function' && Boolean(globalThis.CSS?.highlights);
   const views = ['a', 'b'].map(id => ({
     stage: document.getElementById(`stage-${id}`),
+    window: document.getElementById(`stage-window-${id}`),
     message: document.getElementById(`message-${id}`),
     sample: document.getElementById(`sample-${id}`),
     layer: document.getElementById(`selection-${id}`),
@@ -47,12 +53,13 @@ export function createGraphemeSelection(onSelect) {
       if (document.getSelection()?.type === 'Range') return;
       if (!view.message.contains(event.target)) return;
       const stage = view.stage.getBoundingClientRect();
+      const boundary = clippingBoundary(view, stage);
       const message = view.message.getBoundingClientRect();
       const overflow = getComputedStyle(view.message).overflow;
       for (const [index, cluster] of analysis.clusters.entries()) {
         const range = textRange(view.sample, cluster);
         if (!range) continue;
-        const hit = visibleRects(range, stage, message, overflow).some(rect =>
+        const hit = visibleRects(range, boundary, message, overflow).some(rect =>
           event.clientX >= rect.left && event.clientX < rect.left + rect.width &&
           event.clientY >= rect.top && event.clientY < rect.top + rect.height);
         if (hit) {
@@ -78,7 +85,7 @@ export function createGraphemeSelection(onSelect) {
         ranges.push(range);
         const stage = view.stage.getBoundingClientRect();
         const message = view.message.getBoundingClientRect();
-        const rects = visibleRects(range, stage, message, getComputedStyle(view.message).overflow);
+        const rects = visibleRects(range, clippingBoundary(view, stage), message, getComputedStyle(view.message).overflow);
         for (const rect of rects) {
           const box = document.createElement('div');
           box.className = `selection-outline${rect.caret ? ' selection-caret' : ''}`;

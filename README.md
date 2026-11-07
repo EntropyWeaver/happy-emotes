@@ -14,7 +14,7 @@ En Windows también puedes usar `py -3.12 -m http.server 8000 --directory dist`.
 
 ## Experimentar
 
-Las cinco mejoras están implementadas: **1. Selección conectada**, **2. Crecimiento animado**, **3. Cuaderno de descubrimientos**, **4. Enlaces compartibles** y **5. Constructor de criaturas**. La cabecera las identifica y el enlace **Cuaderno** abre los experimentos guardados.
+Las seis mejoras están implementadas: **1. Selección conectada**, **2. Crecimiento animado**, **3. Cuaderno de descubrimientos**, **4. Enlaces compartibles** **5. Constructor de criaturas** y **6. Escenarios de recorte**. La cabecera las identifica y el enlace **Cuaderno** abre los experimentos guardados.
 
 El selector **Apariencia**, en la cabecera, ofrece **Normal** (el diseño claro original), **Oscuro** y **Sistema**. La elección se recuerda en este navegador; Sistema sigue los cambios de apariencia del sistema operativo mientras la página está abierta. Normal es la opción inicial. Si el navegador bloquea el almacenamiento, el selector sigue funcionando durante la sesión de la página. Restablecer el laboratorio conserva la apariencia elegida.
 
@@ -47,7 +47,7 @@ Para observar el desbordamiento desde su origen: pulsa **Desde cero**, elige **L
 Usa **Guardar este experimento en el cuaderno** debajo de A/B o el enlace **Cuaderno** de la cabecera. Ponle un nombre y pulsa **Guardar experimento**. Cada entrada conserva:
 
 - El texto Unicode exacto, el espécimen y los ajustes del generador de la araña.
-- Las fuentes y el `overflow` de A/B, tamaño de fuente, altura de línea y las guías activadas.
+- Las fuentes y el recorte del mensaje y del panel en A/B, tamaño de fuente, altura de línea y las guías activadas.
 - El grafema seleccionado, el modo del inspector, los escapes y el ritmo del reproductor.
 
 **Abrir** restaura esos ajustes y deja el reproductor en pausa. La apariencia Normal/Oscuro/Sistema es una preferencia general y se conserva al abrir experimentos. **Renombrar** cambia solo el nombre. **Eliminar** ofrece **Deshacer eliminación** para la última entrada eliminada durante esta sesión. Restablecer el laboratorio conserva el cuaderno.
@@ -72,6 +72,18 @@ Abre **Constructor de criaturas** desde la cabecera. Elige una base y pulsa **Em
 
 La paleta reúne marcas de arriba, de abajo, superpuestas y envolventes, unidores, selectores de presentación y tonos de piel. Al pasar el puntero, enfocar o pulsar una pieza, se muestra su nombre Unicode y categoría. Para construir 👩‍💻, empieza con 👩, añade ZWJ, elige 💻 y pulsa **Añadir base**. La fuente y el navegador determinan el dibujo. La criatura se puede guardar en el cuaderno y compartir por enlace como cualquier espécimen.
 
+## Escenarios de recorte
+
+En cada vista, **Mensaje** ajusta el recorte de la caja del espécimen y **Panel** ajusta el recorte del chat. Prueba con Noto Sans y un hilo largo para comparar estos casos:
+
+| Mensaje | Panel | Qué puedes observar |
+| --- | --- | --- |
+| clip o hidden | Cualquiera | La tinta se recorta en la caja del mensaje. |
+| visible | Recortar | La tinta puede cubrir mensajes vecinos hasta el borde del chat. |
+| visible | Visible | La tinta puede cruzar el borde del chat y aparecer en el margen de observación. |
+
+El marco exterior delimita el margen de observación. Ambos ajustes viajan en los enlaces y cuadernos nuevos. Los experimentos antiguos se abren con **Panel → Recortar**.
+
 ## Qué significa cada medida
 
 | Medida | Origen | Limitación |
@@ -85,7 +97,7 @@ La paleta reúne marcas de arriba, de abajo, superpuestas y envolventes, unidore
 | Selección verde | `Range.getClientRects()` con los intervalos UTF-16 de cada grafema | Posición tipográfica, no contorno de tinta; respeta el recorte de cada vista |
 | Guía naranja | `CanvasRenderingContext2D.measureText()` + `actualBoundingBox*` | Estimación sin recorte con Canvas, no medición de píxeles del DOM |
 
-El texto visible de las dos vistas lo dibuja el navegador en elementos DOM. La guía de Canvas puede diferir por composición, sustitución de fuentes y dirección de escritura. Se omite para texto vacío, multilínea, tabuladores y ciertos controles. El panel de pruebas siempre recorta en su propio borde, incluso cuando el mensaje tiene `overflow: visible`.
+El texto visible de las dos vistas lo dibuja el navegador en elementos DOM. La guía de Canvas puede diferir por composición, sustitución de fuentes y dirección de escritura. Se omite para texto vacío, multilínea, tabuladores y ciertos controles. El recorte en el borde del chat se controla por separado en cada vista.
 
 La selección conserva cada muestra en un único nodo de texto para no alterar la composición de la fuente. Si existe CSS Custom Highlight API, también colorea el rango nativamente; en navegadores sin ella siguen funcionando los recuadros. Espacios y saltos de línea se pueden recorrer desde las fichas o las flechas; los rangos sin ancho reciben un marcador fino. Si un grafema queda completamente fuera del panel, se indica «Grafema fuera de vista». Las ligaduras pueden compartir geometría: para seleccionar sin ambigüedad usa las fichas del inspector. Sin `Intl.Segmenter` se conserva el inspector de puntos de código y se desactiva la selección de grafemas.
 
