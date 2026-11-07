@@ -4,6 +4,7 @@ import { createPlayback } from './playback.js';
 import { initNotebook } from './notebook-ui.js';
 import { initShareLinks } from './share-ui.js';
 import { initCreatureBuilder } from './creatures.js';
+import { initMovingChat } from './chat.js';
 
 const $ = id => document.getElementById(id);
 const fonts = { noto: '"Noto Lab", sans-serif', sans: 'Arial, sans-serif', serif: '"Times New Roman", serif', mono: '"Courier New", monospace', system: 'system-ui, sans-serif' };
@@ -238,6 +239,7 @@ function renderTable() {
 }
 
 function renderViews() {
+  $('chat-send').disabled = !state.analysis.text;
   const fontSize = Number($('font-size').value);
   const lineHeight = Number($('line-height').value);
   $('font-size-value').value = `${fontSize} px`;
@@ -268,6 +270,7 @@ function placeBox(element, left, top, width, height) {
 }
 
 function measureViews() {
+  chat.position();
   for (const view of ['a', 'b']) {
     const stage = $(`stage-${view}`);
     const message = $(`message-${view}`);
@@ -348,6 +351,7 @@ function captureExperiment() {
 
 function restoreExperiment(snapshot) {
   playback.pause();
+  chat.reset();
   cancelAnimationFrame(inputFrame);
   for (const [id, value] of Object.entries({ 'font-size': snapshot.fontSize, 'line-height': snapshot.lineHeight, 'mark-count': snapshot.markCount, 'mark-type': snapshot.markType, 'player-speed': snapshot.speed })) $(id).value = value;
   for (const view of ['a', 'b']) {
@@ -440,6 +444,7 @@ $('inspect-all').addEventListener('click', () => {
 
 $('reset').addEventListener('click', () => {
   playback.pause();
+  chat.reset();
   $('player-speed').value = '500';
   cancelAnimationFrame(inputFrame);
   for (const [id, value] of Object.entries({ 'mark-count': 12, 'mark-type': 'homothetic', 'font-size': 28, 'line-height': 36, 'font-a': 'noto', 'font-b': 'noto', 'overflow-a': 'visible', 'overflow-b': 'clip', 'panel-overflow-a': 'hidden', 'panel-overflow-b': 'hidden' })) $(id).value = value;
@@ -461,6 +466,7 @@ window.addEventListener('resize', scheduleMeasurements);
 document.fonts?.ready.then(scheduleMeasurements);
 document.fonts?.addEventListener('loadingdone', scheduleMeasurements);
 
+const chat = initMovingChat({ onMove: scheduleMeasurements });
 setSpecimen(PRESETS.spider.text, { preset: 'spider' });
 $('render-title').tabIndex = -1;
 initNotebook({ capture: captureExperiment, restore: restoreExperiment, pause: () => playback.pause() });

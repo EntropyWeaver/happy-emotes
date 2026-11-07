@@ -41,3 +41,8 @@
   .player-controls .player-toggle { grid-column: 1 / -1; grid-row: 1; }
   .player-speed { width: 100%; justify-content: space-between; }
 }
+
+/* The stream moves while its in-flow contents reserve the original chat height. */
+.chat-stream { position: relative; }
+.chat-after { position: absolute; inset: 100% 0 auto; }
+.chat-player { scroll-margin-top: 12px; }

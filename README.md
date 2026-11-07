@@ -14,7 +14,7 @@ En Windows también puedes usar `py -3.12 -m http.server 8000 --directory dist`.
 
 ## Experimentar
 
-Las seis mejoras están implementadas: **1. Selección conectada**, **2. Crecimiento animado**, **3. Cuaderno de descubrimientos**, **4. Enlaces compartibles** **5. Constructor de criaturas** y **6. Escenarios de recorte**. La cabecera las identifica y el enlace **Cuaderno** abre los experimentos guardados.
+Las siete mejoras están implementadas: **1. Selección conectada**, **2. Crecimiento animado**, **3. Cuaderno de descubrimientos**, **4. Enlaces compartibles** **5. Constructor de criaturas**, **6. Escenarios de recorte** y **7. Chat en movimiento**. La cabecera las identifica y el enlace **Cuaderno** abre los experimentos guardados.
 
 El selector **Apariencia**, en la cabecera, ofrece **Normal** (el diseño claro original), **Oscuro** y **Sistema**. La elección se recuerda en este navegador; Sistema sigue los cambios de apariencia del sistema operativo mientras la página está abierta. Normal es la opción inicial. Si el navegador bloquea el almacenamiento, el selector sigue funcionando durante la sesión de la página. Restablecer el laboratorio conserva la apariencia elegida.
 
@@ -83,6 +83,12 @@ En cada vista, **Mensaje** ajusta el recorte de la caja del espécimen y **Panel
 | visible | Visible | La tinta puede cruzar el borde del chat y aparecer en el margen de observación. |
 
 El marco exterior delimita el margen de observación. Ambos ajustes viajan en los enlaces y cuadernos nuevos. Los experimentos antiguos se abren con **Panel → Recortar**.
+
+## Chat de pruebas en movimiento
+
+Pulsa **Enviar espécimen** para situar el texto del editor al final de A y B. **Iniciar chat** hace llegar la misma secuencia de mensajes ficticios a las dos vistas. Puedes pausar el chat, elegir el intervalo o usar **+1 mensaje** para avanzar un paso en pausa. Observa cómo sube el recuadro azul mientras cada vista aplica su recorte. Si el espécimen se desplaza fuera del panel, vuelve a enviarlo.
+
+El espécimen del chat sigue vinculado al editor. El ritmo del chat y los mensajes que han entrado pertenecen a la sesión de prueba. Al abrir un experimento del cuaderno o desde un enlace, el chat empieza en pausa con sus mensajes iniciales.
 
 ## Qué significa cada medida
 

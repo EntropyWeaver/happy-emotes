@@ -34,7 +34,7 @@
 
   <main>
     <section class="intro" aria-labelledby="page-title">
-      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a><a href="#share-experiment"><b>✓ 4</b> Enlaces compartibles</a><a href="#criaturas"><b>✓ 5</b> Constructor de criaturas</a><a href="#panel-overflow-a"><b>✓ 6</b> Escenarios de recorte</a></div></div>
+      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a><a href="#share-experiment"><b>✓ 4</b> Enlaces compartibles</a><a href="#criaturas"><b>✓ 5</b> Constructor de criaturas</a><a href="#panel-overflow-a"><b>✓ 6</b> Escenarios de recorte</a><a href="#chat-en-movimiento"><b>✓ 7</b> Chat en movimiento</a></div></div>
       <div class="intro-stamp" aria-hidden="true"><span>U+034B</span><div>o͋</div><small>pequeño carácter,<br>grandes consecuencias.</small></div>
     </section>
 
@@ -125,6 +125,19 @@
             <div class="selection-copy"><strong id="connected-selection" role="status" aria-live="polite" aria-atomic="true">Selecciona un grafema</strong><p id="connected-help">Pulsa una ficha del inspector o un carácter en A/B.</p></div>
             <div class="selection-actions"><button id="previous-grapheme" aria-label="Grafema anterior" title="Grafema anterior" disabled>←</button><button id="next-grapheme" aria-label="Grafema siguiente" title="Grafema siguiente" disabled>→</button></div>
           </div>
+          <div id="chat-en-movimiento" class="spider-player chat-player" role="group" aria-label="Chat de pruebas en movimiento">
+            <div class="player-row">
+              <div class="player-copy"><strong>Chat de pruebas en movimiento</strong><p id="chat-status">En pausa · 0 mensajes posteriores</p></div>
+              <div class="player-controls">
+                <button id="chat-send" class="player-toggle" type="button">Enviar espécimen</button>
+                <button id="chat-toggle" type="button">Iniciar chat</button>
+                <button id="chat-step" type="button" title="Pausar y recibir un mensaje ficticio">+1 mensaje</button>
+              </div>
+              <label class="player-speed">Ritmo del chat<select id="chat-speed"><option value="3000">Cada 3 s</option><option value="1500" selected>Cada 1,5 s</option><option value="650">Cada 0,65 s</option></select></label>
+            </div>
+            <p class="player-hint">Los mensajes nuevos empujan el espécimen hacia arriba en A y B. Envíalo otra vez para volver a verlo al final.</p>
+            <span id="chat-announcement" class="visually-hidden" role="status"></span>
+          </div>
           <div class="comparison">
             <article class="render-card" data-view="a">
               <div class="view-title"><span class="view-letter">A</span><h3>Deja que escape</h3><span id="overflow-badge-a" class="mode-badge">visible</span></div>
@@ -132,11 +145,12 @@
               <div class="stage-window" id="stage-window-a">
                 <div class="stage" id="stage-a" aria-label="Vista A: renderizado del texto">
                   <div class="stage-tag"><span></span> CHAT DE PRUEBAS</div>
-                  <div class="chat-message"><span class="chat-user purple">pixel_ghost</span><span>todo bajo control</span></div>
-                  <div class="chat-message"><span class="chat-user green">nullpointer</span><span>¿eso se está moviendo?</span></div>
-                  <div class="chat-message"><span class="chat-user amber">hob_enjoyer</span><span>nice run ✨</span></div>
-                  <div class="specimen-message" id="message-a"><span class="baseline-anchor" aria-hidden="true"></span><bdi class="sample" id="sample-a" dir="auto"></bdi></div>
-                  <div class="sample-caption"><span class="chat-user purple">tú</span><span>acabas de enviar un espécimen</span></div>
+                  <div class="chat-stream" id="chat-stream-a">
+                    <div id="chat-before-a"></div>
+                    <div class="specimen-message" id="message-a"><span class="baseline-anchor" aria-hidden="true"></span><bdi class="sample" id="sample-a" dir="auto"></bdi></div>
+                    <div class="sample-caption"><span class="chat-user purple">tú</span><span>espécimen en el chat</span></div>
+                    <div class="chat-after" id="chat-after-a"></div>
+                  </div>
                   <div class="stage-overlays" aria-hidden="true"><div class="layout-outline" id="layout-a"></div><div class="baseline-guide" id="baseline-a"></div><div class="ink-outline" id="ink-a" hidden></div><div id="selection-a"></div><span id="selection-status-a" class="selection-offscreen" hidden>Grafema fuera de vista</span></div>
                 </div>
               </div>
@@ -149,11 +163,12 @@
               <div class="stage-window" id="stage-window-b">
                 <div class="stage" id="stage-b" aria-label="Vista B: renderizado del texto">
                   <div class="stage-tag"><span></span> CHAT DE PRUEBAS</div>
-                  <div class="chat-message"><span class="chat-user purple">pixel_ghost</span><span>todo bajo control</span></div>
-                  <div class="chat-message"><span class="chat-user green">nullpointer</span><span>¿eso se está moviendo?</span></div>
-                  <div class="chat-message"><span class="chat-user amber">hob_enjoyer</span><span>nice run ✨</span></div>
-                  <div class="specimen-message" id="message-b"><span class="baseline-anchor" aria-hidden="true"></span><bdi class="sample" id="sample-b" dir="auto"></bdi></div>
-                  <div class="sample-caption"><span class="chat-user purple">tú</span><span>acabas de enviar un espécimen</span></div>
+                  <div class="chat-stream" id="chat-stream-b">
+                    <div id="chat-before-b"></div>
+                    <div class="specimen-message" id="message-b"><span class="baseline-anchor" aria-hidden="true"></span><bdi class="sample" id="sample-b" dir="auto"></bdi></div>
+                    <div class="sample-caption"><span class="chat-user purple">tú</span><span>espécimen en el chat</span></div>
+                    <div class="chat-after" id="chat-after-b"></div>
+                  </div>
                   <div class="stage-overlays" aria-hidden="true"><div class="layout-outline" id="layout-b"></div><div class="baseline-guide" id="baseline-b"></div><div class="ink-outline" id="ink-b" hidden></div><div id="selection-b"></div><span id="selection-status-b" class="selection-offscreen" hidden>Grafema fuera de vista</span></div>
                 </div>
               </div>
