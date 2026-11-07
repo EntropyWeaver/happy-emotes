@@ -1,19 +1,9 @@
 import { createNotebookStore, decodeNotebook, encodeNotebook, experimentName, mergeExperiments, validateEntry, MAX_EXPERIMENTS, MAX_IMPORT_BYTES, NOTEBOOK_KEY } from './notebook.js';
+import { downloadJSON } from './download.js';
 
 const $ = id => document.getElementById(id);
 const fontNames = { noto: 'Noto Sans', sans: 'Arial / sans', serif: 'Times / serif', mono: 'Courier / mono', system: 'Sistema' };
 const newId = () => globalThis.crypto?.randomUUID?.() ?? `exp-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
-
-function downloadJSON(raw, filename) {
-  const url = URL.createObjectURL(new Blob([raw], { type: 'application/json;charset=utf-8' }));
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  document.body.append(link);
-  link.click();
-  link.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
 
 export function initNotebook({ capture, restore, pause }) {
   const store = createNotebookStore();

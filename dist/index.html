@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="./creatures.css">
   <link rel="stylesheet" href="./local-fonts.css">
   <link rel="stylesheet" href="./challenges.css">
+  <link rel="stylesheet" href="./browser-cards.css">
   <script src="./theme.js"></script>
   <script type="module" src="./app.js"></script>
 </head>
@@ -36,7 +37,7 @@
 
   <main>
     <section class="intro" aria-labelledby="page-title">
-      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a><a href="#share-experiment"><b>✓ 4</b> Enlaces compartibles</a><a href="#criaturas"><b>✓ 5</b> Constructor de criaturas</a><a href="#panel-overflow-a"><b>✓ 6</b> Escenarios de recorte</a><a href="#chat-en-movimiento"><b>✓ 7</b> Chat en movimiento</a><a href="#local-fonts"><b>✓ 8</b> Fuentes locales</a><a href="#retos"><b>✓ 9</b> Retos</a></div></div>
+      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a><a href="#share-experiment"><b>✓ 4</b> Enlaces compartibles</a><a href="#criaturas"><b>✓ 5</b> Constructor de criaturas</a><a href="#panel-overflow-a"><b>✓ 6</b> Escenarios de recorte</a><a href="#chat-en-movimiento"><b>✓ 7</b> Chat en movimiento</a><a href="#local-fonts"><b>✓ 8</b> Fuentes locales</a><a href="#retos"><b>✓ 9</b> Retos</a><a href="#fichas"><b>✓ 10</b> Fichas de navegador</a></div></div>
       <div class="intro-stamp" aria-hidden="true"><span>U+034B</span><div>o͋</div><small>pequeño carácter,<br>grandes consecuencias.</small></div>
     </section>
 
@@ -230,6 +231,31 @@
           <div class="normalization"><div><strong>¿Se puede escribir igual de otra manera?</strong><p id="normalization-info">Compara las formas compuesta y descompuesta.</p></div><div><button id="normalize-nfc" class="subtle-button" title="Aplicar composición canónica">Aplicar NFC</button><button id="normalize-nfd" class="subtle-button" title="Aplicar descomposición canónica">Aplicar NFD</button></div></div>
           <p id="catalog-note" class="micro muted catalog-note">Los nombres se consultan en un catálogo local; la segmentación depende de tu navegador.</p>
         </section>
+      </div>
+    </section>
+
+    <section id="fichas" class="browser-cards notebook-panel panel" aria-labelledby="browser-card-title">
+      <div class="notebook-heading">
+        <div><p class="eyebrow">EL MISMO EXPERIMENTO EN OTRO NAVEGADOR</p><h2 id="browser-card-title">Fichas de navegador</h2></div>
+        <div class="notebook-actions">
+          <button id="browser-card-export" class="notebook-primary" type="button">Exportar ficha JSON</button>
+          <button id="browser-card-import" class="notebook-button" type="button">Abrir ficha JSON</button>
+          <button id="browser-card-repeat" class="notebook-button" type="button" hidden>Volver a medir</button>
+          <input id="browser-card-file" type="file" accept=".json,application/json" aria-label="Ficha JSON de navegador" hidden>
+        </div>
+      </div>
+      <p class="browser-card-intro">Exporta el texto, los ajustes y las medidas. Al abrir la ficha en otro navegador, el laboratorio recupera el experimento y lo mide de nuevo.</p>
+      <p id="browser-card-status" class="browser-card-status" role="status"></p>
+      <div id="browser-card-comparison" hidden>
+        <div class="browser-card-table" tabindex="0" role="region" aria-label="Comparación de medidas de los navegadores">
+          <table>
+            <caption id="browser-card-caption"></caption>
+            <thead><tr><th scope="col">Medida</th><th scope="col"><span>Ficha importada</span><strong id="browser-card-baseline"></strong></th><th scope="col"><span>Este navegador</span><strong id="browser-card-current"></strong></th><th scope="col">Cambio</th></tr></thead>
+            <tbody id="browser-card-rows"></tbody>
+          </table>
+        </div>
+        <p class="browser-card-note">Las medidas están en píxeles CSS. La anchura de la ventana influye en la caja DOM. La tinta de Canvas se estima antes del recorte.</p>
+        <p class="browser-card-note">La pila CSS indica qué familias se solicitan al navegador. Las sustituciones de cada glifo quedan sin identificar. Si falta un archivo, puedes <a href="#local-fonts">cargar la fuente local</a> y volver a medir.</p>
       </div>
     </section>
 

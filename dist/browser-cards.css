@@ -1,0 +1,48 @@
+.browser-cards { scroll-margin-top: 12px; }
+.browser-cards h2 { margin-top: 4px; font-size: 20px; }
+.browser-cards .notebook-heading .eyebrow { margin: 0; }
+.browser-card-intro, .browser-card-status, .browser-card-note {
+  margin-top: 10px;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.browser-card-intro, .browser-card-note { color: var(--muted); }
+.browser-card-status { color: var(--purple); }
+.browser-card-status:empty { margin: 0; }
+.browser-card-table {
+  overflow-x: auto;
+  margin-top: 13px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+.browser-card-table table { min-width: 550px; }
+.browser-card-table caption {
+  padding: 8px 12px;
+  color: var(--muted);
+  text-align: left;
+  font-size: 10px;
+}
+.browser-card-table thead strong {
+  display: block;
+  margin-top: 2px;
+  color: var(--ink);
+}
+.browser-card-table th, .browser-card-table td {
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.browser-card-table th {
+  position: static;
+  white-space: normal;
+  background: var(--bg);
+  color: var(--muted);
+}
+.browser-card-table tbody th {
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 600;
+}
+.browser-card-table tbody th, .browser-card-table td { border-top: 1px solid var(--line); }
+.browser-card-table td:last-child { white-space: nowrap; }
+.browser-card-note a { color: var(--purple); }

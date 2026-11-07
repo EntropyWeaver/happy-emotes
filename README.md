@@ -14,7 +14,7 @@ En Windows también puedes usar `py -3.12 -m http.server 8000 --directory dist`.
 
 ## Experimentar
 
-La cabecera identifica las nueve mejoras implementadas. **1. Selección conectada**, **2. Crecimiento animado**, **3. Cuaderno de descubrimientos**, **4. Enlaces compartibles**, **5. Constructor de criaturas**, **6. Escenarios de recorte**, **7. Chat en movimiento**, **8. Fuentes locales** y **9. Retos**. El enlace **Cuaderno** abre los experimentos guardados.
+La cabecera identifica las diez mejoras implementadas. **1. Selección conectada**, **2. Crecimiento animado**, **3. Cuaderno de descubrimientos**, **4. Enlaces compartibles**, **5. Constructor de criaturas**, **6. Escenarios de recorte**, **7. Chat en movimiento**, **8. Fuentes locales**, **9. Retos** y **10. Fichas de navegador**. El enlace **Cuaderno** abre los experimentos guardados.
 
 El selector **Apariencia**, en la cabecera, ofrece **Normal** (el diseño claro original), **Oscuro** y **Sistema**. La elección se recuerda en este navegador; Sistema sigue los cambios de apariencia del sistema operativo mientras la página está abierta. Normal es la opción inicial. Si el navegador bloquea el almacenamiento, el selector sigue funcionando durante la sesión de la página. Restablecer el laboratorio conserva la apariencia elegida.
 
@@ -59,6 +59,12 @@ Con **La araña** seleccionada, el reproductor aparece junto a las vistas A/B:
 - Editar el texto, cambiar de espécimen, mover la longitud, cambiar el tipo de hilo, normalizar, seleccionar un grafema o entrar con el foco en el inspector pausa la animación. Cambiar de pestaña también la pausa; hay que pulsar Reproducir para continuar. Las fuentes, la altura de línea y el recorte se pueden modificar durante la reproducción.
 
 Para observar el desbordamiento desde su origen: pulsa **Desde cero**, elige **Lento** y pulsa **Reproducir**. Con las marcas combinantes aumentan los puntos de código mientras el hilo sigue dentro de un solo grafema; U+FC5E es una ligadura y puede producir otra segmentación. La tinta depende de la fuente, no de una animación de altura simulada.
+
+## Fichas de navegador
+
+En **Fichas de navegador**, pulsa **Exportar ficha JSON**. Abre Happy Emotes en el otro navegador y usa **Abrir ficha JSON**. Se recuperan el texto y los ajustes A/B en pausa y se comparan los grafemas, el tamaño de las cajas del DOM y la tinta estimada en Canvas antes del recorte. El registro incluye el ancho de la ventana en píxeles CSS y su DPR para contextualizar las diferencias de layout. **Volver a medir** reaplica la ficha importada y actualiza la columna local.
+
+Cada vista muestra la fuente solicitada, la pila CSS que se aplicó y si la fuente incluida o el archivo local estaban disponibles. Si falta un archivo local, se indica la sustitución y puedes cargar el mismo archivo antes de volver a medir. La pila CSS no revela qué fuente dibujó cada glifo. La ficha incluye el texto, los ajustes, las medidas, la fecha y la etiqueta del navegador, sin adjuntar fuentes. El formato es `happy-emotes-browser-card` versión 1 y el límite de importación es 64 KiB.
 
 ## Cuaderno de descubrimientos
 

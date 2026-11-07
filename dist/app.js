@@ -7,6 +7,8 @@ import { initCreatureBuilder } from './creatures.js';
 import { initMovingChat } from './chat.js';
 import { initLocalFonts } from './local-fonts.js';
 import { initChallenges } from './challenges.js';
+import { browserLabel } from './browser-card.js';
+import { initBrowserCards } from './browser-cards-ui.js';
 
 const $ = id => document.getElementById(id);
 const fonts = { noto: '"Noto Lab", sans-serif', sans: 'Arial, sans-serif', serif: '"Times New Roman", serif', mono: '"Courier New", monospace', system: 'system-ui, sans-serif' };
@@ -274,13 +276,15 @@ function placeBox(element, left, top, width, height) {
 
 function measureViews() {
   chat.position();
-  let inkA = null;
+  const views = {};
   for (const view of ['a', 'b']) {
     const stage = $(`stage-${view}`);
     const message = $(`message-${view}`);
     const sample = $(`sample-${view}`);
     const stageRect = stage.getBoundingClientRect();
     const rect = message.getBoundingClientRect();
+    const measurement = { message: rect, ink: null };
+    views[view] = measurement;
     const baseline = message.querySelector('.baseline-anchor').getBoundingClientRect().top - stageRect.top;
     placeBox($(`layout-${view}`), rect.left - stageRect.left, rect.top - stageRect.top, rect.width, rect.height);
     placeBox($(`baseline-${view}`), rect.left - stageRect.left, baseline, rect.width, 0);
@@ -312,15 +316,13 @@ function measureViews() {
     const inkLeft = sampleRect.left - left;
     const inkTop = baseline - ascent;
     placeBox(ink, inkLeft - stageRect.left, inkTop, width, height);
-    if (view === 'a' && width && height) {
-      inkA = { left: inkLeft, right: inkLeft + width, top: inkTop + stageRect.top, bottom: inkTop + stageRect.top + height, message: rect };
-    }
+    measurement.ink = { left: inkLeft, top: inkTop + stageRect.top, width, height };
     ink.hidden = !$('show-ink').checked;
     metric.textContent = `≈ ${Math.round(width)} × ${Math.round(height)} px`;
     metric.title = 'Límites estimados de tinta sin recorte en Canvas; no son una medida del DOM.';
   }
   connectedSelection.render(state.analysis, state.selected);
-  return inkA;
+  return views;
 }
 
 function scheduleMeasurements() {
@@ -353,17 +355,17 @@ function readSpecimen() {
 function readChallengeInk() {
   playback.pause();
   const { text } = readSpecimen();
-  const ink = measureViews();
-  if (!ink) return null;
+  const { ink, message } = measureViews().a;
+  if (!ink?.width || !ink.height) return null;
   const panelOverflow = $('panel-overflow-a').value;
   const panel = $(panelOverflow === 'visible' ? 'stage-window-a' : 'stage-a').getBoundingClientRect();
   // Use the same Canvas estimate as the ink guide, limited to the panel's clip.
   const top = Math.max(ink.top, panel.top);
-  const bottom = Math.min(ink.bottom, panel.bottom);
-  const insideWidth = Math.min(ink.right, panel.right) - Math.max(ink.left, panel.left);
+  const bottom = Math.min(ink.top + ink.height, panel.bottom);
+  const insideWidth = Math.min(ink.left + ink.width, panel.right) - Math.max(ink.left, panel.left);
   const overhang = insideWidth > 0 && (
-    Math.min(bottom, ink.message.top) - top > 1 ||
-    bottom - Math.max(top, ink.message.bottom) > 1
+    Math.min(bottom, message.top) - top > 1 ||
+    bottom - Math.max(top, message.bottom) > 1
   );
   return {
     overhang,
@@ -390,6 +392,43 @@ function captureExperiment() {
     markCount: Number($('mark-count').value), markType: $('mark-type').value,
     speed: Number($('player-speed').value), inspector: state.inspector,
     selected: state.selected, showEscapes: !$('escaped').hidden,
+  };
+}
+
+async function measureBrowserCard(snapshot) {
+  const renderingKey = ({ text, fontSize, lineHeight, views }) => JSON.stringify([text, fontSize, lineHeight, views]);
+  const expected = renderingKey(captureExperiment());
+  // Flush layout so the font set includes faces needed by the restored text.
+  $('message-a').getBoundingClientRect();
+  await document.fonts?.ready;
+  const applied = captureExperiment();
+  if (expected !== renderingKey(applied)) throw new Error('El experimento cambió durante la medición. Vuelve a intentarlo.');
+  const measurements = measureViews();
+  const notoLoaded = document.fonts && [...document.fonts].some(face =>
+    face.family.replace(/^["']|["']$/gu, '') === 'Noto Lab' && face.status === 'loaded'
+  );
+  const size = ({ width, height }) => [width, height].map(n => Math.round(n * 100) / 100);
+  const views = {};
+  for (const id of ['a', 'b']) {
+    const { ink, message } = measurements[id];
+    const { font, localFont } = applied.views[id];
+    let fontState = 'system';
+    if (localFont) fontState = 'local-loaded';
+    else if (font === 'noto') fontState = notoLoaded ? 'bundled-loaded' : 'bundled-unavailable';
+    views[id] = {
+      layout: size(message),
+      ink: ink ? size(ink) : null,
+      fontStack: localFont ? 'Fuente de archivo, sans-serif' : getComputedStyle($(`sample-${id}`)).fontFamily,
+      fontState,
+      missingLocal: Boolean(snapshot.views[id].localFont && snapshot.views[id].localFont !== localFont),
+    };
+  }
+  return {
+    capturedAt: new Date().toISOString(),
+    environment: { browser: browserLabel(navigator.userAgent), viewportWidth: document.documentElement.clientWidth, pixelRatio: window.devicePixelRatio },
+    snapshot,
+    graphemes: state.analysis.clusters?.length ?? null,
+    views,
   };
 }
 
@@ -522,6 +561,7 @@ initChallenges({ readText: readSpecimen, readInk: readChallengeInk, prepareAccen
 $('render-title').tabIndex = -1;
 initNotebook({ capture: captureExperiment, restore: restoreExperiment, pause: () => playback.pause() });
 initShareLinks({ capture: captureExperiment, restore: restoreExperiment });
+initBrowserCards({ capture: captureExperiment, restore: restoreExperiment, measure: measureBrowserCard });
 const refreshCreatureDetails = initCreatureBuilder({
   getText: () => $('specimen').value,
   setText: setSpecimen,

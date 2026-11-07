@@ -6,7 +6,7 @@
   "description": "Laboratorio de Unicode, grafemas y desbordamiento tipográfico.",
   "scripts": {
     "test": "node --test",
-    "check": "node --check dist/app.js && node --check dist/core.js && node --check dist/theme.js && node --check dist/selection.js && node --check dist/playback.js && node --check dist/notebook.js && node --check dist/notebook-ui.js && node --check dist/share.js && node --check dist/share-ui.js && node --check dist/creatures.js && node --check dist/chat.js && node --check dist/local-fonts.js && node --check dist/challenges.js",
+    "check": "node --check dist/app.js && node --check dist/core.js && node --check dist/theme.js && node --check dist/selection.js && node --check dist/playback.js && node --check dist/notebook.js && node --check dist/notebook-ui.js && node --check dist/share.js && node --check dist/share-ui.js && node --check dist/creatures.js && node --check dist/chat.js && node --check dist/local-fonts.js && node --check dist/challenges.js && node --check dist/browser-card.js && node --check dist/browser-cards-ui.js && node --check dist/download.js",
     "serve": "python -m http.server 8000 --directory dist"
   },
   "engines": { "node": ">=20" }
