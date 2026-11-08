@@ -1,3 +1,4 @@
+import { language, onLanguageChange, setMessage, t } from './i18n.js';
 import { createExperimentURL, decodeExperimentHash } from './share.js';
 
 const $ = id => document.getElementById(id);
@@ -15,7 +16,7 @@ export function initShareLinks({ capture, restore }) {
       $('share-open').href = url;
       $('share-panel').hidden = false;
       $('share-experiment').setAttribute('aria-expanded', 'true');
-      $('share-status').textContent = 'Enlace generado. Ya puedes copiarlo o probarlo.';
+      setMessage($('share-status'), () => t("Link ready to copy or test.", "Enlace generado. Ya puedes copiarlo o probarlo."));
       $('share-url').focus();
       $('share-url').select();
     } catch (error) {
@@ -25,7 +26,7 @@ export function initShareLinks({ capture, restore }) {
       $('share-open').removeAttribute('href');
       $('share-panel').hidden = false;
       $('share-experiment').setAttribute('aria-expanded', 'true');
-      $('share-status').textContent = error.message;
+      setMessage($('share-status'), error.message);
     }
   });
 
@@ -35,12 +36,12 @@ export function initShareLinks({ capture, restore }) {
     if (!value) return;
     try {
       await navigator.clipboard.writeText(value);
-      if (generation === copyGeneration) $('share-status').textContent = 'Enlace copiado. Quien lo abra recuperará este experimento en pausa.';
+      if (generation === copyGeneration) setMessage($('share-status'), () => t("Link copied. Recipients will open this experiment in a paused state.", "Enlace copiado. Quien lo abra recuperará este experimento en pausa."));
     } catch {
       if (generation !== copyGeneration) return;
       $('share-url').focus();
       $('share-url').select();
-      $('share-status').textContent = 'Enlace seleccionado. Usa Ctrl+C o ⌘C para copiarlo.';
+      setMessage($('share-status'), () => t("Link selected. Use Ctrl+C or ⌘C to copy.", "Enlace seleccionado. Usa Ctrl+C o ⌘C para copiarlo."));
     }
   });
 
@@ -58,14 +59,17 @@ export function initShareLinks({ capture, restore }) {
       const missingFonts = restore(snapshot);
       $('shared-notice').hidden = false;
       $('shared-notice').classList.remove('share-error');
-      $('shared-notice-text').textContent = missingFonts.length
-        ? `Experimento abierto en pausa. Se usan fuentes de sustitución en ${missingFonts.join(' y ')}. Puedes cargar los archivos originales en Fuentes locales.`
-        : 'Experimento abierto desde un enlace, en pausa. El dibujo puede variar con el navegador y las fuentes disponibles.';
+      setMessage($('shared-notice-text'), () => missingFonts.length
+        ? t(`Experiment opened and paused. Using fallback fonts in ${missingFonts.join(t(' and ', ' y '))}. You can load the original files in Local fonts.`, `Experimento abierto en pausa. Se usan fuentes de sustitución en ${missingFonts.join(t(' and ', ' y '))}. Puedes cargar los archivos originales en Fuentes locales.`)
+        : t("Experiment opened from a link and paused. Rendering can vary with the browser and available fonts.", "Experimento abierto desde un enlace, en pausa. El dibujo puede variar con el navegador y las fuentes disponibles."));
       requestAnimationFrame(() => $('shared-notice').scrollIntoView({ block: 'start' }));
     } catch (error) {
       $('shared-notice').hidden = false;
       $('shared-notice').classList.add('share-error');
-      $('shared-notice-text').textContent = `No se ha podido abrir el experimento: ${error.message} Puedes seguir usando el laboratorio.`;
+      const errorLanguage = language();
+      setMessage($('shared-notice-text'), () => errorLanguage === language()
+        ? t(`Could not open the experiment: ${error.message} You can still use the lab.`, `No se ha podido abrir el experimento: ${error.message} Puedes seguir usando el laboratorio.`)
+        : t("Could not open the shared experiment. You can still use the lab.", "No se ha podido abrir el experimento compartido. Puedes seguir usando el laboratorio."));
       requestAnimationFrame(() => $('shared-notice').scrollIntoView({ block: 'start' }));
     }
   }
@@ -75,4 +79,5 @@ export function initShareLinks({ capture, restore }) {
   });
   window.addEventListener('hashchange', openFromHash);
   openFromHash();
+  onLanguageChange(() => { $('share-status').textContent = ''; });
 }

@@ -21,7 +21,7 @@
   background: #3b3154;
 }
 .stage-window::before {
-  content: "MARGEN DE OBSERVACIÓN";
+  content: "OBSERVATION MARGIN";
   position: absolute;
   right: 12px;
   top: 12px;
@@ -30,6 +30,7 @@
   letter-spacing: .06em;
   pointer-events: none;
 }
+.stage-window:lang(es)::before { content: "MARGEN DE OBSERVACIÓN"; }
 .stage[data-panel-overflow="visible"] {
   overflow: visible;
   contain: none;

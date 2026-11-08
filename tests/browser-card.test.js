@@ -52,5 +52,5 @@ test('browser labels distinguish Chromium derivatives and expose no raw user age
   assert.equal(browserLabel('Mozilla/5.0 Chrome/150.0 Safari/537.36 Edg/150.2'), 'Edge 150.2');
   assert.equal(browserLabel('Mozilla/5.0 Gecko/20100101 Firefox/159.0'), 'Firefox 159.0');
   assert.equal(browserLabel('Mozilla/5.0 Version/26.0 Safari/605.1'), 'Safari 26.0');
-  assert.equal(browserLabel('Unknown platform / string'), 'Navegador sin identificar');
+  assert.equal(browserLabel('Unknown platform / string'), 'Unidentified browser');
 });

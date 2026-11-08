@@ -43,7 +43,7 @@ test('imports reject invalid formats, overlong text, unsafe settings and inconsi
     assert.throws(() => validateSnapshot(sample.snapshot));
   }
   const duplicateIds = JSON.stringify({ format: 'happy-emotes-notebook', version: 1, experiments: [entry(), entry()] });
-  assert.throws(() => decodeNotebook(duplicateIds), /identificadores/);
+  assert.throws(() => decodeNotebook(duplicateIds), /duplicate IDs/);
 });
 
 test('a notebook saved before panel controls restores the original panel clipping', () => {
@@ -70,7 +70,7 @@ test('merge skips exact repeats and retains both versions when an imported ID ha
 
 test('capacity and byte limits reject the whole import without truncating the notebook', () => {
   const full = Array.from({ length: MAX_EXPERIMENTS }, (_, i) => entry(`test-${i}`, `Experimento ${i}`));
-  assert.throws(() => mergeExperiments(full, [entry('new', 'Nuevo')], () => 'new-id'), /espacio/);
+  assert.throws(() => mergeExperiments(full, [entry('new', 'Nuevo')], () => 'new-id'), /can hold/);
   assert.equal(full.length, MAX_EXPERIMENTS);
   assert.throws(() => decodeNotebook(' '.repeat(1024 * 1024 + 1)), /1 MiB/);
 });
@@ -95,7 +95,7 @@ test('corrupt storage and quota errors leave the existing saved data intact', ()
   const original = encodeNotebook([entry()]);
   storage.setItem(NOTEBOOK_KEY, original);
   storage.setItem = () => { throw new Error('QuotaExceededError'); };
-  assert.throws(() => store.change(() => []), /No se ha podido guardar/);
+  assert.throws(() => store.change(() => []), /Could not save/);
   assert.equal(storage.getItem(NOTEBOOK_KEY), original);
 });
 

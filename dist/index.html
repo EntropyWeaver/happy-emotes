@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Abre el texto por dentro: experimenta con Unicode, grafemas, fuentes y el desbordamiento real de los glifos.">
+  <meta name="description" content="Explore Unicode, graphemes, fonts, and how glyphs overflow their boxes.">
   <meta name="theme-color" content="#f7f7fb">
-  <title>Happy Emotes — Laboratorio Unicode</title>
+  <title>Happy Emotes — Unicode Lab</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./theme.css">
@@ -21,269 +21,274 @@
   <script type="module" src="./app.js"></script>
 </head>
 <body>
-  <a class="skip-link" href="#laboratorio">Saltar al laboratorio</a>
+  <a class="skip-link" href="#laboratorio">Skip to the lab</a>
   <header class="topbar">
-    <a class="brand" href="#" aria-label="Happy Emotes, inicio"><span class="brand-icon" aria-hidden="true">a<span>͋</span></span><span>happy<span class="brand-light">emotes</span><small>UNICODE PLAYGROUND</small></span></a>
-    <nav aria-label="Navegación principal"><a href="#laboratorio" class="nav-active">Laboratorio</a><a href="#anatomia">Anatomía</a><a href="#cuaderno">Cuaderno</a><a href="#como-funciona">Cómo funciona</a></nav>
+    <a class="brand" href="#" aria-label="Happy Emotes home"><span class="brand-icon" aria-hidden="true">a<span>͋</span></span><span>happy<span class="brand-light">emotes</span><small>UNICODE PLAYGROUND</small></span></a>
+    <nav aria-label="Main navigation"><a href="#laboratorio" class="nav-active">Lab</a><a href="#anatomia">Anatomy</a><a href="#cuaderno">Notebook</a><a href="#como-funciona">How it works</a></nav>
     <div class="topbar-actions">
-      <label class="theme-picker" title="Elige el aspecto del laboratorio">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor" stroke="none"/></svg>
-        <span class="visually-hidden">Apariencia</span>
-        <select id="theme" aria-label="Apariencia"><option value="light">Normal</option><option value="dark">Oscuro</option><option value="system">Sistema</option></select>
+      <label class="theme-picker language-picker">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18Z"/></svg>
+        <span class="visually-hidden">Language</span>
+        <select id="language" aria-label="Language"><option value="en" lang="en">English</option><option value="es" lang="es">Español</option></select>
       </label>
-      <a class="repo-link" href="https://github.com/EntropyWeaver/happy-emotes" target="_blank" rel="noopener noreferrer" aria-label="Ver happy-emotes en GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-14-2 18"/></svg><span>GitHub</span><span aria-hidden="true">↗</span></a>
+      <label class="theme-picker" title="Choose the lab&#x27;s appearance">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor" stroke="none"/></svg>
+        <span class="visually-hidden">Appearance</span>
+        <select id="theme" aria-label="Appearance"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select>
+      </label>
+      <a class="repo-link" href="https://github.com/EntropyWeaver/happy-emotes" target="_blank" rel="noopener noreferrer" aria-label="View Happy Emotes on GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-14-2 18"/></svg><span>GitHub</span><span aria-hidden="true">↗</span></a>
     </div>
   </header>
 
   <main>
     <section class="intro" aria-labelledby="page-title">
-      <div><p class="eyebrow"><span class="status-dot"></span> UN PEQUEÑO LABORATORIO DE GRANDES CARACTERES</p><h1 id="page-title">El texto también<br class="mobile-break"> se sale de la caja<span>.</span></h1><p class="intro-copy">Escribe. Combina. Desborda. Mira lo que el navegador hace con cada carácter.</p><div class="feature-status" aria-label="Mejoras implementadas"><span><b>✓ 1</b> Selección conectada</span><span><b>✓ 2</b> Crecimiento animado</span><a href="#cuaderno"><b>✓ 3</b> Cuaderno de descubrimientos</a><a href="#share-experiment"><b>✓ 4</b> Enlaces compartibles</a><a href="#criaturas"><b>✓ 5</b> Constructor de criaturas</a><a href="#panel-overflow-a"><b>✓ 6</b> Escenarios de recorte</a><a href="#chat-en-movimiento"><b>✓ 7</b> Chat en movimiento</a><a href="#local-fonts"><b>✓ 8</b> Fuentes locales</a><a href="#retos"><b>✓ 9</b> Retos</a><a href="#fichas"><b>✓ 10</b> Fichas de navegador</a></div></div>
-      <div class="intro-stamp" aria-hidden="true"><span>U+034B</span><div>o͋</div><small>pequeño carácter,<br>grandes consecuencias.</small></div>
+      <div><p class="eyebrow"><span class="status-dot"></span> A SMALL LAB FOR BIG CHARACTERS</p><h1 id="page-title">Even text can<br class="mobile-break"> escape the box<span>.</span></h1><p class="intro-copy">Type. Combine. Overflow. See what the browser does with every character.</p><div class="feature-status" aria-label="Lab features"><span><b>✓ 1</b> Linked selection</span><span><b>✓ 2</b> Growth animation</span><a href="#cuaderno"><b>✓ 3</b> Discovery notebook</a><a href="#share-experiment"><b>✓ 4</b> Shareable links</a><a href="#criaturas"><b>✓ 5</b> Creature builder</a><a href="#panel-overflow-a"><b>✓ 6</b> Clipping controls</a><a href="#chat-en-movimiento"><b>✓ 7</b> Moving chat</a><a href="#local-fonts"><b>✓ 8</b> Local fonts</a><a href="#retos"><b>✓ 9</b> Challenges</a><a href="#fichas"><b>✓ 10</b> Browser records</a></div></div>
+      <div class="intro-stamp" aria-hidden="true"><span>U+034B</span><div>o͋</div><small>small character,<br>big consequences.</small></div>
     </section>
 
-    <section id="laboratorio" class="lab-grid" aria-label="Laboratorio interactivo">
+    <section id="laboratorio" class="lab-grid" aria-label="Interactive lab">
       <aside class="control-panel panel">
-        <div class="section-heading"><span class="step">01</span><h2>Tu espécimen</h2><button id="reset" class="icon-button" title="Restablecer laboratorio" aria-label="Restablecer laboratorio">↺</button></div>
-        <p class="muted small">Empieza con uno de nuestros sospechosos.</p>
-        <div class="presets" aria-label="Ejemplos de texto">
-          <button data-preset="spider" class="preset active" aria-pressed="true">🕷 La araña</button><button data-preset="accent" class="preset" aria-pressed="false">á Acentos</button><button data-preset="family" class="preset" aria-pressed="false">👨‍👩‍👧‍👦 Familia</button><button data-preset="flags" class="preset" aria-pressed="false">🇪🇸 Banderas</button><button data-preset="skin" class="preset" aria-pressed="false">👋🏽 Tono de piel</button><button data-preset="scripts" class="preset" aria-pressed="false">अ Escrituras</button>
+        <div class="section-heading"><span class="step">01</span><h2>Your specimen</h2><button id="reset" class="icon-button" title="Reset the lab" aria-label="Reset the lab">↺</button></div>
+        <p class="muted small">Start with one of our suspects.</p>
+        <div class="presets" aria-label="Text examples">
+          <button data-preset="spider" class="preset active" aria-pressed="true">🕷 The spider</button><button data-preset="accent" class="preset" aria-pressed="false">á Accents</button><button data-preset="family" class="preset" aria-pressed="false">👨‍👩‍👧‍👦 Family</button><button data-preset="flags" class="preset" aria-pressed="false">🇪🇸 Flags</button><button data-preset="skin" class="preset" aria-pressed="false">👋🏽 Skin tone</button><button data-preset="scripts" class="preset" aria-pressed="false">अ Scripts</button>
         </div>
-        <div class="label-row"><label for="specimen">Texto para explorar</label><span id="input-count" class="mono"></span></div>
+        <div class="label-row"><label for="specimen">Text to explore</label><span id="input-count" class="mono"></span></div>
         <textarea id="specimen" rows="3" spellcheck="false" autocomplete="off" aria-describedby="input-help input-notice" dir="auto"></textarea>
-        <div class="input-actions"><button id="copy" class="text-button">Copiar texto <span aria-hidden="true">⧉</span></button><button id="escaped-toggle" class="text-button" aria-expanded="false" aria-controls="escaped">Ver escapes</button></div>
+        <div class="input-actions"><button id="copy" class="text-button">Copy text <span aria-hidden="true">⧉</span></button><button id="escaped-toggle" class="text-button" aria-expanded="false" aria-controls="escaped">Show escapes</button></div>
         <code id="escaped" class="escape-box" hidden></code>
-        <p id="input-help" class="hint">Una base, muchas marcas. Cambia la fuente y mira hasta dónde llega el hilo.</p>
+        <p id="input-help" class="hint">One base, many marks. Change the font and see how far the thread reaches.</p>
         <p id="input-notice" class="notice" role="status"></p>
         <div id="spider-controls" class="control-group">
-          <div class="label-row"><label for="mark-count">Longitud del hilo</label><output id="mark-count-value" for="mark-count" class="value-pill">12 marcas</output></div>
+          <div class="label-row"><label for="mark-count">Thread length</label><output id="mark-count-value" for="mark-count" class="value-pill">12 marks</output></div>
           <input id="mark-count" type="range" min="0" max="60" step="1" value="12">
-          <div class="range-labels"><span>Discreta</span><span>Arácnido interdimensional</span></div>
-          <label for="mark-type" class="select-label">Carácter del hilo</label>
-          <select id="mark-type"><option value="homothetic">◌͋ · U+034B · Homothetic above</option><option value="acute">◌́ · U+0301 · Acento agudo</option><option value="below">◌̣ · U+0323 · Punto inferior</option><option value="arabic">ﱞ · U+FC5E · Ligadura árabe</option></select>
-          <p id="mark-note" class="micro muted">Su altura depende de la fuente y del motor tipográfico.</p>
+          <div class="range-labels"><span>Subtle</span><span>Interdimensional arachnid</span></div>
+          <label for="mark-type" class="select-label">Thread character</label>
+          <select id="mark-type"><option value="homothetic">◌͋ · U+034B · Homothetic above</option><option value="acute">◌́ · U+0301 · Acute accent</option><option value="below">◌̣ · U+0323 · Dot below</option><option value="arabic">ﱞ · U+FC5E · Arabic ligature</option></select>
+          <p id="mark-note" class="micro muted">Its height depends on the font and rendering engine.</p>
         </div>
         <div class="control-group">
-          <div class="section-heading compact"><span class="step">02</span><h2>El microscopio</h2></div>
-          <div class="label-row"><label for="font-size">Tamaño de fuente</label><output id="font-size-value" for="font-size" class="mono">28 px</output></div><input id="font-size" type="range" min="14" max="48" value="28">
-          <div class="label-row"><label for="line-height">Altura de línea</label><output id="line-height-value" for="line-height" class="mono">36 px</output></div><input id="line-height" type="range" min="16" max="80" value="36">
-          <label class="switch-row"><span><strong>Cajas de layout</strong><small>El espacio reservado por el DOM</small></span><input id="show-boxes" type="checkbox" checked role="switch"><span class="switch" aria-hidden="true"></span></label>
-          <label class="switch-row"><span><strong>Guía de tinta</strong><small>Estimación con Canvas, sin recorte</small></span><input id="show-ink" type="checkbox" role="switch"><span class="switch" aria-hidden="true"></span></label>
+          <div class="section-heading compact"><span class="step">02</span><h2>The microscope</h2></div>
+          <div class="label-row"><label for="font-size">Font size</label><output id="font-size-value" for="font-size" class="mono">28 px</output></div><input id="font-size" type="range" min="14" max="48" value="28">
+          <div class="label-row"><label for="line-height">Line height</label><output id="line-height-value" for="line-height" class="mono">36 px</output></div><input id="line-height" type="range" min="16" max="80" value="36">
+          <label class="switch-row"><span><strong>Layout boxes</strong><small>Space reserved by the DOM</small></span><input id="show-boxes" type="checkbox" checked role="switch"><span class="switch" aria-hidden="true"></span></label>
+          <label class="switch-row"><span><strong>Ink guide</strong><small>Unclipped Canvas estimate</small></span><input id="show-ink" type="checkbox" role="switch"><span class="switch" aria-hidden="true"></span></label>
         </div>
-        <div class="local-note"><span class="status-dot"></span><span>Todo se procesa en tu navegador.<br>Sin cuentas, servidores de análisis ni API.</span></div>
+        <div class="local-note"><span class="status-dot"></span><span>Everything runs in your browser.<br>No accounts, analytics servers, or API.</span></div>
       </aside>
 
       <div class="workbench">
-        <div class="stats" aria-label="Medidas del texto">
-          <div class="stat"><span>Puntos de código <span class="stat-symbol">U+</span></span><strong id="stat-codepoints">—</strong><small>Valores Unicode</small></div>
-          <div class="stat"><span>Grafemas <span class="stat-symbol">a͋</span></span><strong id="stat-graphemes">—</strong><small>Clústeres percibidos</small></div>
-          <div class="stat"><span>Unidades UTF-16 <span class="stat-symbol">{ }</span></span><strong id="stat-utf16">—</strong><small>Lo que cuenta JS .length</small></div>
-          <div class="stat"><span>Bytes UTF-8 <span class="stat-symbol">01</span></span><strong id="stat-utf8">—</strong><small>Texto codificado</small></div>
+        <div class="stats" aria-label="Text measurements">
+          <div class="stat"><span>Code points <span class="stat-symbol">U+</span></span><strong id="stat-codepoints">—</strong><small>Unicode values</small></div>
+          <div class="stat"><span>Graphemes <span class="stat-symbol">a͋</span></span><strong id="stat-graphemes">—</strong><small>Perceived characters</small></div>
+          <div class="stat"><span>UTF-16 code units <span class="stat-symbol">{ }</span></span><strong id="stat-utf16">—</strong><small>What JS .length counts</small></div>
+          <div class="stat"><span>UTF-8 bytes <span class="stat-symbol">01</span></span><strong id="stat-utf8">—</strong><small>Encoded text</small></div>
         </div>
         <details id="criaturas" class="creature-builder panel">
           <summary>
-            <span class="creature-summary"><strong>Constructor de criaturas Unicode</strong><small>Elige una base y ensambla tu criatura pieza a pieza.</small></span>
+            <span class="creature-summary"><strong>Unicode creature builder</strong><small>Choose a base and build your creature piece by piece.</small></span>
             <span class="creature-toggle" aria-hidden="true">+</span>
           </summary>
           <div class="creature-body">
             <div class="creature-controls">
               <label>Base<select id="creature-base">
-                <option value="o">o · Letra redonda</option><option value="a">a · Letra latina</option><option value="◕">◕ · Ojo</option><option value="♥">♥ · Corazón</option>
-                <option value="👍">👍 · Pulgar</option><option value="👋">👋 · Mano</option><option value="👩">👩 · Mujer</option><option value="💻">💻 · Portátil</option><option value="🕷">🕷 · Araña</option>
+                <option value="o">o · Round letter</option><option value="a">a · Latin letter</option><option value="◕">◕ · Eye</option><option value="♥">♥ · Heart</option>
+                <option value="👍">👍 · Thumb</option><option value="👋">👋 · Hand</option><option value="👩">👩 · Woman</option><option value="💻">💻 · Laptop</option><option value="🕷">🕷 · Spider</option>
               </select></label>
-              <button id="creature-use-base" class="notebook-primary" type="button">Empezar con esta base</button>
-              <button id="creature-add-base" class="notebook-button" type="button">Añadir base</button>
-              <button id="creature-remove" class="notebook-button" type="button">Quitar último punto</button>
+              <button id="creature-use-base" class="notebook-primary" type="button">Start with this base</button>
+              <button id="creature-add-base" class="notebook-button" type="button">Append base</button>
+              <button id="creature-remove" class="notebook-button" type="button">Remove last code point</button>
             </div>
-            <p class="creature-help">Empezar sustituye el texto del espécimen. Las piezas y las bases que añadas se colocan al final.</p>
-            <label class="creature-group">Paleta<select id="creature-group">
-              <option value="above">Marcas de arriba</option><option value="below">Marcas de abajo</option><option value="overlay">Superpuestas y envolventes</option>
-              <option value="join">Unidores y presentación</option><option value="emoji">Modificadores de emoji</option>
+            <p class="creature-help">Starting with a base replaces the specimen. Pieces and appended bases go at the end.</p>
+            <label class="creature-group">Palette<select id="creature-group">
+              <option value="above">Marks above</option><option value="below">Marks below</option><option value="overlay">Overlay and enclosing marks</option>
+              <option value="join">Joiners and presentation</option><option value="emoji">Emoji modifiers</option>
             </select></label>
-            <div id="creature-pieces" class="creature-pieces" role="group" aria-label="Piezas de la paleta"></div>
+            <div id="creature-pieces" class="creature-pieces" role="group" aria-label="Palette pieces"></div>
             <div class="creature-description"><strong id="creature-piece-name"></strong><p id="creature-piece-category"></p></div>
-            <p class="creature-help">Prueba 👩 + ZWJ + 💻, o 👍 + un tono de piel. La fuente y el navegador deciden si la secuencia se dibuja como un solo emoji o como piezas separadas.</p>
+            <p class="creature-help">Try 👩 + ZWJ + 💻, or 👍 + a skin tone. The font and browser determine whether the sequence appears as a single emoji or separate pieces.</p>
             <p id="creature-status" class="creature-status" role="status"></p>
           </div>
         </details>
         <section id="retos" class="challenge-panel panel" aria-labelledby="challenge-title">
           <div class="challenge-heading">
-            <div><p class="eyebrow">PON A PRUEBA EL LABORATORIO</p><h2 id="challenge-title">Retos del laboratorio</h2></div>
-            <span id="challenge-progress" class="value-pill" role="status">0 de 3 resueltos</span>
+            <div><p class="eyebrow">PUT THE LAB TO THE TEST</p><h2 id="challenge-title">Lab challenges</h2></div>
+            <span id="challenge-progress" class="value-pill" role="status">0 of 3 solved</span>
           </div>
-          <div id="challenge-options" class="challenge-options" role="group" aria-label="Elegir un reto">
-            <button class="notebook-button" type="button" data-challenge="grapheme" aria-pressed="true">1. Un grafema, siete piezas<span class="challenge-done" hidden><span aria-hidden="true"> ✓</span><span class="visually-hidden"> Resuelto</span></span></button>
-            <button class="notebook-button" type="button" data-challenge="accent" aria-pressed="false">2. El mismo acento<span class="challenge-done" hidden><span aria-hidden="true"> ✓</span><span class="visually-hidden"> Resuelto</span></span></button>
-            <button class="notebook-button" type="button" data-challenge="clip" aria-pressed="false">3. Tinta fuera de la caja<span class="challenge-done" hidden><span aria-hidden="true"> ✓</span><span class="visually-hidden"> Resuelto</span></span></button>
+          <div id="challenge-options" class="challenge-options" role="group" aria-label="Choose a challenge">
+            <button class="notebook-button" type="button" data-challenge="grapheme" aria-pressed="true">1. One grapheme, seven pieces<span class="challenge-done" hidden><span aria-hidden="true"> ✓</span><span class="visually-hidden"> Solved</span></span></button>
+            <button class="notebook-button" type="button" data-challenge="accent" aria-pressed="false">2. The same accent<span class="challenge-done" hidden><span aria-hidden="true"> ✓</span><span class="visually-hidden"> Solved</span></span></button>
+            <button class="notebook-button" type="button" data-challenge="clip" aria-pressed="false">3. Ink outside the box<span class="challenge-done" hidden><span aria-hidden="true"> ✓</span><span class="visually-hidden"> Solved</span></span></button>
           </div>
           <p id="challenge-task" class="challenge-task"></p>
           <div class="challenge-actions">
-            <button id="challenge-check" class="notebook-primary" type="button">Comprobar</button>
-            <button id="challenge-hint-toggle" class="notebook-button" type="button" aria-expanded="false" aria-controls="challenge-hint">Pista</button>
-            <button id="challenge-prepare" class="notebook-button" type="button" hidden>Preparar acento</button>
-            <a id="challenge-link" href="#specimen">Ir al espécimen</a>
+            <button id="challenge-check" class="notebook-primary" type="button">Check</button>
+            <button id="challenge-hint-toggle" class="notebook-button" type="button" aria-expanded="false" aria-controls="challenge-hint">Hint</button>
+            <button id="challenge-prepare" class="notebook-button" type="button" hidden>Set up accent</button>
+            <a id="challenge-link" href="#specimen">Go to specimen</a>
           </div>
           <p id="challenge-hint" class="challenge-note" hidden></p>
           <p id="challenge-result" class="challenge-note" role="status"></p>
         </section>
         <section class="render-panel panel" aria-labelledby="render-title">
-          <div id="shared-notice" class="shared-notice" hidden><span id="shared-notice-text" role="status" aria-live="polite"></span><button id="shared-notice-close" aria-label="Cerrar aviso del enlace" title="Cerrar aviso">×</button></div>
-          <div class="render-heading"><div><p class="eyebrow">LA PRUEBA DEL ALGODÓN</p><h2 id="render-title">Mismo texto. Distintas reglas.</h2></div><span class="live-badge"><span class="status-dot"></span> DOM real</span></div>
-          <div class="legend"><span><i class="legend-box"></i> Caja del mensaje</span><span><i class="legend-baseline"></i> Línea base</span><span><i class="legend-ink"></i> Tinta estimada · Canvas</span><span><i class="legend-selection"></i> Grafema seleccionado</span></div>
-          <div id="spider-player" class="spider-player" role="group" aria-label="Animación del crecimiento de la araña">
+          <div id="shared-notice" class="shared-notice" hidden><span id="shared-notice-text" role="status" aria-live="polite"></span><button id="shared-notice-close" aria-label="Dismiss shared link notice" title="Dismiss notice">×</button></div>
+          <div class="render-heading"><div><p class="eyebrow">THE EXPERIMENT</p><h2 id="render-title">Same text. Different rules.</h2></div><span class="live-badge"><span class="status-dot"></span> Real DOM</span></div>
+          <div class="legend"><span><i class="legend-box"></i> Message box</span><span><i class="legend-baseline"></i> Baseline</span><span><i class="legend-ink"></i> Estimated ink · Canvas</span><span><i class="legend-selection"></i> Selected grapheme</span></div>
+          <div id="spider-player" class="spider-player" role="group" aria-label="Spider growth animation">
             <div class="player-row">
-              <div class="player-copy"><strong>La araña, paso a paso</strong><p id="player-status">En pausa · 12 de 60 marcas</p></div>
+              <div class="player-copy"><strong>The spider, step by step</strong><p id="player-status">Paused · 12 of 60 marks</p></div>
               <div class="player-controls">
-                <button id="player-rewind" title="Volver a cero y pausar"><span aria-hidden="true">↺</span> Desde cero</button>
-                <button id="player-toggle" class="player-toggle"><span id="player-icon" aria-hidden="true">▶</span><span id="player-label">Reproducir</span></button>
-                <button id="player-step" title="Pausar y añadir una incorporación"><span aria-hidden="true">+1</span><span id="player-step-label">marca</span></button>
+                <button id="player-rewind" title="Go back to zero and pause"><span aria-hidden="true">↺</span> From zero</button>
+                <button id="player-toggle" class="player-toggle"><span id="player-icon" aria-hidden="true">▶</span><span id="player-label">Play</span></button>
+                <button id="player-step" title="Pause and add one character"><span aria-hidden="true">+1</span><span id="player-step-label">mark</span></button>
               </div>
-              <label class="player-speed">Ritmo<select id="player-speed" aria-label="Ritmo de reproducción"><option value="1000">Lento · 1/s</option><option value="500" selected>Normal · 2/s</option><option value="250">Rápido · 4/s</option></select></label>
+              <label class="player-speed">Speed<select id="player-speed" aria-label="Playback speed"><option value="1000">Slow · 1/s</option><option value="500" selected>Normal · 2/s</option><option value="250">Fast · 4/s</option></select></label>
             </div>
-            <progress id="player-progress" class="player-progress" value="12" max="60" aria-label="Longitud animada del hilo" aria-live="off"></progress>
-            <p class="player-hint">Cada paso incorpora un punto de código. Reproduce desde la longitud actual o vuelve a cero.</p>
+            <progress id="player-progress" class="player-progress" value="12" max="60" aria-label="Animated thread length" aria-live="off"></progress>
+            <p class="player-hint">Each step adds a code point. Play from the current length or go back to zero.</p>
             <span id="player-announcement" class="visually-hidden" role="status" aria-live="polite"></span>
           </div>
-          <div class="selection-toolbar" role="group" aria-label="Selección conectada">
+          <div class="selection-toolbar" role="group" aria-label="Linked selection">
             <div class="selection-preview" aria-hidden="true"><bdi id="selected-preview" dir="auto"></bdi></div>
-            <div class="selection-copy"><strong id="connected-selection" role="status" aria-live="polite" aria-atomic="true">Selecciona un grafema</strong><p id="connected-help">Pulsa una ficha del inspector o un carácter en A/B.</p></div>
-            <div class="selection-actions"><button id="previous-grapheme" aria-label="Grafema anterior" title="Grafema anterior" disabled>←</button><button id="next-grapheme" aria-label="Grafema siguiente" title="Grafema siguiente" disabled>→</button></div>
+            <div class="selection-copy"><strong id="connected-selection" role="status" aria-live="polite" aria-atomic="true">Select a grapheme</strong><p id="connected-help">Select a chip in the inspector or a character in A/B.</p></div>
+            <div class="selection-actions"><button id="previous-grapheme" aria-label="Previous grapheme" title="Previous grapheme" disabled>←</button><button id="next-grapheme" aria-label="Next grapheme" title="Next grapheme" disabled>→</button></div>
           </div>
-          <div id="chat-en-movimiento" class="spider-player chat-player" role="group" aria-label="Chat de pruebas en movimiento">
+          <div id="chat-en-movimiento" class="spider-player chat-player" role="group" aria-label="Moving test chat">
             <div class="player-row">
-              <div class="player-copy"><strong>Chat de pruebas en movimiento</strong><p id="chat-status">En pausa · 0 mensajes posteriores</p></div>
+              <div class="player-copy"><strong>Moving test chat</strong><p id="chat-status">Paused · 0 newer messages</p></div>
               <div class="player-controls">
-                <button id="chat-send" class="player-toggle" type="button">Enviar espécimen</button>
-                <button id="chat-toggle" type="button">Iniciar chat</button>
-                <button id="chat-step" type="button" title="Pausar y recibir un mensaje ficticio">+1 mensaje</button>
+                <button id="chat-send" class="player-toggle" type="button">Send specimen</button>
+                <button id="chat-toggle" type="button">Start chat</button>
+                <button id="chat-step" type="button" title="Pause and receive one test message">+1 message</button>
               </div>
-              <label class="player-speed">Ritmo del chat<select id="chat-speed"><option value="3000">Cada 3 s</option><option value="1500" selected>Cada 1,5 s</option><option value="650">Cada 0,65 s</option></select></label>
+              <label class="player-speed">Chat speed<select id="chat-speed"><option value="3000">Every 3 s</option><option value="1500" selected>Every 1.5 s</option><option value="650">Every 0.65 s</option></select></label>
             </div>
-            <p class="player-hint">Los mensajes nuevos empujan el espécimen hacia arriba en A y B. Envíalo otra vez para volver a verlo al final.</p>
+            <p class="player-hint">New messages push the specimen up in A and B. Send it again to bring it back to the end of the chat.</p>
             <span id="chat-announcement" class="visually-hidden" role="status"></span>
           </div>
           <section id="local-fonts" class="spider-player font-drop" aria-labelledby="local-font-title">
             <div class="player-row">
-              <div class="player-copy"><strong id="local-font-title">Fuentes locales</strong><p>Arrastra aquí un archivo WOFF2, WOFF, TTF u OTF de hasta 10 MiB.</p></div>
-              <label class="player-speed">Aplicar al cargar<select id="local-font-target"><option value="a">Vista A</option><option value="b">Vista B</option></select></label>
-              <div class="player-controls"><button id="local-font-pick" type="button" aria-describedby="local-font-hint">Elegir archivo</button><button id="local-font-clear" type="button" hidden>Quitar fuentes locales</button></div>
-              <input id="local-font-file" type="file" accept=".woff2,.woff,.ttf,.otf" aria-label="Archivo de fuente local" hidden>
+              <div class="player-copy"><strong id="local-font-title">Local fonts</strong><p>Drop a WOFF2, WOFF, TTF, or OTF file up to 10 MiB here.</p></div>
+              <label class="player-speed">Apply on load<select id="local-font-target"><option value="a">View A</option><option value="b">View B</option></select></label>
+              <div class="player-controls"><button id="local-font-pick" type="button" aria-describedby="local-font-hint">Choose file</button><button id="local-font-clear" type="button" hidden>Remove local fonts</button></div>
+              <input id="local-font-file" type="file" accept=".woff2,.woff,.ttf,.otf" aria-label="Local font file" hidden>
             </div>
-            <p id="local-font-hint" class="player-hint">Los archivos se quedan en esta pestaña. El navegador puede usar otra fuente para los caracteres que falten.</p>
+            <p id="local-font-hint" class="player-hint">Files stay in this tab. The browser may use another font for missing characters.</p>
             <p id="local-font-status" role="status"></p>
           </section>
           <div class="comparison">
             <article class="render-card" data-view="a">
-              <div class="view-title"><span class="view-letter">A</span><h3>Deja que escape</h3><span id="overflow-badge-a" class="mode-badge">visible</span></div>
-              <div class="view-settings"><label>Fuente<select id="font-a"><option value="noto">Noto Sans · incluida</option><option value="sans">Arial / sans-serif</option><option value="serif">Times / serif</option><option value="mono">Courier / monospace</option><option value="system">Sistema</option><optgroup id="local-fonts-a" label="Fuentes locales" hidden></optgroup></select></label><label>Mensaje<select id="overflow-a"><option value="visible">visible</option><option value="clip">clip</option><option value="hidden">hidden</option></select></label><label>Panel<select id="panel-overflow-a"><option value="hidden">Recortar</option><option value="visible">Visible</option></select></label></div>
+              <div class="view-title"><span class="view-letter">A</span><h3>Let it escape</h3><span id="overflow-badge-a" class="mode-badge">visible</span></div>
+              <div class="view-settings"><label>Font<select id="font-a"><option value="noto">Noto Sans · bundled</option><option value="sans">Arial / sans-serif</option><option value="serif">Times / serif</option><option value="mono">Courier / monospace</option><option value="system">System</option><optgroup id="local-fonts-a" label="Local fonts" hidden></optgroup></select></label><label>Message<select id="overflow-a"><option value="visible">visible</option><option value="clip">clip</option><option value="hidden">hidden</option></select></label><label>Panel<select id="panel-overflow-a"><option value="hidden">Clip</option><option value="visible">Visible</option></select></label></div>
               <div class="stage-window" id="stage-window-a">
-                <div class="stage" id="stage-a" aria-label="Vista A: renderizado del texto">
-                  <div class="stage-tag"><span></span> CHAT DE PRUEBAS</div>
+                <div class="stage" id="stage-a" aria-label="View A: text rendering">
+                  <div class="stage-tag"><span></span> TEST CHAT</div>
                   <div class="chat-stream" id="chat-stream-a">
                     <div id="chat-before-a"></div>
                     <div class="specimen-message" id="message-a"><span class="baseline-anchor" aria-hidden="true"></span><bdi class="sample" id="sample-a" dir="auto"></bdi></div>
-                    <div class="sample-caption"><span class="chat-user purple">tú</span><span>espécimen en el chat</span></div>
+                    <div class="sample-caption"><span class="chat-user purple">you</span><span>specimen in chat</span></div>
                     <div class="chat-after" id="chat-after-a"></div>
                   </div>
-                  <div class="stage-overlays" aria-hidden="true"><div class="layout-outline" id="layout-a"></div><div class="baseline-guide" id="baseline-a"></div><div class="ink-outline" id="ink-a" hidden></div><div id="selection-a"></div><span id="selection-status-a" class="selection-offscreen" hidden>Grafema fuera de vista</span></div>
+                  <div class="stage-overlays" aria-hidden="true"><div class="layout-outline" id="layout-a"></div><div class="baseline-guide" id="baseline-a"></div><div class="ink-outline" id="ink-a" hidden></div><div id="selection-a"></div><span id="selection-status-a" class="selection-offscreen" hidden>Grapheme out of view</span></div>
                 </div>
               </div>
-              <div class="view-readout"><span>Caja <strong id="box-metric-a">—</strong></span><span>Tinta Canvas <strong id="ink-metric-a">—</strong></span></div>
+              <div class="view-readout"><span>Box <strong id="box-metric-a">—</strong></span><span>Canvas ink <strong id="ink-metric-a">—</strong></span></div>
               <code class="css-snippet" id="css-a"></code>
             </article>
             <article class="render-card" data-view="b">
-              <div class="view-title"><span class="view-letter secondary">B</span><h3>Ponle un límite</h3><span id="overflow-badge-b" class="mode-badge">clip</span></div>
-              <div class="view-settings"><label>Fuente<select id="font-b"><option value="noto">Noto Sans · incluida</option><option value="sans">Arial / sans-serif</option><option value="serif">Times / serif</option><option value="mono">Courier / monospace</option><option value="system">Sistema</option><optgroup id="local-fonts-b" label="Fuentes locales" hidden></optgroup></select></label><label>Mensaje<select id="overflow-b"><option value="visible">visible</option><option value="clip" selected>clip</option><option value="hidden">hidden</option></select></label><label>Panel<select id="panel-overflow-b"><option value="hidden">Recortar</option><option value="visible">Visible</option></select></label></div>
+              <div class="view-title"><span class="view-letter secondary">B</span><h3>Set a limit</h3><span id="overflow-badge-b" class="mode-badge">clip</span></div>
+              <div class="view-settings"><label>Font<select id="font-b"><option value="noto">Noto Sans · bundled</option><option value="sans">Arial / sans-serif</option><option value="serif">Times / serif</option><option value="mono">Courier / monospace</option><option value="system">System</option><optgroup id="local-fonts-b" label="Local fonts" hidden></optgroup></select></label><label>Message<select id="overflow-b"><option value="visible">visible</option><option value="clip" selected>clip</option><option value="hidden">hidden</option></select></label><label>Panel<select id="panel-overflow-b"><option value="hidden">Clip</option><option value="visible">Visible</option></select></label></div>
               <div class="stage-window" id="stage-window-b">
-                <div class="stage" id="stage-b" aria-label="Vista B: renderizado del texto">
-                  <div class="stage-tag"><span></span> CHAT DE PRUEBAS</div>
+                <div class="stage" id="stage-b" aria-label="View B: text rendering">
+                  <div class="stage-tag"><span></span> TEST CHAT</div>
                   <div class="chat-stream" id="chat-stream-b">
                     <div id="chat-before-b"></div>
                     <div class="specimen-message" id="message-b"><span class="baseline-anchor" aria-hidden="true"></span><bdi class="sample" id="sample-b" dir="auto"></bdi></div>
-                    <div class="sample-caption"><span class="chat-user purple">tú</span><span>espécimen en el chat</span></div>
+                    <div class="sample-caption"><span class="chat-user purple">you</span><span>specimen in chat</span></div>
                     <div class="chat-after" id="chat-after-b"></div>
                   </div>
-                  <div class="stage-overlays" aria-hidden="true"><div class="layout-outline" id="layout-b"></div><div class="baseline-guide" id="baseline-b"></div><div class="ink-outline" id="ink-b" hidden></div><div id="selection-b"></div><span id="selection-status-b" class="selection-offscreen" hidden>Grafema fuera de vista</span></div>
+                  <div class="stage-overlays" aria-hidden="true"><div class="layout-outline" id="layout-b"></div><div class="baseline-guide" id="baseline-b"></div><div class="ink-outline" id="ink-b" hidden></div><div id="selection-b"></div><span id="selection-status-b" class="selection-offscreen" hidden>Grapheme out of view</span></div>
                 </div>
               </div>
-              <div class="view-readout"><span>Caja <strong id="box-metric-b">—</strong></span><span>Tinta Canvas <strong id="ink-metric-b">—</strong></span></div>
+              <div class="view-readout"><span>Box <strong id="box-metric-b">—</strong></span><span>Canvas ink <strong id="ink-metric-b">—</strong></span></div>
               <code class="css-snippet" id="css-b"></code>
             </article>
           </div>
-          <div class="observation"><span class="observation-icon" aria-hidden="true">⌁</span><p id="observation">El contenido puede pintarse fuera de su caja sin desplazar los mensajes anteriores.</p></div>
-          <p class="render-footnote">La tinta visible es texto real del navegador. El recuadro verde sitúa el grafema; no delimita su tinta. La guía naranja estima la tinta con Canvas. Si el panel deja salir la tinta, puedes verla en el margen que rodea el chat. Sube la longitud del hilo para llevarlo hasta ese borde.</p>
-          <div class="experiment-tools"><a id="open-notebook" class="notebook-shortcut" href="#cuaderno">Guardar este experimento en el cuaderno →</a><button id="share-experiment" class="notebook-primary share-trigger" aria-expanded="false" aria-controls="share-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="5" r="3"/><circle cx="18" cy="19" r="3"/><path d="m9 10 6-4M9 14l6 4"/></svg>Compartir experimento</button></div>
+          <div class="observation"><span class="observation-icon" aria-hidden="true">⌁</span><p id="observation">Ink can extend beyond its box without shifting earlier messages.</p></div>
+          <p class="render-footnote">The browser draws the visible text. The green outline locates the grapheme, and the orange Canvas guide estimates its ink. When the panel allows overflow, the ink can reach the margin around the chat. Increase the thread length to reach that edge.</p>
+          <div class="experiment-tools"><a id="open-notebook" class="notebook-shortcut" href="#cuaderno">Save this experiment to the notebook →</a><button id="share-experiment" class="notebook-primary share-trigger" aria-expanded="false" aria-controls="share-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="5" r="3"/><circle cx="18" cy="19" r="3"/><path d="m9 10 6-4M9 14l6 4"/></svg>Share experiment</button></div>
           <div id="share-panel" class="share-panel" hidden>
-            <h3>Un experimento, un enlace</h3>
-            <p id="share-info">El enlace contiene el texto y los ajustes. Quien lo abra podrá recuperarlos; las fuentes y el navegador pueden cambiar el dibujo.</p>
-            <label for="share-url">Enlace de este momento<textarea id="share-url" rows="3" readonly spellcheck="false" aria-describedby="share-info share-snapshot-note"></textarea></label>
-            <div class="share-panel-actions"><button id="share-copy" class="notebook-primary">Copiar enlace</button><a id="share-open" class="notebook-button" target="_blank" rel="noopener noreferrer">Probar enlace ↗</a><button id="share-close" class="notebook-button share-close">Cerrar</button></div>
-            <p id="share-snapshot-note">Si cambias los ajustes, pulsa Compartir experimento para generar otro enlace.</p>
-            <p id="share-font-note" hidden>El enlace guarda referencias a las fuentes locales. En otra pestaña se usarán fuentes de sustitución hasta que cargues los archivos.</p>
+            <h3>One experiment, one link</h3>
+            <p id="share-info">The link contains the text and settings. Recipients can restore them. Fonts and browsers can affect how the text looks.</p>
+            <label for="share-url">Link for this snapshot<textarea id="share-url" rows="3" readonly spellcheck="false" aria-describedby="share-info share-snapshot-note"></textarea></label>
+            <div class="share-panel-actions"><button id="share-copy" class="notebook-primary">Copy link</button><a id="share-open" class="notebook-button" target="_blank" rel="noopener noreferrer">Test link ↗</a><button id="share-close" class="notebook-button share-close">Close</button></div>
+            <p id="share-snapshot-note">After changing the settings, click Share experiment to generate a new link.</p>
+            <p id="share-font-note" hidden>The link stores references to local fonts. Another tab will use fallback fonts until you load the files.</p>
             <p id="share-status" role="status" aria-live="polite"></p>
           </div>
         </section>
         <section id="anatomia" class="anatomy-panel panel" aria-labelledby="anatomy-title">
-          <div class="anatomy-heading"><div class="section-heading"><span class="step">03</span><h2 id="anatomy-title">Debajo del glifo</h2></div><div class="segmented" role="group" aria-label="Vista del inspector"><button id="tab-graphemes" aria-pressed="true">Grafemas</button><button id="tab-codepoints" aria-pressed="false">Puntos de código</button></div></div>
-          <p id="inspector-help" class="muted small">Cada ficha es un grafema. Selecciónalo para inspeccionar los puntos de código que lo forman.</p>
-          <div id="grapheme-list" class="grapheme-list" aria-label="Grafemas del texto"></div>
-          <div class="inspector-summary"><span id="selection-label">Selecciona un grafema</span><button id="inspect-all" class="text-button">Ver todos los puntos →</button></div>
-          <div class="table-scroll"><table><thead><tr><th scope="col">Carácter</th><th scope="col">Punto de código</th><th scope="col">Nombre Unicode</th><th scope="col">Categoría</th><th scope="col">UTF-16</th></tr></thead><tbody id="codepoint-rows"></tbody></table></div>
-          <div class="normalization"><div><strong>¿Se puede escribir igual de otra manera?</strong><p id="normalization-info">Compara las formas compuesta y descompuesta.</p></div><div><button id="normalize-nfc" class="subtle-button" title="Aplicar composición canónica">Aplicar NFC</button><button id="normalize-nfd" class="subtle-button" title="Aplicar descomposición canónica">Aplicar NFD</button></div></div>
-          <p id="catalog-note" class="micro muted catalog-note">Los nombres se consultan en un catálogo local; la segmentación depende de tu navegador.</p>
+          <div class="anatomy-heading"><div class="section-heading"><span class="step">03</span><h2 id="anatomy-title">Under the glyph</h2></div><div class="segmented" role="group" aria-label="Inspector view"><button id="tab-graphemes" aria-pressed="true">Graphemes</button><button id="tab-codepoints" aria-pressed="false">Code points</button></div></div>
+          <p id="inspector-help" class="muted small">Each chip is a grapheme. Select it to inspect its code points.</p>
+          <div id="grapheme-list" class="grapheme-list" aria-label="Graphemes in the text"></div>
+          <div class="inspector-summary"><span id="selection-label">Select a grapheme</span><button id="inspect-all" class="text-button">Show all code points →</button></div>
+          <div class="table-scroll"><table><thead><tr><th scope="col">Character</th><th scope="col">Code point</th><th scope="col">Unicode name</th><th scope="col">Category</th><th scope="col">UTF-16</th></tr></thead><tbody id="codepoint-rows"></tbody></table></div>
+          <div class="normalization"><div><strong>Can you write it another way?</strong><p id="normalization-info">Compare the composed and decomposed forms.</p></div><div><button id="normalize-nfc" class="subtle-button" title="Apply canonical composition">Apply NFC</button><button id="normalize-nfd" class="subtle-button" title="Apply canonical decomposition">Apply NFD</button></div></div>
+          <p id="catalog-note" class="micro muted catalog-note">Names come from a local catalog. Segmentation depends on your browser.</p>
         </section>
       </div>
     </section>
 
     <section id="fichas" class="browser-cards notebook-panel panel" aria-labelledby="browser-card-title">
       <div class="notebook-heading">
-        <div><p class="eyebrow">EL MISMO EXPERIMENTO EN OTRO NAVEGADOR</p><h2 id="browser-card-title">Fichas de navegador</h2></div>
+        <div><p class="eyebrow">THE SAME EXPERIMENT IN ANOTHER BROWSER</p><h2 id="browser-card-title">Browser records</h2></div>
         <div class="notebook-actions">
-          <button id="browser-card-export" class="notebook-primary" type="button">Exportar ficha JSON</button>
-          <button id="browser-card-import" class="notebook-button" type="button">Abrir ficha JSON</button>
-          <button id="browser-card-repeat" class="notebook-button" type="button" hidden>Volver a medir</button>
-          <input id="browser-card-file" type="file" accept=".json,application/json" aria-label="Ficha JSON de navegador" hidden>
+          <button id="browser-card-export" class="notebook-primary" type="button">Export record as JSON</button>
+          <button id="browser-card-import" class="notebook-button" type="button">Open JSON record</button>
+          <button id="browser-card-repeat" class="notebook-button" type="button" hidden>Measure again</button>
+          <input id="browser-card-file" type="file" accept=".json,application/json" aria-label="Browser record JSON file" hidden>
         </div>
       </div>
-      <p class="browser-card-intro">Exporta el texto, los ajustes y las medidas. Al abrir la ficha en otro navegador, el laboratorio recupera el experimento y lo mide de nuevo.</p>
+      <p class="browser-card-intro">Export the text, settings, and measurements. Open the record in another browser to restore the experiment and measure it again.</p>
       <p id="browser-card-status" class="browser-card-status" role="status"></p>
       <div id="browser-card-comparison" hidden>
-        <div class="browser-card-table" tabindex="0" role="region" aria-label="Comparación de medidas de los navegadores">
+        <div class="browser-card-table" tabindex="0" role="region" aria-label="Browser measurement comparison">
           <table>
             <caption id="browser-card-caption"></caption>
-            <thead><tr><th scope="col">Medida</th><th scope="col"><span>Ficha importada</span><strong id="browser-card-baseline"></strong></th><th scope="col"><span>Este navegador</span><strong id="browser-card-current"></strong></th><th scope="col">Cambio</th></tr></thead>
+            <thead><tr><th scope="col">Measurement</th><th scope="col"><span>Imported record</span><strong id="browser-card-baseline"></strong></th><th scope="col"><span>This browser</span><strong id="browser-card-current"></strong></th><th scope="col">Change</th></tr></thead>
             <tbody id="browser-card-rows"></tbody>
           </table>
         </div>
-        <p class="browser-card-note">Las medidas están en píxeles CSS. La anchura de la ventana influye en la caja DOM. La tinta de Canvas se estima antes del recorte.</p>
-        <p class="browser-card-note">La pila CSS indica qué familias se solicitan al navegador. Las sustituciones de cada glifo quedan sin identificar. Si falta un archivo, puedes <a href="#local-fonts">cargar la fuente local</a> y volver a medir.</p>
+        <p class="browser-card-note">Measurements use CSS pixels. Viewport width affects the DOM box. Canvas ink is estimated before clipping.</p>
+        <p class="browser-card-note">The CSS stack lists the requested families. The lab leaves per-glyph substitutions unidentified. If a file is missing, you can <a href="#local-fonts">load the local font</a> and measure again.</p>
       </div>
     </section>
 
     <section id="cuaderno" class="notebook-panel panel" aria-labelledby="notebook-title">
       <div class="notebook-heading">
-        <div><div class="section-heading"><span class="step">04</span><h2 id="notebook-title">Cuaderno de descubrimientos</h2></div><p>Ponle nombre a un hallazgo y vuelve a él cuando quieras.</p></div>
-        <div class="notebook-actions"><button id="notebook-export" class="notebook-button" disabled>Exportar JSON</button><button id="notebook-import" class="notebook-button">Importar JSON</button><input id="notebook-file" type="file" accept=".json,application/json" aria-label="Archivo JSON del cuaderno" hidden></div>
+        <div><div class="section-heading"><span class="step">04</span><h2 id="notebook-title">Discovery notebook</h2></div><p>Name a discovery and come back to it any time.</p></div>
+        <div class="notebook-actions"><button id="notebook-export" class="notebook-button" disabled>Export JSON</button><button id="notebook-import" class="notebook-button">Import JSON</button><input id="notebook-file" type="file" accept=".json,application/json" aria-label="Notebook JSON file" hidden></div>
       </div>
       <form id="notebook-form" class="notebook-form">
-        <label for="experiment-name">Nombre del experimento<input id="experiment-name" name="experiment-name" type="text" maxlength="80" required placeholder="La araña que trepa tres mensajes" autocomplete="off" aria-describedby="notebook-save-help"></label>
-        <button id="notebook-save" class="notebook-primary" type="submit">Guardar experimento</button><button id="notebook-cancel" class="notebook-button" type="button" hidden>Cancelar</button>
+        <label for="experiment-name">Experiment name<input id="experiment-name" name="experiment-name" type="text" maxlength="80" required placeholder="The spider that climbed three messages" autocomplete="off" aria-describedby="notebook-save-help"></label>
+        <button id="notebook-save" class="notebook-primary" type="submit">Save experiment</button><button id="notebook-cancel" class="notebook-button" type="button" hidden>Cancel</button>
       </form>
-      <p id="notebook-save-help" class="notebook-storage">Conserva el texto, los ajustes A/B, las guías y la selección. Los experimentos se recuperan en pausa. Para recuperar una fuente local, carga el mismo archivo antes de abrir el experimento.</p>
-      <p id="notebook-storage" class="notebook-storage">Guardado en este navegador. Exporta JSON para compartirlo o llevarlo a otro equipo.</p>
-      <div class="notebook-feedback"><span id="notebook-status" role="status" aria-live="polite"></span><button id="notebook-undo" class="text-button" hidden>Deshacer eliminación</button></div>
-      <div class="notebook-list-header"><span>TUS HALLAZGOS</span><span id="notebook-count">0 / 100 experimentos</span></div>
-      <div id="notebook-empty" class="notebook-empty"><strong>Las mejores rarezas merecen una página.</strong><p>Guarda el experimento que tienes abierto o importa un cuaderno JSON.</p></div>
-      <div id="notebook-list" class="notebook-list" aria-label="Experimentos guardados"></div>
+      <p id="notebook-save-help" class="notebook-storage">Keeps the text, A/B settings, guides, and selection. Experiments open paused. To restore a local font, load the same file before opening the experiment.</p>
+      <p id="notebook-storage" class="notebook-storage">Saved in this browser. Export JSON to share or move your notebook.</p>
+      <div class="notebook-feedback"><span id="notebook-status" role="status" aria-live="polite"></span><button id="notebook-undo" class="text-button" hidden>Undo deletion</button></div>
+      <div class="notebook-list-header"><span>YOUR DISCOVERIES</span><span id="notebook-count">0 / 100 experiments</span></div>
+      <div id="notebook-empty" class="notebook-empty"><strong>The best oddities deserve a page.</strong><p>Save the current experiment or import a JSON notebook.</p></div>
+      <div id="notebook-list" class="notebook-list" aria-label="Saved experiments"></div>
     </section>
 
     <section id="como-funciona" class="explanation" aria-labelledby="explanation-title">
-      <div class="explanation-heading"><p class="eyebrow">LA INFORMÁTICA DETRÁS DE LA ARAÑA</p><h2 id="explanation-title">Tres cosas que parecen una.</h2><p>Un carácter, un grafema y un glifo viven en capas distintas.</p></div>
-      <div class="concepts"><article><span class="concept-number">01 / DATOS</span><div class="concept-example mono">U+0061 + U+0301</div><h3>Puntos de código</h3><p>Los valores que componen el texto. Una «a» y su acento combinante son dos puntos de código.</p></article><article><span class="concept-number">02 / AGRUPACIÓN</span><div class="concept-example">[ á ]</div><h3>Grafemas</h3><p>Los clústeres que solemos percibir como caracteres. Esa letra con acento forma un solo grafema.</p></article><article><span class="concept-number">03 / DIBUJO</span><div class="concept-example ink-example">á<span></span></div><h3>Glifos y tinta</h3><p>Las formas que pinta la fuente. Su tinta puede salir de la caja; contar grafemas no cuenta glifos.</p></article></div>
-      <details class="methodology"><summary>Qué estamos midiendo, exactamente <span aria-hidden="true">+</span></summary><div><p><strong>Layout:</strong> el rectángulo azul es la caja de bloque del mensaje, medida con <code>getBoundingClientRect()</code>. No es el contorno de los glifos ni la caja de línea interna. La guía horizontal marca la primera línea base con un elemento inline de tamaño cero.</p><p><strong>Tinta:</strong> los glifos se dibujan en el DOM, con la fuente y el <code>overflow</code> elegidos. La guía naranja usa <code>measureText()</code> y <code>actualBoundingBox*</code> de Canvas para estimar los límites antes del recorte. Canvas y el DOM pueden diferir; no se dibuja esta guía para saltos de línea, tabuladores o controles incompatibles.</p><p><strong>Grafemas:</strong> se calculan con <code>Intl.Segmenter</code>, según la versión Unicode del navegador. Si falta esta API se indica que la medida no está disponible; no se sustituyen grafemas por puntos de código.</p><p><strong>Selección:</strong> el recuadro verde usa los intervalos UTF-16 de cada grafema y <code>Range.getClientRects()</code>. Marca su posición tipográfica, no su contorno de tinta; respeta el recorte de cada vista. El resaltado nativo, cuando está disponible, conserva el texto en un único nodo. Las ligaduras pueden compartir geometría: las fichas del inspector permiten seleccionar cada grafema sin ambigüedad.</p><p><strong>Fuentes:</strong> los nombres son familias solicitadas, no una identificación de cada fuente usada. El navegador puede usar fuentes de sustitución. El número de marcas no garantiza una altura.</p><p><strong>Normalización:</strong> NFC compone y NFD descompone canónicamente. Ninguna elimina por sí sola todas las marcas repetidas. U+FC5E es una ligadura de presentación árabe (categoría Lo), no una marca Mn; se incluye para comparar el espécimen original.</p><p>Lecturas: <a href="https://www.w3.org/TR/css-overflow-3/#ink-overflow" target="_blank" rel="noopener noreferrer">CSS Ink Overflow ↗</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter" target="_blank" rel="noopener noreferrer">Intl.Segmenter ↗</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics" target="_blank" rel="noopener noreferrer">TextMetrics ↗</a> · <a href="https://www.unicode.org/reports/tr29/" target="_blank" rel="noopener noreferrer">Unicode UAX #29 ↗</a></p></div></details>
+      <div class="explanation-heading"><p class="eyebrow">THE COMPUTING BEHIND THE SPIDER</p><h2 id="explanation-title">Three things that look like one.</h2><p>Characters, graphemes, and glyphs belong to different layers.</p></div>
+      <div class="concepts"><article><span class="concept-number">01 / DATA</span><div class="concept-example mono">U+0061 + U+0301</div><h3>Code points</h3><p>The values that make up text. The letter “a” and its combining acute accent are two code points.</p></article><article><span class="concept-number">02 / GROUPING</span><div class="concept-example">[ á ]</div><h3>Graphemes</h3><p>The clusters we usually perceive as characters. That accented letter forms one grapheme.</p></article><article><span class="concept-number">03 / DRAWING</span><div class="concept-example ink-example">á<span></span></div><h3>Glyphs and ink</h3><p>The shapes drawn by a font. Their ink can escape its box. Counting graphemes tells you how the text groups.</p></article></div>
+      <details class="methodology"><summary>What exactly are we measuring? <span aria-hidden="true">+</span></summary><div><p><strong>Layout:</strong> The blue outline is the message's block box, measured with <code>getBoundingClientRect()</code>. The horizontal guide marks the first baseline using a zero-size inline element.</p><p><strong>Ink:</strong> The browser draws the glyphs in the DOM with the selected font and <code>overflow</code> setting. The orange guide uses <code>measureText()</code> and <code>actualBoundingBox*</code> from Canvas to estimate ink bounds before clipping. Canvas and the DOM can differ. The guide is omitted for line breaks, tabs, and unsupported control characters.</p><p><strong>Graphemes:</strong> The lab uses <code>Intl.Segmenter</code>with the browser's Unicode version. If the API is missing, the grapheme count is unavailable.</p><p><strong>Selection:</strong> The green outline uses each grapheme's UTF-16 offsets and <code>Range.getClientRects()</code>. It marks the grapheme's position and follows each view's clipping. Native highlighting, where available, keeps the text in one node. Ligatures can share geometry. Use the inspector chips to select one grapheme at a time.</p><p><strong>Fonts:</strong> The names identify requested families. The browser can draw missing characters with fallback fonts. Mark count alone cannot predict height.</p><p><strong>Normalization:</strong> NFC composes and NFD decomposes canonically. Repeated marks can remain in either form. U+FC5E is a presentation ligature (category Lo). Try it to compare with the original specimen.</p><p>Further reading: <a href="https://www.w3.org/TR/css-overflow-3/#ink-overflow" target="_blank" rel="noopener noreferrer">CSS Ink Overflow ↗</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter" target="_blank" rel="noopener noreferrer">Intl.Segmenter ↗</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics" target="_blank" rel="noopener noreferrer">TextMetrics ↗</a> · <a href="https://www.unicode.org/reports/tr29/" target="_blank" rel="noopener noreferrer">Unicode UAX #29 ↗</a></p></div></details>
     </section>
   </main>
-  <footer><span><strong>happyemotes</strong> · Hecho de curiosidad y Unicode.</span><span>De una araña en un chat a abrir el navegador por dentro. 🕷</span></footer>
+  <footer><span><strong>happyemotes</strong> · Made of curiosity and Unicode.</span><span>From a spider in a chat to a look inside the browser. 🕷</span></footer>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <noscript><div class="no-script">Este laboratorio necesita JavaScript para analizar y renderizar los experimentos.</div></noscript>
+  <noscript><div class="no-script">This lab needs JavaScript to analyze and render experiments.</div></noscript>
 </body>
 </html>

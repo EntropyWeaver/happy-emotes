@@ -1,3 +1,4 @@
+import { initLanguageSelector, onLanguageChange, setMessage, t } from './i18n.js';
 import { PRESETS, MAX_CODEPOINTS, MAX_MARKS, makeSpider, limitText, analyzeText, displayChar, escapedText, canvasEligible } from './core.js';
 import { createGraphemeSelection } from './selection.js';
 import { createPlayback } from './playback.js';
@@ -34,16 +35,18 @@ const playback = createPlayback({
 function renderPlaybackControls() {
   const count = Number($('mark-count').value);
   const atEnd = count >= MAX_MARKS;
-  const noun = $('mark-type').value === 'arabic' ? 'ligaduras' : 'marcas';
-  const phase = playback.playing ? 'Reproduciendo' : atEnd ? 'Completado' : 'En pausa';
-  $('player-status').textContent = `${phase} · ${count} de ${MAX_MARKS} ${noun}`;
+  const ligature = $('mark-type').value === 'arabic';
+  const stepLabel = ligature ? t("ligature", "ligadura") : t("mark", "marca");
+  const noun = count === 1 ? stepLabel : ligature ? t("ligatures", "ligaduras") : t("marks", "marcas");
+  const phase = playback.playing ? t("Playing", "Reproduciendo") : atEnd ? t("Complete", "Completado") : t("Paused", "En pausa");
+  $('player-status').textContent = t(`${phase} · ${count} of ${MAX_MARKS} ${noun}`, `${phase} · ${count} de ${MAX_MARKS} ${noun}`);
   $('player-progress').value = count;
-  $('player-progress').setAttribute('aria-valuetext', `${count} de ${MAX_MARKS} ${noun}`);
-  $('player-label').textContent = playback.playing ? 'Pausar' : atEnd ? 'Repetir' : 'Reproducir';
+  $('player-progress').setAttribute('aria-valuetext', t(`${count} of ${MAX_MARKS} ${noun}`, `${count} de ${MAX_MARKS} ${noun}`));
+  $('player-label').textContent = playback.playing ? t("Pause", "Pausar") : atEnd ? t("Replay", "Repetir") : t("Play", "Reproducir");
   $('player-icon').textContent = playback.playing ? 'Ⅱ' : '▶';
   $('player-step').disabled = atEnd;
   $('player-rewind').disabled = count === 0 && !playback.playing;
-  $('player-step-label').textContent = noun === 'ligaduras' ? 'ligadura' : 'marca';
+  $('player-step-label').textContent = stepLabel;
   // Announce transport changes, not a stream of counts several times a second.
   $('connected-selection').setAttribute('aria-live', playback.playing ? 'off' : 'polite');
   $('mark-count-value').setAttribute('aria-live', playback.playing ? 'off' : 'polite');
@@ -67,18 +70,23 @@ function selectGrapheme(index) {
   scheduleMeasurements();
 }
 
+function codepointCount(count) {
+  const unit = count === 1 ? t("code point", "punto de código") : t("code points", "puntos de código");
+  return `${count} ${unit}`;
+}
+
 function renderSelectionControls() {
   const clusters = state.analysis.clusters;
   const cluster = clusters?.[state.selected];
   const count = cluster ? Array.from(cluster.text).length : 0;
   $('selected-preview').textContent = cluster ? (count === 1 ? displayChar(cluster.text) : cluster.text) : '—';
   $('connected-selection').textContent = cluster
-    ? `Grafema ${state.selected + 1} de ${clusters.length} · ${count} ${count === 1 ? 'punto' : 'puntos'} de código`
-    : clusters === null ? 'Selección de grafemas no disponible' : 'Aún no hay grafemas';
+    ? t(`Grapheme ${state.selected + 1} of ${clusters.length}`, `Grafema ${state.selected + 1} de ${clusters.length}`) + ` · ${codepointCount(count)}`
+    : clusters === null ? t("Grapheme selection unavailable", "Selección de grafemas no disponible") : t("No graphemes yet", "Aún no hay grafemas");
   $('connected-help').textContent = clusters === null
-    ? 'Este navegador no dispone de segmentación de grafemas.'
-    : !cluster ? 'Escribe un texto o elige un espécimen para empezar.'
-      : 'Pulsa una ficha del inspector o un carácter en A/B.';
+    ? t("This browser does not support grapheme segmentation.", "Este navegador no dispone de segmentación de grafemas.")
+    : !cluster ? t("Enter text or choose a specimen to start.", "Escribe un texto o elige un espécimen para empezar.")
+      : t("Select a chip in the inspector or a character in A/B.", "Pulsa una ficha del inspector o un carácter en A/B.");
   $('previous-grapheme').disabled = !cluster || state.selected === 0;
   $('next-grapheme').disabled = !cluster || state.selected === clusters.length - 1;
 }
@@ -108,14 +116,18 @@ function updatePresetButtons() {
   $('spider-player').hidden = state.preset !== 'spider';
 }
 
-function setSpecimen(text, { preset = null, notice = '', animated = false, preserveSelection = false } = {}) {
+function renderInputHelp() {
+  $('input-help').textContent = PRESETS[state.preset]?.hint ?? t("Your text as entered. Explore its graphemes and try different rendering rules.", "Tu texto, tal cual. Explora sus grafemas y prueba distintas reglas de renderizado.");
+}
+
+function setSpecimen(text, { preset = null, animated = false, preserveSelection = false } = {}) {
   if (!animated) playback.pause();
   cancelAnimationFrame(inputFrame);
   const limited = limitText(text);
   $('specimen').value = limited.text;
-  $('input-notice').textContent = limited.truncated ? `Límite de ${MAX_CODEPOINTS} puntos de código: se ha conservado el comienzo del texto.` : notice;
+  setMessage($('input-notice'), limited.truncated ? () => t(`The limit is ${MAX_CODEPOINTS} code points. The beginning of the text was kept.`, `Límite de ${MAX_CODEPOINTS} puntos de código: se ha conservado el comienzo del texto.`) : '');
   state.preset = preset;
-  $('input-help').textContent = PRESETS[preset]?.hint ?? 'Tu texto, tal cual. Explora sus grafemas y prueba distintas reglas de renderizado.';
+  renderInputHelp();
   updatePresetButtons();
   updateAnalysis(!animated && !preserveSelection);
   renderPlaybackControls();
@@ -130,14 +142,14 @@ function updateAnalysis(selectInteresting = false) {
     state.selected = Math.max(0, interesting);
   }
   $('stat-codepoints').textContent = a.codepoints;
-  $('stat-graphemes').textContent = a.clusters ? a.clusters.length : 'N/D';
+  $('stat-graphemes').textContent = a.clusters ? a.clusters.length : t("N/A", "N/D");
   $('stat-utf16').textContent = a.utf16;
   $('stat-utf8').textContent = a.utf8;
   $('input-count').textContent = `${a.codepoints} / ${MAX_CODEPOINTS}`;
-  $('escaped').textContent = escapedText(a.text) || '(texto vacío)';
+  $('escaped').textContent = escapedText(a.text) || t("(empty text)", "(texto vacío)");
   const nfc = Array.from(a.text.normalize('NFC')).length;
   const nfd = Array.from(a.text.normalize('NFD')).length;
-  $('normalization-info').textContent = `NFC: ${nfc} puntos de código · NFD: ${nfd} puntos de código. Normalizar no elimina todas las marcas.`;
+  $('normalization-info').textContent = t(`NFC: ${nfc} code points · NFD: ${nfd} code points. Normalization can leave some marks in place.`, `NFC: ${nfc} puntos de código · NFD: ${nfd} puntos de código. Normalizar no elimina todas las marcas.`);
   $('normalize-nfc').disabled = !a.text || a.text === a.text.normalize('NFC');
   $('normalize-nfd').disabled = !a.text || a.text === a.text.normalize('NFD');
   $('copy').disabled = !a.text;
@@ -155,8 +167,8 @@ function renderInspector() {
   $('grapheme-list').hidden = !showClusters;
   $('inspect-all').hidden = !showClusters;
   $('inspector-help').textContent = !available
-    ? 'Este navegador no tiene Intl.Segmenter. Mostramos puntos de código; el número de grafemas no está disponible.'
-    : showClusters ? 'Cada ficha es un grafema. Selecciónalo: se ilumina en A y B y aquí aparecen sus puntos de código.' : 'El texto completo, punto por punto. Pulsa un carácter para localizar su grafema en A/B; sus filas se marcan en verde. UTF-16 indica el intervalo [inicio, fin) en JavaScript.';
+    ? t("This browser lacks Intl.Segmenter. Code points are shown and the grapheme count is unavailable.", "Este navegador no tiene Intl.Segmenter. Mostramos puntos de código; el número de grafemas no está disponible.")
+    : showClusters ? t("Each chip is a grapheme. Select it to highlight it in A/B and see its code points here.", "Cada ficha es un grafema. Selecciónalo: se ilumina en A y B y aquí aparecen sus puntos de código.") : t("The whole text, one code point at a time. Select a character to locate its grapheme in A/B and highlight its rows in green. UTF-16 shows the JavaScript [start, end) range.", "El texto completo, punto por punto. Pulsa un carácter para localizar su grafema en A/B; sus filas se marcan en verde. UTF-16 indica el intervalo [inicio, fin) en JavaScript.");
   const fragment = document.createDocumentFragment();
   if (showClusters) {
     for (const [index, cluster] of a.clusters.entries()) {
@@ -164,7 +176,7 @@ function renderInspector() {
       button.className = 'grapheme-chip';
       button.setAttribute('aria-pressed', String(index === state.selected));
       const length = Array.from(cluster.text).length;
-      button.setAttribute('aria-label', `Grafema ${index + 1}, ${length} ${length === 1 ? 'punto' : 'puntos'} de código`);
+      button.setAttribute('aria-label', t(`Grapheme ${index + 1}`, `Grafema ${index + 1}`) + `, ${codepointCount(length)}`);
       const glyph = document.createElement('bdi');
       glyph.className = 'glyph';
       glyph.dir = 'auto';
@@ -193,8 +205,8 @@ function renderTable() {
   const a = state.analysis;
   const selectedOnly = state.inspector === 'graphemes' && a.clusters !== null;
   const points = selectedOnly ? a.points.filter(p => p.cluster === state.selected) : a.points;
-  const countLabel = `${points.length} ${points.length === 1 ? 'punto' : 'puntos'} de código`;
-  $('selection-label').textContent = !a.text ? 'Aún no hay texto para inspeccionar' : selectedOnly ? `Grafema ${state.selected + 1} · ${countLabel}` : `Texto completo · ${countLabel}`;
+  const countLabel = codepointCount(points.length);
+  $('selection-label').textContent = !a.text ? t("No text to inspect yet", "Aún no hay texto para inspeccionar") : selectedOnly ? t(`Grapheme ${state.selected + 1} · ${countLabel}`, `Grafema ${state.selected + 1} · ${countLabel}`) : t(`Full text · ${countLabel}`, `Texto completo · ${countLabel}`);
   const fragment = document.createDocumentFragment();
   for (const point of points) {
     const row = document.createElement('tr');
@@ -209,7 +221,7 @@ function renderTable() {
     glyph.title = point.code;
     if (linked) {
       glyph.classList.add('codepoint-select');
-      glyph.setAttribute('aria-label', `${point.code}: seleccionar grafema ${point.cluster + 1}`);
+      glyph.setAttribute('aria-label', t(`${point.code}: select grapheme ${point.cluster + 1}`, `${point.code}: seleccionar grafema ${point.cluster + 1}`));
       glyph.addEventListener('click', () => selectGrapheme(point.cluster));
     }
     glyphCell.append(glyph);
@@ -217,12 +229,12 @@ function renderTable() {
     codeCell.textContent = point.code;
     const nameCell = document.createElement('td');
     const record = state.catalog[point.char.codePointAt(0).toString(16).toUpperCase()];
-    nameCell.textContent = record?.[0] ?? 'Nombre fuera del catálogo local';
+    nameCell.textContent = record?.[0] ?? t("Name outside the local catalog", "Nombre fuera del catálogo local");
     const categoryCell = document.createElement('td');
     const category = document.createElement('span');
     category.className = `category-tag ${isMark ? '' : 'neutral'}`;
     category.textContent = record?.[1] ?? point.category.code;
-    category.title = `${point.category.label}${record ? ` · clase combinante ${record[2]}` : ''}`;
+    category.title = `${point.category.label}${record ? t(` · combining class ${record[2]}`, ` · clase combinante ${record[2]}`) : ''}`;
     categoryCell.append(category);
     const offsetCell = document.createElement('td');
     offsetCell.textContent = `[${point.offset}, ${point.end})`;
@@ -234,7 +246,7 @@ function renderTable() {
     const cell = document.createElement('td');
     cell.colSpan = 5;
     cell.className = 'empty-state';
-    cell.textContent = 'Escribe algo o elige un espécimen para empezar.';
+    cell.textContent = t("Enter text or choose a specimen to start.", "Escribe algo o elige un espécimen para empezar.");
     row.append(cell);
     fragment.append(row);
   }
@@ -259,14 +271,14 @@ function renderViews() {
     Object.assign(message.style, { fontFamily: font, fontSize: `${fontSize}px`, lineHeight: `${lineHeight}px`, overflow });
     const sample = $(`sample-${view}`);
     if (sample.textContent !== state.analysis.text) sample.textContent = state.analysis.text;
-    $(`overflow-badge-${view}`).textContent = `Mensaje · ${overflow}`;
-    $(`css-${view}`).textContent = `font-size: ${fontSize}px; line-height: ${lineHeight}px;\nMensaje · overflow: ${overflow};\nPanel · overflow: ${panelOverflow};`;
+    $(`overflow-badge-${view}`).textContent = t(`Message · ${overflow}`, `Mensaje · ${overflow}`);
+    $(`css-${view}`).textContent = t(`font-size: ${fontSize}px; line-height: ${lineHeight}px;\nMessage · overflow: ${overflow};\nPanel · overflow: ${panelOverflow};`, `font-size: ${fontSize}px; line-height: ${lineHeight}px;\nMensaje · overflow: ${overflow};\nPanel · overflow: ${panelOverflow};`);
     $(`layout-${view}`).hidden = !$('show-boxes').checked;
     $(`baseline-${view}`).hidden = !$('show-boxes').checked;
   }
   $('observation').textContent = state.analysis.text
-    ? 'Mensaje controla el recorte en la caja azul. Panel controla el borde oscuro del chat. Elige visible en Mensaje y compara las opciones de Panel.'
-    : 'Escribe un texto para observar qué espacio reserva el navegador.';
+    ? t("Message controls clipping at the blue box. Panel controls the dark chat boundary. Set Message to visible and compare the Panel options.", "Mensaje controla el recorte en la caja azul. Panel controla el borde oscuro del chat. Elige visible en Mensaje y compara las opciones de Panel.")
+    : t("Enter text to see how much space the browser reserves.", "Escribe un texto para observar qué espacio reserva el navegador.");
   scheduleMeasurements();
 }
 
@@ -294,8 +306,8 @@ function measureViews() {
     const metric = $(`ink-metric-${view}`);
     const text = state.analysis.text;
     if (!ctx || !canvasEligible(text)) {
-      metric.textContent = text ? 'no disponible' : '—';
-      metric.title = 'La estimación se omite para texto vacío, multilínea, tabuladores o ciertos controles.';
+      metric.textContent = text ? t("unavailable", "no disponible") : '—';
+      metric.title = t("The estimate is omitted for empty text, multiple lines, tabs, or certain control characters.", "La estimación se omite para texto vacío, multilínea, tabuladores o ciertos controles.");
       continue;
     }
     const computed = getComputedStyle(sample);
@@ -307,7 +319,7 @@ function measureViews() {
     const m = ctx.measureText(text);
     const { actualBoundingBoxLeft: left, actualBoundingBoxRight: right, actualBoundingBoxAscent: ascent, actualBoundingBoxDescent: descent } = m;
     if (![left, right, ascent, descent].every(Number.isFinite)) {
-      metric.textContent = 'no disponible';
+      metric.textContent = t("unavailable", "no disponible");
       continue;
     }
     const width = Math.max(0, left + right);
@@ -319,7 +331,7 @@ function measureViews() {
     measurement.ink = { left: inkLeft, top: inkTop + stageRect.top, width, height };
     ink.hidden = !$('show-ink').checked;
     metric.textContent = `≈ ${Math.round(width)} × ${Math.round(height)} px`;
-    metric.title = 'Límites estimados de tinta sin recorte en Canvas; no son una medida del DOM.';
+    metric.title = t("Unclipped ink bounds estimated with Canvas. DOM ink can differ.", "Límites estimados de tinta sin recorte en Canvas; no son una medida del DOM.");
   }
   connectedSelection.render(state.analysis, state.selected);
   return views;
@@ -332,12 +344,14 @@ function scheduleMeasurements() {
 
 function updateSpiderControls() {
   const count = Number($('mark-count').value);
-  $('mark-count-value').value = `${count} marcas`;
   const type = $('mark-type').value;
-  $('mark-count-value').value = type === 'arabic' ? `${count} ligaduras` : `${count} marcas`;
+  const noun = type === 'arabic'
+    ? count === 1 ? t("ligature", "ligadura") : t("ligatures", "ligaduras")
+    : count === 1 ? t("mark", "marca") : t("marks", "marcas");
+  $('mark-count-value').value = `${count} ${noun}`;
   $('mark-note').textContent = type === 'arabic'
-    ? 'U+FC5E es una ligadura árabe (Lo), no una marca Mn. Su composición depende de la fuente.'
-    : 'Su altura depende de la fuente y del motor tipográfico.';
+    ? t("U+FC5E is an Arabic ligature (Lo). Its shaping depends on the font.", "U+FC5E es una ligadura árabe (Lo), no una marca Mn. Su composición depende de la fuente.")
+    : t("Its height depends on the font and rendering engine.", "Su altura depende de la fuente y del motor tipográfico.");
 }
 
 function regenerateSpider({ animated = false } = {}) {
@@ -402,7 +416,7 @@ async function measureBrowserCard(snapshot) {
   $('message-a').getBoundingClientRect();
   await document.fonts?.ready;
   const applied = captureExperiment();
-  if (expected !== renderingKey(applied)) throw new Error('El experimento cambió durante la medición. Vuelve a intentarlo.');
+  if (expected !== renderingKey(applied)) throw new Error(t("The experiment changed during measurement. Please try again.", "El experimento cambió durante la medición. Vuelve a intentarlo."));
   const measurements = measureViews();
   const notoLoaded = document.fonts && [...document.fonts].some(face =>
     face.family.replace(/^["']|["']$/gu, '') === 'Noto Lab' && face.status === 'loaded'
@@ -418,7 +432,7 @@ async function measureBrowserCard(snapshot) {
     views[id] = {
       layout: size(message),
       ink: ink ? size(ink) : null,
-      fontStack: localFont ? 'Fuente de archivo, sans-serif' : getComputedStyle($(`sample-${id}`)).fontFamily,
+      fontStack: localFont ? 'local-font, sans-serif' : getComputedStyle($(`sample-${id}`)).fontFamily,
       fontState,
       missingLocal: Boolean(snapshot.views[id].localFont && snapshot.views[id].localFont !== localFont),
     };
@@ -449,13 +463,13 @@ function restoreExperiment(snapshot) {
   $('show-ink').checked = snapshot.showInk;
   $('escaped').hidden = !snapshot.showEscapes;
   $('escaped-toggle').setAttribute('aria-expanded', String(snapshot.showEscapes));
-  $('escaped-toggle').textContent = snapshot.showEscapes ? 'Ocultar escapes' : 'Ver escapes';
+  $('escaped-toggle').textContent = snapshot.showEscapes ? t("Hide escapes", "Ocultar escapes") : t("Show escapes", "Ver escapes");
   state.inspector = snapshot.inspector;
   state.selected = snapshot.selected;
   updateSpiderControls();
   setSpecimen(snapshot.text, { preset: snapshot.preset, preserveSelection: true });
   localFonts.warnMissing(missingFonts);
-  toast(missingFonts.length ? 'Experimento recuperado con fuentes de sustitución.' : 'Experimento recuperado, en pausa.');
+  toast(missingFonts.length ? t("Experiment restored with fallback fonts.", "Experimento recuperado con fuentes de sustitución.") : t("Experiment restored and paused.", "Experimento recuperado, en pausa."));
   return missingFonts;
 }
 
@@ -472,9 +486,9 @@ $('specimen').addEventListener('input', event => {
   inputFrame = requestAnimationFrame(() => {
     const limited = limitText($('specimen').value);
     if (limited.truncated) $('specimen').value = limited.text;
-    $('input-notice').textContent = limited.truncated ? `Límite de ${MAX_CODEPOINTS} puntos de código: se ha conservado el comienzo del texto.` : '';
+    setMessage($('input-notice'), limited.truncated ? () => t(`The limit is ${MAX_CODEPOINTS} code points. The beginning of the text was kept.`, `Límite de ${MAX_CODEPOINTS} puntos de código: se ha conservado el comienzo del texto.`) : '');
     state.preset = null;
-    $('input-help').textContent = 'Tu texto, tal cual. Explora sus grafemas y prueba distintas reglas de renderizado.';
+    renderInputHelp();
     updatePresetButtons();
     updateAnalysis(true);
   });
@@ -491,7 +505,7 @@ $('player-toggle').addEventListener('click', () => playback.playing ? playback.p
 $('player-rewind').addEventListener('click', () => playback.rewind());
 $('player-step').addEventListener('click', () => {
   playback.step();
-  $('player-announcement').textContent = `Paso: ${$('mark-count').value} incorporaciones, ${state.analysis.codepoints} puntos de código.`;
+  $('player-announcement').textContent = t(`Step: ${$('mark-count').value} additions, ${state.analysis.codepoints} code points.`, `Paso: ${$('mark-count').value} incorporaciones, ${state.analysis.codepoints} puntos de código.`);
 });
 $('player-speed').addEventListener('change', () => playback.changeSpeed());
 $('anatomia').addEventListener('focusin', () => { if (playback.playing) playback.pause(); });
@@ -501,23 +515,23 @@ window.addEventListener('pagehide', () => playback.pause());
 $('escaped-toggle').addEventListener('click', () => {
   $('escaped').hidden = !$('escaped').hidden;
   $('escaped-toggle').setAttribute('aria-expanded', String(!$('escaped').hidden));
-  $('escaped-toggle').textContent = $('escaped').hidden ? 'Ver escapes' : 'Ocultar escapes';
+  $('escaped-toggle').textContent = $('escaped').hidden ? t("Show escapes", "Ver escapes") : t("Hide escapes", "Ocultar escapes");
 });
 
 $('copy').addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText($('specimen').value);
-    toast('Espécimen copiado. 🕷');
+    toast(t("Specimen copied. 🕷", "Espécimen copiado. 🕷"));
   } catch {
     $('specimen').focus();
     $('specimen').select();
-    toast('Texto seleccionado. Usa Ctrl+C o ⌘C para copiarlo.');
+    toast(t("Text selected. Use Ctrl+C or ⌘C to copy.", "Texto seleccionado. Usa Ctrl+C o ⌘C para copiarlo."));
   }
 });
 
 for (const form of ['NFC', 'NFD']) $(`normalize-${form.toLowerCase()}`).addEventListener('click', () => {
   setSpecimen($('specimen').value.normalize(form));
-  toast(`Normalización ${form} aplicada.`);
+  toast(t(`Applied ${form} normalization.`, `Normalización ${form} aplicada.`));
 });
 
 for (const mode of ['graphemes', 'codepoints']) $(`tab-${mode}`).addEventListener('click', () => {
@@ -539,11 +553,11 @@ $('reset').addEventListener('click', () => {
   $('show-boxes').checked = true;
   $('show-ink').checked = false;
   $('escaped').hidden = true;
-  $('escaped-toggle').textContent = 'Ver escapes';
+  $('escaped-toggle').textContent = t("Show escapes", "Ver escapes");
   $('escaped-toggle').setAttribute('aria-expanded', 'false');
   state.inspector = 'graphemes';
   regenerateSpider();
-  toast('Laboratorio restablecido. Araña localizada.');
+  toast(t("Lab reset. Spider located.", "Laboratorio restablecido. Araña localizada."));
 });
 
 if (typeof ResizeObserver === 'function') {
@@ -554,9 +568,11 @@ window.addEventListener('resize', scheduleMeasurements);
 document.fonts?.ready.then(scheduleMeasurements);
 document.fonts?.addEventListener('loadingdone', scheduleMeasurements);
 
+initLanguageSelector();
 const chat = initMovingChat({ onMove: scheduleMeasurements });
 const localFonts = initLocalFonts({ onChange: renderViews });
 setSpecimen(PRESETS.spider.text, { preset: 'spider' });
+updateSpiderControls();
 initChallenges({ readText: readSpecimen, readInk: readChallengeInk, prepareAccent: setSpecimen });
 $('render-title').tabIndex = -1;
 initNotebook({ capture: captureExperiment, restore: restoreExperiment, pause: () => playback.pause() });
@@ -568,14 +584,23 @@ const refreshCreatureDetails = initCreatureBuilder({
   getRecord: char => state.catalog[char.codePointAt(0).toString(16).toUpperCase()],
 });
 fetch('./unicode-names.json').then(response => {
-  if (!response.ok) throw new Error('No se pudo cargar el catálogo');
+  if (!response.ok) throw new Error(t("Could not load the catalog", "No se pudo cargar el catálogo"));
   return response.json();
 }).then(data => {
   state.catalog = data.characters;
   state.unicodeVersion = data.version;
   refreshCreatureDetails();
-  $('catalog-note').textContent = `Nombres y categorías detalladas: catálogo parcial Unicode ${data.version}. Fuera del catálogo se muestra la categoría general del navegador; la segmentación también depende del navegador.`;
+  setMessage($('catalog-note'), () => t(`Names and detailed categories come from a partial Unicode ${data.version} catalog. Other characters use the browser’s general categories. Segmentation also depends on the browser.`, `Nombres y categorías detalladas: catálogo parcial Unicode ${data.version}. Fuera del catálogo se muestra la categoría general del navegador; la segmentación también depende del navegador.`));
   renderTable();
 }).catch(() => {
-  $('catalog-note').textContent = 'El catálogo de nombres no está disponible. Los puntos de código, las categorías generales y el renderizado siguen funcionando.';
+  setMessage($('catalog-note'), () => t("The name catalog is unavailable. Code points, general categories, and rendering still work.", "El catálogo de nombres no está disponible. Los puntos de código, las categorías generales y el renderizado siguen funcionando."));
+});
+
+onLanguageChange(() => {
+  renderInputHelp();
+  updateSpiderControls();
+  updateAnalysis();
+  renderPlaybackControls();
+  $('escaped-toggle').textContent = $('escaped').hidden ? t("Show escapes", "Ver escapes") : t("Hide escapes", "Ocultar escapes");
+  $('toast').classList.remove('show');
 });

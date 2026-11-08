@@ -1,14 +1,15 @@
+import { t } from './i18n.js';
 /** Pure text analysis. No font metrics or DOM assumptions belong here. */
 export const MAX_CODEPOINTS = 512;
 export const MAX_MARKS = 60;
 
 export const PRESETS = {
-  spider: { label: 'La araña', text: '╲(◕ o' + '\u034B'.repeat(12) + ' ◕)╱', hint: 'Una base, muchas marcas. Cambia la fuente y mira hasta dónde llega el hilo.' },
-  accent: { label: 'Acentos', text: '\u00E1 a\u0301', hint: 'Parecen iguales: «á» tiene 1 punto de código; «a + ◌́» tiene 2. Cada una forma un grafema.' },
-  family: { label: 'Familia', text: '👨‍👩‍👧‍👦', hint: 'Cuatro personas y tres unidores ZWJ: 7 puntos de código dentro de un único grafema.' },
-  flags: { label: 'Banderas', text: '🇪🇸 🇯🇵', hint: 'Cada bandera combina dos indicadores regionales. La fuente decide cómo se dibujan.' },
-  skin: { label: 'Tono de piel', text: '👋🏽', hint: 'Un emoji y un modificador de tono de piel se agrupan en un grafema.' },
-  scripts: { label: 'Escrituras', text: 'नमस्ते · مَرْحَبًا', hint: 'Las marcas combinantes también forman parte de escrituras cotidianas. No son un error.' }
+  spider: { get label() { return t("The spider", "La araña"); }, text: '╲(◕ o' + '\u034B'.repeat(12) + ' ◕)╱', get hint() { return t("One base, many marks. Change the font and see how far the thread reaches.", "Una base, muchas marcas. Cambia la fuente y mira hasta dónde llega el hilo."); } },
+  accent: { get label() { return t("Accents", "Acentos"); }, text: '\u00E1 a\u0301', get hint() { return t("They look alike. “á” has one code point and “a + ◌́” has two. Each forms one grapheme.", "Parecen iguales: «á» tiene 1 punto de código; «a + ◌́» tiene 2. Cada una forma un grafema."); } },
+  family: { get label() { return t("Family", "Familia"); }, text: '👨‍👩‍👧‍👦', get hint() { return t("Four people and three zero-width joiners make seven code points in one grapheme.", "Cuatro personas y tres unidores ZWJ: 7 puntos de código dentro de un único grafema."); } },
+  flags: { get label() { return t("Flags", "Banderas"); }, text: '🇪🇸 🇯🇵', get hint() { return t("Each flag combines two regional indicators. The font determines how they are drawn.", "Cada bandera combina dos indicadores regionales. La fuente decide cómo se dibujan."); } },
+  skin: { get label() { return t("Skin tone", "Tono de piel"); }, text: '👋🏽', get hint() { return t("An emoji and a skin tone modifier form one grapheme.", "Un emoji y un modificador de tono de piel se agrupan en un grafema."); } },
+  scripts: { get label() { return t("Scripts", "Escrituras"); }, text: 'नमस्ते · مَرْحَبًا', get hint() { return t("Combining marks are part of everyday writing systems.", "Las marcas combinantes también forman parte de escrituras cotidianas. No son un error."); } }
 };
 
 export function makeSpider(count = 12, mark = '\u034B') {
@@ -34,17 +35,17 @@ export function escapedText(text) {
 }
 
 export function categoryOf(char) {
-  if (/\p{Mn}/u.test(char)) return { code: 'Mn', label: 'Marca sin espaciado' };
-  if (/\p{Mc}/u.test(char)) return { code: 'Mc', label: 'Marca con espaciado' };
-  if (/\p{Me}/u.test(char)) return { code: 'Me', label: 'Marca envolvente' };
-  if (/\p{Cf}/u.test(char)) return { code: 'Cf', label: 'Formato / unión' };
-  if (/\p{Cc}/u.test(char)) return { code: 'Cc', label: 'Control' };
-  if (/\p{Z}/u.test(char)) return { code: 'Z', label: 'Separador' };
-  if (/\p{L}/u.test(char)) return { code: 'L', label: 'Letra' };
-  if (/\p{N}/u.test(char)) return { code: 'N', label: 'Número' };
-  if (/\p{P}/u.test(char)) return { code: 'P', label: 'Puntuación' };
-  if (/\p{S}/u.test(char)) return { code: 'S', label: 'Símbolo' };
-  return { code: 'C', label: 'Otro / no asignado' };
+  if (/\p{Mn}/u.test(char)) return { code: 'Mn', label: t("Nonspacing mark", "Marca sin espaciado") };
+  if (/\p{Mc}/u.test(char)) return { code: 'Mc', label: t("Spacing mark", "Marca con espaciado") };
+  if (/\p{Me}/u.test(char)) return { code: 'Me', label: t("Enclosing mark", "Marca envolvente") };
+  if (/\p{Cf}/u.test(char)) return { code: 'Cf', label: t("Format / joiner", "Formato / unión") };
+  if (/\p{Cc}/u.test(char)) return { code: 'Cc', label: t("Control", "Control") };
+  if (/\p{Z}/u.test(char)) return { code: 'Z', label: t("Separator", "Separador") };
+  if (/\p{L}/u.test(char)) return { code: 'L', label: t("Letter", "Letra") };
+  if (/\p{N}/u.test(char)) return { code: 'N', label: t("Number", "Número") };
+  if (/\p{P}/u.test(char)) return { code: 'P', label: t("Punctuation", "Puntuación") };
+  if (/\p{S}/u.test(char)) return { code: 'S', label: t("Symbol", "Símbolo") };
+  return { code: 'C', label: t("Other / unassigned", "Otro / no asignado") };
 }
 
 export function displayChar(char) {

@@ -124,6 +124,9 @@
   .topbar nav { gap: 16px; }
   .topbar-actions { gap: 8px; }
 }
+@media (max-width: 760px) {
+  .topbar nav { display: none; }
+}
 @media (max-width: 600px) {
   .topbar { height: auto; min-height: 67px; flex-wrap: wrap; gap: 10px; padding-top: 10px; padding-bottom: 10px; }
   .topbar-actions { margin-left: auto; gap: 7px; }

@@ -1,18 +1,19 @@
+import { onLanguageChange, setMessage, t } from './i18n.js';
 import { createPlayback } from './playback.js';
 
 const messages = [
-  ['pixel_ghost', 'todo bajo control', 'purple'],
-  ['nullpointer', '¿eso se está moviendo?', 'green'],
-  ['hob_enjoyer', 'nice run ✨', 'amber'],
-  ['glifo_fantasma', 'acabo de llegar', 'purple'],
-  ['byte_curioso', '¿alguien más ve el hilo?', 'green'],
-  ['pixel_ghost', 'sigo el recuadro azul', 'amber'],
-  ['hob_enjoyer', 'la araña va por arriba 🕷', 'purple'],
-  ['nullpointer', '¿y con otra fuente?', 'green'],
-  ['byte_curioso', 'esa marca tiene vida propia', 'amber'],
-  ['glifo_fantasma', 'probando el recorte', 'purple'],
-  ['pixel_ghost', 'otro mensaje más', 'green'],
-  ['hob_enjoyer', 'la caja sigue en su sitio', 'amber'],
+  ['pixel_ghost', () => t("everything under control", "todo bajo control"), 'purple'],
+  ['nullpointer', () => t("is that moving?", "¿eso se está moviendo?"), 'green'],
+  ['hob_enjoyer', () => 'nice run ✨', 'amber'],
+  ['glifo_fantasma', () => t("just got here", "acabo de llegar"), 'purple'],
+  ['byte_curioso', () => t("anyone else see the thread?", "¿alguien más ve el hilo?"), 'green'],
+  ['pixel_ghost', () => t("following the blue box", "sigo el recuadro azul"), 'amber'],
+  ['hob_enjoyer', () => t("the spider is climbing 🕷", "la araña va por arriba 🕷"), 'purple'],
+  ['nullpointer', () => t("what about another font?", "¿y con otra fuente?"), 'green'],
+  ['byte_curioso', () => t("that mark has a life of its own", "esa marca tiene vida propia"), 'amber'],
+  ['glifo_fantasma', () => t("testing clipping", "probando el recorte"), 'purple'],
+  ['pixel_ghost', () => t("one more message", "otro mensaje más"), 'green'],
+  ['hob_enjoyer', () => t("the box is still there", "la caja sigue en su sitio"), 'amber'],
 ];
 const INITIAL_ROWS = 3;
 const MAX_LATER_ROWS = 12;
@@ -24,7 +25,7 @@ function messageRow([user, text, color]) {
   author.className = `chat-user ${color}`;
   author.textContent = user;
   const body = document.createElement('span');
-  body.textContent = text;
+  body.textContent = text();
   row.append(author, body);
   return row;
 }
@@ -71,10 +72,10 @@ export function initMovingChat({ onMove }) {
   }
 
   function updateControls() {
-    toggle.textContent = clock.playing ? 'Pausar chat' : 'Iniciar chat';
+    toggle.textContent = clock.playing ? t("Pause chat", "Pausar chat") : t("Start chat", "Iniciar chat");
     const later = received - sentAt;
-    const label = later === 1 ? '1 mensaje posterior' : `${later} mensajes posteriores`;
-    $('chat-status').textContent = `${clock.playing ? 'En marcha' : 'En pausa'} · ${label}`;
+    const label = later === 1 ? t("1 newer message", "1 mensaje posterior") : t(`${later} newer messages`, `${later} mensajes posteriores`);
+    $('chat-status').textContent = `${clock.playing ? t("Running", "En marcha") : t("Paused", "En pausa")} · ${label}`;
   }
 
   const clock = createPlayback({
@@ -93,7 +94,7 @@ export function initMovingChat({ onMove }) {
     sentAt = received;
     placeSpecimen();
     updateControls();
-    $('chat-announcement').textContent = 'Espécimen enviado al final de las dos vistas.';
+    setMessage($('chat-announcement'), () => t("Specimen sent to the end of both chats.", "Espécimen enviado al final de las dos vistas."));
   });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && clock.playing) clock.pause();
@@ -101,11 +102,19 @@ export function initMovingChat({ onMove }) {
   window.addEventListener('pagehide', () => clock.pause());
 
   placeSpecimen();
+  onLanguageChange(() => {
+    for (const view of views) {
+      view.before.replaceChildren(...before.map(messageRow));
+      view.after.replaceChildren(...after.map(messageRow));
+    }
+    updateControls();
+    onMove();
+  });
   return {
     reset() {
       speed.value = '1500';
       clock.rewind();
-      $('chat-announcement').textContent = '';
+      setMessage($('chat-announcement'), '');
     },
     position() {
       for (const { stream, after } of views) {

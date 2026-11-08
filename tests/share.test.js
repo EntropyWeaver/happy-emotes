@@ -31,7 +31,7 @@ test('local font references round-trip without carrying font files or accepting 
   experiment.views.a.localFont = 'a'.repeat(64);
   assert.deepEqual(decodeExperimentHash(SHARE_PREFIX + encodeExperiment(experiment)), experiment);
   experiment.views.a.localFont = 'https://example.com/font.woff2';
-  assert.throws(() => encodeExperiment(experiment), /fuente local/);
+  assert.throws(() => encodeExperiment(experiment), /local font/);
 });
 
 test('URLs support subdirectories, replace old fragments and omit existing query parameters', () => {
@@ -55,13 +55,13 @@ test('legacy links default to clipping at the panel edge and invalid panel modes
   assert.equal(restored.views.b.panelOverflow, 'hidden');
   assert.equal(restored.views.a.overflow, 'visible');
   experiment.views.b.panelOverflow = 'scroll';
-  assert.throws(() => decodeExperimentHash(uncheckedHash({ v: 1, experiment })), /Overflow del panel/);
+  assert.throws(() => decodeExperimentHash(uncheckedHash({ v: 1, experiment })), /Panel overflow/);
 });
 
 test('ordinary anchors are ignored; truncated, oversized, invalid UTF-8 and future-version payloads are rejected', () => {
   for (const hash of ['', '#cuaderno', '#anatomia', '#share-experiment']) assert.equal(decodeExperimentHash(hash), null);
   for (const hash of ['#experiment', SHARE_PREFIX, SHARE_PREFIX + 'v1.A', SHARE_PREFIX + 'v1._w', SHARE_PREFIX + 'v1.not-json', SHARE_PREFIX + 'v1.%%%%', SHARE_PREFIX + 'v1.' + 'a'.repeat(MAX_SHARE_TOKEN_LENGTH)]) assert.throws(() => decodeExperimentHash(hash));
-  assert.throws(() => decodeExperimentHash(SHARE_PREFIX + encodeExperiment(snapshot()).replace(/^v1/u, 'v2')), /versión/);
+  assert.throws(() => decodeExperimentHash(SHARE_PREFIX + encodeExperiment(snapshot()).replace(/^v1/u, 'v2')), /version/);
   assert.throws(() => decodeExperimentHash(uncheckedHash({ v: 2, experiment: snapshot() })));
 });
 

@@ -1,3 +1,4 @@
+import { onLanguageChange, setMessage, t } from './i18n.js';
 import { categoryOf, codepointLabel, displayChar, limitText, MAX_CODEPOINTS } from './core.js';
 
 const palette = {
@@ -9,10 +10,10 @@ const palette = {
 };
 
 const categoryLabels = {
-  Mn: 'Marca sin espaciado',
-  Me: 'Marca envolvente',
-  Cf: 'Carácter de formato',
-  Sk: 'Símbolo modificador',
+  get Mn() { return t("Nonspacing mark", "Marca sin espaciado"); },
+  get Me() { return t("Enclosing mark", "Marca envolvente"); },
+  get Cf() { return t("Format character", "Carácter de formato"); },
+  get Sk() { return t("Modifier symbol", "Símbolo modificador"); },
 };
 
 export function initCreatureBuilder({ getText, setText, getRecord }) {
@@ -31,19 +32,19 @@ export function initCreatureBuilder({ getText, setText, getRecord }) {
     const record = getRecord(char);
     const fallback = categoryOf(char);
     const code = record?.[1] ?? fallback.code;
-    name.textContent = `${codepointLabel(char)} · ${record?.[0] ?? 'Nombre pendiente del catálogo'}`;
+    name.textContent = `${codepointLabel(char)} · ${record?.[0] ?? t("Name pending from the catalog", "Nombre pendiente del catálogo")}`;
     category.textContent = `${code} · ${categoryLabels[code] ?? fallback.label}`;
-    if (record && code.startsWith('M')) category.textContent += ` · Clase combinante ${record[2]}`;
+    if (record && code.startsWith('M')) category.textContent += t(` · Combining class ${record[2]}`, ` · Clase combinante ${record[2]}`);
   }
 
   function append(char) {
     const result = limitText(getText() + char);
     if (result.truncated) {
-      status.textContent = `Has alcanzado el límite de ${MAX_CODEPOINTS} puntos de código. Quita una pieza para añadir otra.`;
+      setMessage(status, () => t(`You reached the ${MAX_CODEPOINTS} code point limit. Remove a piece to add another.`, `Has alcanzado el límite de ${MAX_CODEPOINTS} puntos de código. Quita una pieza para añadir otra.`));
       return;
     }
     setText(result.text);
-    status.textContent = `Añadido ${codepointLabel(char)} · ${Array.from(result.text).length} puntos de código en total.`;
+    setMessage(status, () => t(`Added ${codepointLabel(char)} · ${Array.from(result.text).length} code points total.`, `Añadido ${codepointLabel(char)} · ${Array.from(result.text).length} puntos de código en total.`));
   }
 
   function renderPalette() {
@@ -59,7 +60,7 @@ export function initCreatureBuilder({ getText, setText, getRecord }) {
       const code = document.createElement('small');
       code.textContent = codepointLabel(char);
       button.append(glyph, code);
-      button.setAttribute('aria-label', `Añadir ${codepointLabel(char)}`);
+      button.setAttribute('aria-label', t(`Add ${codepointLabel(char)}`, `Añadir ${codepointLabel(char)}`));
       button.setAttribute('aria-describedby', 'creature-piece-name creature-piece-category');
       button.addEventListener('pointerenter', () => describe(char));
       button.addEventListener('focus', () => describe(char));
@@ -74,19 +75,20 @@ export function initCreatureBuilder({ getText, setText, getRecord }) {
   }
 
   byId('creature-use-base').addEventListener('click', () => {
-    setText(base.value);
-    status.textContent = `Base aplicada · ${codepointLabel(base.value)}.`;
+    const char = base.value;
+    setText(char);
+    setMessage(status, () => t(`Base applied · ${codepointLabel(char)}.`, `Base aplicada · ${codepointLabel(char)}.`));
   });
   byId('creature-add-base').addEventListener('click', () => append(base.value));
   byId('creature-remove').addEventListener('click', () => {
     const points = Array.from(getText());
     const removed = points.pop();
     if (removed === undefined) {
-      status.textContent = 'El espécimen está vacío.';
+      setMessage(status, () => t("The specimen is empty.", "El espécimen está vacío."));
       return;
     }
     setText(points.join(''));
-    status.textContent = `Retirado ${codepointLabel(removed)}.`;
+    setMessage(status, () => t(`Removed ${codepointLabel(removed)}.`, `Retirado ${codepointLabel(removed)}.`));
   });
   group.addEventListener('change', renderPalette);
 
@@ -99,5 +101,10 @@ export function initCreatureBuilder({ getText, setText, getRecord }) {
   window.addEventListener('hashchange', openAtAnchor);
   openAtAnchor();
   renderPalette();
+  onLanguageChange(() => {
+    const previous = described;
+    renderPalette();
+    describe(previous);
+  });
   return () => describe(described);
 }

@@ -1,3 +1,4 @@
+import { setMessage, t } from './i18n.js';
 const MAX_FONT_BYTES = 10 * 1024 * 1024;
 const MAX_FONTS = 8;
 const FORMAT = /\.(woff2?|ttf|otf)$/iu;
@@ -38,24 +39,24 @@ export function initLocalFonts({ onChange }) {
     if (busy || !files.length) return;
     const [file] = files;
     if (files.length > 1 || !FORMAT.test(file.name)) {
-      status.textContent = 'Elige un solo archivo WOFF2, WOFF, TTF u OTF.';
+      setMessage(status, () => t("Choose a single WOFF2, WOFF, TTF, or OTF file.", "Elige un solo archivo WOFF2, WOFF, TTF u OTF."));
       return;
     }
     if (!file.size || file.size > MAX_FONT_BYTES) {
-      status.textContent = 'La fuente debe pesar entre 1 byte y 10 MiB.';
+      setMessage(status, () => t("The font must be between 1 byte and 10 MiB.", "La fuente debe pesar entre 1 byte y 10 MiB."));
       return;
     }
     const view = target.value;
     busy = true;
     updateControls();
-    status.textContent = 'Leyendo la fuente…';
+    setMessage(status, () => t("Reading font…", "Leyendo la fuente…"));
     try {
       const bytes = await file.arrayBuffer();
       const id = await fontId(bytes);
       let font = faces.get(id);
       if (!font) {
         if (faces.size >= MAX_FONTS) {
-          status.textContent = 'Ya hay 8 fuentes locales. Quítalas para cargar más.';
+          setMessage(status, () => t("You already have 8 local fonts. Remove them to load more.", "Ya hay 8 fuentes locales. Quítalas para cargar más."));
           return;
         }
         const family = `LabLocal-${id}`;
@@ -70,9 +71,9 @@ export function initLocalFonts({ onChange }) {
       }
       views[view].value = id;
       onChange();
-      status.textContent = `${font.name} aplicada a la vista ${view.toUpperCase()}. Puedes elegirla también en el otro selector de Fuente.`;
+      setMessage(status, () => t(`${font.name} applied to view ${view.toUpperCase()}. You can also select it in the other Font menu.`, `${font.name} aplicada a la vista ${view.toUpperCase()}. Puedes elegirla también en el otro selector de Fuente.`));
     } catch {
-      status.textContent = 'El navegador no pudo leer la fuente. Prueba con otro archivo compatible.';
+      setMessage(status, () => t("The browser could not read the font. Try another supported file.", "El navegador no pudo leer la fuente. Prueba con otro archivo compatible."));
     } finally {
       busy = false;
       updateControls();
@@ -111,16 +112,16 @@ export function initLocalFonts({ onChange }) {
     onChange();
     picker.focus();
     updateControls();
-    status.textContent = 'Fuentes locales retiradas.';
+    setMessage(status, () => t("Local fonts removed.", "Fuentes locales retiradas."));
   });
 
   return {
     has: id => faces.has(id),
     family: id => faces.has(id) ? `"${faces.get(id).family}", sans-serif` : null,
     warnMissing: missing => {
-      status.textContent = missing.length
-        ? `La vista ${missing.join(' y la vista ')} usa una fuente de sustitución. Carga el archivo original para recuperar su tipografía.`
-        : '';
+      setMessage(status, () => missing.length
+        ? t(`View ${missing.join(t(" and view ", " y la vista "))} uses a fallback font. Load the original file to restore its typography.`, `La vista ${missing.join(t(" and view ", " y la vista "))} usa una fuente de sustitución. Carga el archivo original para recuperar su tipografía.`)
+        : '');
     },
   };
 }

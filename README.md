@@ -1,190 +1,164 @@
 # Happy Emotes 🕷️
 
-Un laboratorio de tipografía para abrir el texto por dentro. Nació de una araña Unicode que se dibujaba encima de otros mensajes en un chat.
+**English** · [Español](README.es.md)
 
-## Ejecutar
+A typography lab for looking inside text. It started with a Unicode spider whose thread spilled over earlier messages in a chat.
 
-No hay compilación, dependencias de JavaScript, API ni claves. Con Python 3.12 instalado, desde la raíz del repositorio:
+[Open the Unicode Lab](https://happy-emotes-borja.entropyweaver.chatgpt.site)
+
+## Run locally
+
+The app uses static files and needs no build step, JavaScript dependencies, API, or keys. With Python 3.12 installed, run this from the repository root:
 
 ```bash
 python -m http.server 8000 --directory dist
 ```
 
-En Windows también puedes usar `py -3.12 -m http.server 8000 --directory dist`. Abre <http://localhost:8000> en Firefox, Chrome, Edge o Safari reciente. Sirve los archivos por HTTP: abrir `index.html` con `file://` no permite cargar correctamente los módulos y el catálogo.
+On Windows, you can also use `py -3.12 -m http.server 8000 --directory dist`. Open <http://localhost:8000> in a recent version of Firefox, Chrome, Edge, or Safari. Use HTTP so the browser can load the modules and the Unicode catalog.
 
-## Experimentar
+## Experiment
 
-La cabecera identifica las diez mejoras implementadas. **1. Selección conectada**, **2. Crecimiento animado**, **3. Cuaderno de descubrimientos**, **4. Enlaces compartibles**, **5. Constructor de criaturas**, **6. Escenarios de recorte**, **7. Chat en movimiento**, **8. Fuentes locales**, **9. Retos** y **10. Fichas de navegador**. El enlace **Cuaderno** abre los experimentos guardados.
+Use **Language** in the header to switch between **English** and **Español** while you work. English is the default, and the browser remembers your choice. **Appearance** offers Light, Dark, and System. System follows the operating system's appearance while the page is open. The lab starts in Light mode.
 
-El selector **Apariencia**, en la cabecera, ofrece **Normal** (el diseño claro original), **Oscuro** y **Sistema**. La elección se recuerda en este navegador; Sistema sigue los cambios de apariencia del sistema operativo mientras la página está abierta. Normal es la opción inicial. Si el navegador bloquea el almacenamiento, el selector sigue funcionando durante la sesión de la página. Restablecer el laboratorio conserva la apariencia elegida.
+1. Choose **The spider**. Both views render the same text with the bundled Noto Sans font.
+2. Move **Thread length**. It adds combining marks, so the number of code points can rise while the number of graphemes stays the same.
+3. Compare `overflow: visible` in A with `overflow: clip` in B. The browser draws both views in the DOM.
+4. Switch one view to Arial, Times, Courier, or the system font to see whether the marks still stack.
+5. Turn on **Layout boxes** and **Ink guide** to compare the space reserved for a message with the estimated bounds of its ink.
+6. Try **Accents** and apply NFC or NFD. The accent can look the same as the number of code points changes.
+7. Try **Family**. The sequence `👨‍👩‍👧‍👦` has seven code points, eleven UTF-16 code units, and twenty-five UTF-8 bytes. Current grapheme segmentation groups them into one grapheme.
+8. Select a grapheme chip or a character in either rendering view. Both views highlight the grapheme and the inspector shows its Unicode names, categories, and UTF-16 ranges. Use the previous and next buttons, or move through the chips with the arrow, Home, and End keys.
+9. Choose **Code points** to see the full text. Selecting a character in the table highlights every row belonging to its grapheme.
 
-1. Abre **La araña**. Las dos vistas usan el mismo texto y Noto Sans, incluida en el proyecto.
-2. Mueve **Longitud del hilo**: aumenta el número de marcas combinantes mientras los grafemas pueden seguir siendo los mismos.
-3. Compara `overflow: visible` en A con `overflow: clip` en B. La tinta se dibuja en el DOM real; no es una telaraña simulada con CSS.
-4. Cambia una vista a Arial, Times, Courier o la fuente del sistema. Las marcas pueden dejar de apilarse; es un resultado válido.
-5. Activa **Cajas de layout** y **Guía de tinta** para comparar dos mediciones diferentes.
-6. Prueba **Acentos** y aplica NFC/NFD. La forma visual puede conservarse aunque cambie el número de puntos de código.
-7. Prueba **Familia**: `👨‍👩‍👧‍👦` tiene 7 puntos de código, 11 unidades UTF-16 y 25 bytes UTF-8, agrupados en un grafema con la segmentación actual.
-8. Selecciona una ficha de grafema: se ilumina en **las dos vistas** y el inspector muestra sus puntos de código, nombres, categorías e intervalos UTF-16. También puedes pulsar el texto de A/B o usar los botones **anterior/siguiente**. En las fichas, las flechas y las teclas Inicio/Fin permiten recorrer el texto con el teclado.
-9. Cambia a **Puntos de código** para ver el texto completo. Pulsa un carácter de la tabla para localizar su grafema: todas las filas que lo componen quedan marcadas en verde.
+The editor accepts up to 512 code points. The spider generator supports up to 60 repetitions and four thread characters. The lab inserts the specimen with `textContent`.
 
-Incluye seis ejemplos, cuatro tipos de hilo, cinco fuentes predefinidas por vista, control de tamaño y altura de línea, escapes Unicode, copia y restablecimiento. El texto personalizado admite hasta 512 puntos de código y el generador hasta 60 repeticiones. El contenido se inserta como texto con `textContent`.
+### Spider growth
 
-### Fuentes locales
+With **The spider** selected, **Play** adds one code point at a time. **From zero** rewinds and pauses, **+1 mark** pauses and advances one step, and **Replay** starts from zero after the final step. Choose one, two, or four additions per second. U+FC5E uses the label **ligature**.
 
-Elige **Vista A** o **Vista B** en **Aplicar al cargar** y arrastra un archivo a **Fuentes locales** o pulsa **Elegir archivo**. Puedes elegir cualquiera de las fuentes cargadas desde el selector **Fuente** de cada vista. El laboratorio admite hasta ocho archivos WOFF2, WOFF, TTF u OTF de hasta 10 MiB cada uno.
+The text, counts, inspector, views, and guides update together. The selected grapheme stays selected as long as it still exists. Editing the specimen, changing its generator, normalizing, inspecting a grapheme, or leaving the tab pauses playback. You can change fonts, line height, and clipping while the spider grows.
 
-Los archivos permanecen en la memoria de la pestaña. **Quitar fuentes locales** retira las fuentes cargadas y devuelve a Noto Sans las vistas que las usaban. El navegador puede usar otras fuentes para los caracteres ausentes en el archivo.
+### Local fonts
 
-El cuaderno, sus exportaciones y los enlaces guardan una referencia al archivo y usan Noto Sans si falta. Para reproducir la tipografía, carga el mismo archivo en esa pestaña antes de abrir el experimento. En HTTPS y localhost, la referencia se calcula a partir del contenido del archivo.
+Choose **View A** or **View B** under **Apply on load**, then drop a font into **Local fonts** or choose a file. Each loaded font becomes available from either **Font** menu. The lab accepts up to eight WOFF2, WOFF, TTF, or OTF files of up to 10 MiB each.
 
-### Retos del laboratorio
+Font files stay in the tab. **Remove local fonts** unloads them and switches any affected view back to Noto Sans. Notebooks, links, and browser records save a file reference. Load the same file before restoring the experiment to use its font again. In HTTPS and on localhost, the reference comes from the file contents.
 
-Elige un reto en **Retos**, trabaja con el espécimen y pulsa **Comprobar**. Cada reto ofrece una pista opcional y explica el resultado al resolverlo.
+### Challenges
 
-- **Un grafema, siete piezas** comprueba que el espécimen entero sea un solo grafema de siete puntos de código.
-- **El mismo acento** parte de «a» con un acento combinante. **Preparar acento** carga esa forma en el editor para que puedas comparar el resultado de NFC.
-- **Tinta fuera de la caja** usa la estimación de Canvas para detectar desbordamiento vertical en A. Compruébalo con **Mensaje** en `visible` y luego con `clip` o `hidden`, conservando texto, fuente, tamaño, altura de línea y recorte del panel.
+Choose a challenge, work with the actual lab controls, and click **Check**. Each challenge has an optional hint and explains the result when solved.
 
-El progreso pertenece a la pestaña y se reinicia al recargar. Puedes repetir cada reto desde su resultado.
+- **One grapheme, seven pieces** checks that the entire specimen is one grapheme containing seven code points.
+- **The same accent** starts with a decomposed “a” and acute accent. **Set up accent** loads it into the editor so you can try NFC.
+- **Ink outside the box** checks estimated vertical ink overflow in A. Check once with **Message** set to `visible`, then again with `clip` or `hidden` while keeping the other settings fixed.
 
-### La araña, paso a paso
+You can retry any challenge. Progress lasts until the tab reloads.
 
-Con **La araña** seleccionada, el reproductor aparece junto a las vistas A/B:
+### Clipping controls
 
-- **Reproducir / Pausar** incorpora un punto de código por paso, desde la longitud actual hasta 60. Al terminar, **Repetir** comienza de nuevo desde cero.
-- **Desde cero** deja la araña sin incorporaciones y en pausa. **+1 marca** pausa y añade exactamente una; con U+FC5E el control indica **+1 ligadura**.
-- **Ritmo** ofrece 1, 2 o 4 incorporaciones por segundo. No hay reproducción automática al abrir la página ni bucle al alcanzar el límite.
-- El texto, los contadores, el inspector, las dos vistas y sus guías se actualizan juntos. Se conserva el grafema seleccionado mientras siga existiendo.
-- Editar el texto, cambiar de espécimen, mover la longitud, cambiar el tipo de hilo, normalizar, seleccionar un grafema o entrar con el foco en el inspector pausa la animación. Cambiar de pestaña también la pausa; hay que pulsar Reproducir para continuar. Las fuentes, la altura de línea y el recorte se pueden modificar durante la reproducción.
+**Message** controls clipping at the specimen's box. **Panel** controls clipping at the chat boundary. Use Noto Sans and a long thread to compare the following settings.
 
-Para observar el desbordamiento desde su origen: pulsa **Desde cero**, elige **Lento** y pulsa **Reproducir**. Con las marcas combinantes aumentan los puntos de código mientras el hilo sigue dentro de un solo grafema; U+FC5E es una ligadura y puede producir otra segmentación. La tinta depende de la fuente, no de una animación de altura simulada.
-
-## Fichas de navegador
-
-En **Fichas de navegador**, pulsa **Exportar ficha JSON**. Abre Happy Emotes en el otro navegador y usa **Abrir ficha JSON**. Se recuperan el texto y los ajustes A/B en pausa y se comparan los grafemas, el tamaño de las cajas del DOM y la tinta estimada en Canvas antes del recorte. El registro incluye el ancho de la ventana en píxeles CSS y su DPR para contextualizar las diferencias de layout. **Volver a medir** reaplica la ficha importada y actualiza la columna local.
-
-Cada vista muestra la fuente solicitada, la pila CSS que se aplicó y si la fuente incluida o el archivo local estaban disponibles. Si falta un archivo local, se indica la sustitución y puedes cargar el mismo archivo antes de volver a medir. La pila CSS no revela qué fuente dibujó cada glifo. La ficha incluye el texto, los ajustes, las medidas, la fecha y la etiqueta del navegador, sin adjuntar fuentes. El formato es `happy-emotes-browser-card` versión 1 y el límite de importación es 64 KiB.
-
-## Cuaderno de descubrimientos
-
-Usa **Guardar este experimento en el cuaderno** debajo de A/B o el enlace **Cuaderno** de la cabecera. Ponle un nombre y pulsa **Guardar experimento**. Cada entrada conserva:
-
-- El texto Unicode exacto, el espécimen y los ajustes del generador de la araña.
-- Las fuentes y el recorte del mensaje y del panel en A/B, tamaño de fuente, altura de línea y las guías activadas.
-- El grafema seleccionado, el modo del inspector, los escapes y el ritmo del reproductor.
-
-**Abrir** restaura esos ajustes y deja el reproductor en pausa. La apariencia Normal/Oscuro/Sistema es una preferencia general y se conserva al abrir experimentos. **Renombrar** cambia solo el nombre. **Eliminar** ofrece **Deshacer eliminación** para la última entrada eliminada durante esta sesión. Restablecer el laboratorio conserva el cuaderno.
-
-Las entradas se guardan en este navegador, bajo el origen del sitio. No se sincronizan automáticamente entre equipos. **Exportar JSON** descarga el cuaderno completo; **Importar JSON** añade entradas sin sobrescribir las existentes. Las copias exactas se omiten, y las versiones diferentes con el mismo identificador reciben uno nuevo. Se validan todos los datos antes de escribir: si algo falla, no se importa parcialmente. Límites: 100 experimentos, nombres de 80 caracteres, texto de 512 puntos de código por experimento y archivos de hasta 1 MiB. El formato incluye `format: "happy-emotes-notebook"` y `version: 1`.
-
-Si el navegador bloquea el almacenamiento, se indica **Guardado temporal** y se permite exportar la colección antes de cerrar la pestaña. Un error de espacio no se presenta como un guardado correcto. Los datos dañados se conservan y se ofrece descargar una copia original. Los nombres y textos siempre se muestran con `textContent`.
-
-## Compartir un experimento
-
-Pulsa **Compartir experimento**, debajo de las vistas A/B, y después **Copiar enlace**. También puedes seleccionar y copiar el campo manualmente o abrir **Probar enlace** en otra pestaña.
-
-El enlace guarda una copia del texto y de todos los ajustes que conserva el cuaderno, incluida la selección del inspector y el ritmo. Al abrirlo, el laboratorio recupera esa configuración en pausa; se puede seguir editando o guardarla en el cuaderno. Las fuentes efectivas, el motor del navegador y su versión de Unicode pueden cambiar el renderizado y la segmentación. La apariencia Normal/Oscuro/Sistema sigue siendo una preferencia del visitante.
-
-Es una instantánea: si cambias los ajustes, vuelve a pulsar Compartir experimento para crear otro enlace. Abrir un enlace no añade entradas automáticamente al cuaderno. El texto y los ajustes se incluyen en el propio enlace, por lo que cualquiera que lo reciba puede recuperarlos.
-
-El formato versionado es `#experiment=v1.<JSON en UTF-8 y base64url>`. El fragmento no se envía en la petición HTTP al servidor; no se usa un servicio de acortamiento. Admite el límite habitual de 512 puntos de código, también con emojis, marcas y saltos de línea. Los enlaces se validan completamente antes de aplicar sus ajustes. Si están incompletos, dañados o usan una versión incompatible, aparece un aviso y se conserva el estado actual del laboratorio. Navegar a otros apartados usa los anclajes habituales; el enlace generado permanece en su campo hasta que lo cierres o generes otro.
-
-## Constructor de criaturas Unicode
-
-Abre **Constructor de criaturas** desde la cabecera. Elige una base y pulsa **Empezar con esta base**. Las piezas de la paleta y **Añadir base** se insertan al final del espécimen. **Quitar último punto** retira el último punto de código, incluido un emoji completo si ocupa dos unidades UTF-16.
-
-La paleta reúne marcas de arriba, de abajo, superpuestas y envolventes, unidores, selectores de presentación y tonos de piel. Al pasar el puntero, enfocar o pulsar una pieza, se muestra su nombre Unicode y categoría. Para construir 👩‍💻, empieza con 👩, añade ZWJ, elige 💻 y pulsa **Añadir base**. La fuente y el navegador determinan el dibujo. La criatura se puede guardar en el cuaderno y compartir por enlace como cualquier espécimen.
-
-## Escenarios de recorte
-
-En cada vista, **Mensaje** ajusta el recorte de la caja del espécimen y **Panel** ajusta el recorte del chat. Prueba con Noto Sans y un hilo largo para comparar estos casos:
-
-| Mensaje | Panel | Qué puedes observar |
+| Message | Panel | What you can observe |
 | --- | --- | --- |
-| clip o hidden | Cualquiera | La tinta se recorta en la caja del mensaje. |
-| visible | Recortar | La tinta puede cubrir mensajes vecinos hasta el borde del chat. |
-| visible | Visible | La tinta puede cruzar el borde del chat y aparecer en el margen de observación. |
+| clip or hidden | Either | The message box clips the ink. |
+| visible | Clip | The ink can cover neighboring messages up to the chat boundary. |
+| visible | Visible | The ink can cross the chat boundary into the observation margin. |
 
-El marco exterior delimita el margen de observación. Ambos ajustes viajan en los enlaces y cuadernos nuevos. Los experimentos antiguos se abren con **Panel → Recortar**.
+Links and notebooks keep both settings. Older experiments open with **Panel** set to **Clip**.
 
-## Chat de pruebas en movimiento
+### Moving chat
 
-Pulsa **Enviar espécimen** para situar el texto del editor al final de A y B. **Iniciar chat** hace llegar la misma secuencia de mensajes ficticios a las dos vistas. Puedes pausar el chat, elegir el intervalo o usar **+1 mensaje** para avanzar un paso en pausa. Observa cómo sube el recuadro azul mientras cada vista aplica su recorte. Si el espécimen se desplaza fuera del panel, vuelve a enviarlo.
+Click **Send specimen** to put the editor text at the end of both views. **Start chat** sends the same stream of test messages to A and B. Pause, change the interval, or use **+1 message** to advance once. Watch the blue box move up and resend the specimen if it scrolls out of view.
 
-El espécimen del chat sigue vinculado al editor. El ritmo del chat y los mensajes que han entrado pertenecen a la sesión de prueba. Al abrir un experimento del cuaderno o desde un enlace, el chat empieza en pausa con sus mensajes iniciales.
+The chat specimen stays linked to the editor. The chat's speed and incoming messages belong to the current test session. Restoring an experiment opens the chat paused with its initial messages.
 
-## Qué significa cada medida
+## Browser records
 
-| Medida | Origen | Limitación |
+Click **Export record as JSON**. Open Happy Emotes in another browser, then use **Open JSON record**. The lab restores the text and both sets of settings in a paused state and compares the grapheme count, DOM box dimensions, and Canvas ink estimates. Viewport width and device pixel ratio provide context for differences in layout. **Measure again** reapplies the imported settings and refreshes the local column.
+
+The comparison shows the requested font, the applied CSS stack, and the availability of bundled or local font files. It flags a missing local file so you can load it and measure again. Per-glyph font substitutions remain unidentified. The JSON contains the date and browser label alongside the text, settings, and measurements. Font files stay separate. Records use the `happy-emotes-browser-card` format, version 1, and have a 64 KiB import limit.
+
+## Discovery notebook
+
+Use **Save this experiment to the notebook** below the views or open **Notebook** in the header. Name the experiment and click **Save experiment**. Each entry keeps:
+
+- The exact Unicode text, specimen type, and spider generator settings.
+- Fonts and clipping rules for A/B, font size, line height, and enabled guides.
+- The selected grapheme, inspector mode, escape display, and playback speed.
+
+**Open** restores an experiment in a paused state. **Rename** changes its name. **Delete** offers **Undo deletion** for the last entry removed in the tab. Resetting the lab preserves the notebook.
+
+The notebook is stored in the browser for this site. **Export JSON** downloads it and **Import JSON** adds entries. Exact duplicates are skipped. Distinct entries with the same ID receive new IDs. Imports are validated as a whole. The limits are 100 entries, names up to 80 characters, 512 code points per specimen, and JSON files up to 1 MiB. The format is `happy-emotes-notebook`, version 1.
+
+If the browser blocks storage, the notebook indicates temporary storage and can still export the collection. If saved data is damaged, the notebook keeps the original data and offers a recovery download.
+
+## Share an experiment
+
+Click **Share experiment**, then **Copy link**. You can also copy the field manually or use **Test link** to open it in another tab. The link includes the text and experiment settings and opens paused. Visitors can edit the restored experiment or add it to their own notebook. Rendering can vary by browser and available fonts.
+
+Each link is a snapshot. Generate a new one after changing the experiment. The versioned format is `#experiment=v1.<JSON encoded as UTF-8 and base64url>`. The URL fragment stays in the browser and holds up to 512 code points of specimen text plus the settings. The lab validates the payload before changing the current experiment. The viewer's language and appearance are browser preferences.
+
+## Unicode creature builder
+
+Open **Creature builder**, choose a base, and click **Start with this base**. Palette pieces and **Append base** go at the end of the specimen. **Remove last code point** removes one code point, including both UTF-16 units of a supplementary character.
+
+The palette includes above, below, overlay, and enclosing marks, joiners, presentation selectors, and emoji skin tones. Hover, focus, or select a piece to see its Unicode name and category. Try starting with 👩, adding ZWJ, and appending 💻. The font and browser determine the rendered form. Creatures can be saved and shared like any other specimen.
+
+## What each measurement means
+
+| Measurement | Source | What it measures |
 | --- | --- | --- |
-| Puntos de código | Iteración Unicode del string | No cuenta glifos ni caracteres percibidos |
-| Grafemas | `Intl.Segmenter`, granularidad `grapheme` | Depende de la versión Unicode del navegador; se muestra N/D si falta la API |
-| Unidades UTF-16 | `string.length` | Un punto de código astral ocupa dos unidades |
-| Bytes UTF-8 | `TextEncoder` | Tamaño del texto codificado, no del DOM |
-| Caja azul | `getBoundingClientRect()` del bloque del mensaje | Caja de bloque, no contorno de glifos ni caja interna de línea |
-| Línea base | Elemento inline de tamaño cero | Marca la primera línea base |
-| Selección verde | `Range.getClientRects()` con los intervalos UTF-16 de cada grafema | Posición tipográfica, no contorno de tinta; respeta el recorte de cada vista |
-| Guía naranja | `CanvasRenderingContext2D.measureText()` + `actualBoundingBox*` | Estimación sin recorte con Canvas, no medición de píxeles del DOM |
+| Code points | Unicode iteration over the string | The values that make up the text |
+| Graphemes | `Intl.Segmenter` with `grapheme` granularity | Text clusters under the browser's Unicode rules |
+| UTF-16 code units | `string.length` | Two units for each supplementary code point |
+| UTF-8 bytes | `TextEncoder` | Size of the encoded text |
+| Blue box | The message block's `getBoundingClientRect()` | The block box reserved in layout |
+| Baseline | A zero-size inline element | The first line's baseline |
+| Green selection | `Range.getClientRects()` using each grapheme's UTF-16 offsets | The grapheme's typographic position, subject to each view's clipping |
+| Orange ink guide | `CanvasRenderingContext2D.measureText()` and `actualBoundingBox*` | Estimated Canvas ink bounds before clipping |
 
-El texto visible de las dos vistas lo dibuja el navegador en elementos DOM. La guía de Canvas puede diferir por composición, sustitución de fuentes y dirección de escritura. Se omite para texto vacío, multilínea, tabuladores y ciertos controles. El recorte en el borde del chat se controla por separado en cada vista.
+The lab keeps the rendered text in a single node so selection preserves shaping. The CSS Custom Highlight API adds native range coloring where available. The layout guides also work independently of it. Ligatures can share geometry, so inspector chips let you select one grapheme at a time. Without `Intl.Segmenter`, code point inspection remains available.
 
-La selección conserva cada muestra en un único nodo de texto para no alterar la composición de la fuente. Si existe CSS Custom Highlight API, también colorea el rango nativamente; en navegadores sin ella siguen funcionando los recuadros. Espacios y saltos de línea se pueden recorrer desde las fichas o las flechas; los rangos sin ancho reciben un marcador fino. Si un grafema queda completamente fuera del panel, se indica «Grafema fuera de vista». Las ligaduras pueden compartir geometría: para seleccionar sin ambigüedad usa las fichas del inspector. Sin `Intl.Segmenter` se conserva el inspector de puntos de código y se desactiva la selección de grafemas.
+Canvas estimates can differ from DOM rendering because of shaping, font fallback, and writing direction. The lab omits the guide for empty text, multiple lines, tabs, and unsupported control characters. Fonts and browser engines can change which marks stack and how far they extend.
 
-Las fuentes del sistema varían entre equipos. Noto Sans se sirve localmente para hacer el primer experimento más reproducible, pero no elimina todas las diferencias de motor o sistema. El resto de escrituras y emojis pueden usar fuentes de sustitución. No se identifica automáticamente la fuente efectiva de cada glifo.
+The partial catalog contains 1,592 Unicode names generated with Python 3.12's `unicodedata` (Unicode 15.0.0). Characters outside the catalog still get a code point, rendering, and a general category inferred by the browser. Unicode character names are shown in their standard form in both interface languages.
 
-El catálogo de 1.592 nombres es **parcial**, generado con `unicodedata` de Python 3.12 (Unicode 15.0.0). Incluye los ejemplos y bloques comunes; un carácter fuera del catálogo sigue teniendo código, renderizado y categoría general del navegador. Su nombre se marca explícitamente como no incluido. La clasificación del catálogo y la segmentación del navegador pueden proceder de versiones Unicode distintas.
+`U+034B` is `COMBINING HOMOTHETIC ABOVE` (Mn, combining class 230). `U+FC5E` is `ARABIC LIGATURE SHADDA WITH DAMMATAN ISOLATED FORM` (Lo) and is available to compare with the original spider. Neither category alone predicts a glyph's advance or height. Repeated marks can remain after NFC.
 
-`U+034B` es `COMBINING HOMOTHETIC ABOVE`, categoría Mn, clase combinante 230. `U+FC5E`, incluido para comparar la araña original, es `ARABIC LIGATURE SHADDA WITH DAMMATAN ISOLATED FORM`, categoría Lo: **no** es una marca Mn. Ninguna categoría garantiza por sí sola un avance o una altura concretos. NFC no es un filtro de marcas repetidas.
+## Development
 
-## Desarrollo y comprobaciones
-
-Node 20 o superior, sin `npm install`:
+With Node 20 or newer, run:
 
 ```bash
 npm test
 npm run check
 ```
 
-Las pruebas comprueban acentos, emojis ZWJ, indicadores regionales, tonos de piel, índices UTF-16, límites sin cortar pares sustitutos, ausencia de Segmenter, cadenas vacías, marcas sin base y metadatos Unicode.
-Las pruebas de enlaces comprueban la reproducción exacta de Unicode y de los ajustes, rutas relativas al sitio, límites, versiones y rechazo de enlaces incompletos o inválidos.
-Las pruebas del cuaderno comprueban la exportación/importación sin alterar Unicode, validación, mezcla de duplicados, capacidad, persistencia, datos dañados y errores de almacenamiento.
-Las pruebas del reproductor usan un reloj controlado para verificar pausas, reanudación, pasos manuales, cambio de velocidad, cancelación de callbacks, límite de 60, repetición y crecimiento de los puntos de código sin dividir el grafema combinante.
-
-Para regenerar el catálogo:
+The tests cover Unicode analysis, the playback clock, notebook validation and storage, share links, and browser record validation. Regenerate the Unicode catalog with:
 
 ```bash
 python scripts/generate-unicode-catalog.py
 ```
 
-El script registra la versión real de `unicodedata`; regenerarlo con otra versión de Python puede cambiar sus datos.
+The script records the Python runtime's Unicode data version. A different Python version may produce different metadata.
 
-## Estructura
+- `dist/index.html` contains the English interface and measurement explanations.
+- `dist/i18n.js` and `dist/static-es.js` manage language switching and Spanish translations of the static interface. Dynamic UI messages define both translations alongside their rendering logic.
+- `dist/core.js` handles Unicode analysis. `dist/app.js` ties controls, selection, and DOM/Canvas measurements together.
+- `dist/selection.js`, `dist/playback.js`, and `dist/chat.js` handle linked selection and the two animations.
+- `dist/notebook.js`, `dist/share.js`, and `dist/browser-card.js` validate portable experiment data. Their corresponding UI modules handle the controls.
+- `dist/unicode-names.json` holds the partial catalog and `dist/fonts/` contains the bundled Noto Sans font and its license.
 
-- `dist/index.html`: interfaz y explicación de las mediciones.
-- `dist/styles.css`: diseño adaptable y escenarios de desbordamiento.
-- `dist/core.js`: análisis Unicode puro, reutilizable y probado.
-- `dist/app.js`: controles, inspector y mediciones DOM/Canvas.
-- `dist/selection.js` y `dist/selection.css`: selección conectada con rangos DOM, resaltado nativo y recuadros que respetan el recorte.
-- `dist/playback.js` y `dist/playback.css`: reproducción del crecimiento y controles; `tests/playback.test.js` comprueba su temporización.
-- `dist/notebook.js`, `dist/notebook-ui.js` y `dist/notebook.css`: formato JSON validado, persistencia y cuaderno; `tests/notebook.test.js` comprueba la integridad de los datos.
-- `dist/share.js`, `dist/share-ui.js` y `dist/share.css`: enlaces reproducibles con el estado completo y copia manual; `tests/share.test.js` comprueba sus formatos y validación.
-- `dist/theme.js` y `dist/theme.css`: selección de apariencia, preferencia local y paleta oscura.
-- `dist/unicode-names.json`: catálogo local parcial.
-- `dist/fonts/`: fuente Noto Sans y licencia OFL 1.1.
-- `tests/core.test.js`: pruebas de análisis.
-- `scripts/generate-unicode-catalog.py`: generación reproducible del catálogo.
+Serve `dist/` from a root or a subdirectory. Assets use relative paths. `.openai/hosting.json` identifies the hosted copy. The lab processes text locally and stores language, appearance, and saved notebooks in the browser.
 
-Todo lo necesario para servir la aplicación está en `dist/`. Se puede desplegar como sitio estático bajo una ruta raíz o subdirectorio; los recursos usan rutas relativas. El archivo `.openai/hosting.json` vincula la copia alojada y no es necesario para ejecutarla localmente. No hay analítica, peticiones a terceros ni claves. La preferencia de apariencia y los experimentos que guardas en el cuaderno se almacenan localmente en este navegador; el texto no se envía a servidores de análisis.
+## References
 
-## Referencias
+- [CSS Overflow and ink overflow](https://www.w3.org/TR/css-overflow-3/#ink-overflow)
+- [Unicode UAX #29 and text segmentation](https://www.unicode.org/reports/tr29/)
+- [MDN · Intl.Segmenter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
+- [MDN · TextMetrics](https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics)
+- [MDN · CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API)
+- [MDN · Range.getClientRects](https://developer.mozilla.org/en-US/docs/Web/API/Range/getClientRects)
+- [Noto Sans and its license](https://github.com/notofonts/latin-greek-cyrillic)
 
-- [CSS Overflow: ink overflow](https://www.w3.org/TR/css-overflow-3/#ink-overflow)
-- [Unicode UAX #29: Text Segmentation](https://www.unicode.org/reports/tr29/)
-- [MDN: Intl.Segmenter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
-- [MDN: TextMetrics](https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics)
-- [MDN: CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API)
-- [MDN: Range.getClientRects](https://developer.mozilla.org/en-US/docs/Web/API/Range/getClientRects)
-- [Noto Sans y licencia](https://github.com/notofonts/latin-greek-cyrillic)
-
-Noto Sans se redistribuye bajo SIL Open Font License 1.1. Se ha convertido de TTF a WOFF conservando los glifos y las tablas de composición; su licencia está en `dist/fonts/OFL.txt`.
+The bundled Noto Sans font uses the SIL Open Font License 1.1. It was converted from TTF to WOFF with glyphs and shaping tables preserved. See [the included license](dist/fonts/OFL.txt).
