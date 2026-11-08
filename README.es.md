@@ -191,4 +191,8 @@ Todo lo necesario para servir la aplicación está en `dist/`. Se puede desplega
 - [MDN: Range.getClientRects](https://developer.mozilla.org/en-US/docs/Web/API/Range/getClientRects)
 - [Noto Sans y licencia](https://github.com/notofonts/latin-greek-cyrillic)
 
-Noto Sans se redistribuye bajo SIL Open Font License 1.1. Se ha convertido de TTF a WOFF conservando los glifos y las tablas de composición; su licencia está en `dist/fonts/OFL.txt`.
+## Licencia
+
+El código y la documentación del proyecto se publican bajo la [licencia MIT](LICENSE).
+
+Noto Sans se redistribuye bajo SIL Open Font License 1.1. Se ha convertido de TTF a WOFF conservando los glifos y las tablas de composición; su licencia está en [OFL.txt](dist/fonts/OFL.txt).

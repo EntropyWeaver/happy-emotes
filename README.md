@@ -161,4 +161,8 @@ Serve `dist/` from a root or a subdirectory. Assets use relative paths. `.openai
 - [MDN · Range.getClientRects](https://developer.mozilla.org/en-US/docs/Web/API/Range/getClientRects)
 - [Noto Sans and its license](https://github.com/notofonts/latin-greek-cyrillic)
 
+## License
+
+The project code and documentation are released under the [MIT License](LICENSE).
+
 The bundled Noto Sans font uses the SIL Open Font License 1.1. It was converted from TTF to WOFF with glyphs and shaping tables preserved. See [the included license](dist/fonts/OFL.txt).
