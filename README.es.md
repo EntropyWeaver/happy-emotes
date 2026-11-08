@@ -4,6 +4,10 @@
 
 Un laboratorio de tipografía para abrir el texto por dentro. Nació de una araña Unicode que se dibujaba encima de otros mensajes en un chat.
 
+[Abre el laboratorio Unicode](https://happy-emotes-borja.entropyweaver.chatgpt.site)
+
+![Happy Emotes en acción mientras crece el hilo de la araña Unicode](docs/happyemotes-demo.gif)
+
 ## Ejecutar
 
 No hay compilación, dependencias de JavaScript, API ni claves. Con Python 3.12 instalado, desde la raíz del repositorio:

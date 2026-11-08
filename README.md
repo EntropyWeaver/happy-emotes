@@ -6,6 +6,8 @@ A typography lab for looking inside text. It started with a Unicode spider whose
 
 [Open the Unicode Lab](https://happy-emotes-borja.entropyweaver.chatgpt.site)
 
+![Happy Emotes in action as the Unicode spider's thread grows](docs/happyemotes-demo.gif)
+
 ## Run locally
 
 The app uses static files and needs no build step, JavaScript dependencies, API, or keys. With Python 3.12 installed, run this from the repository root:
